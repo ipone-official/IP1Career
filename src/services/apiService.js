@@ -16,7 +16,10 @@ export default {
   getPosition() {
     return apiClient.get('/Position');
   },
-  deletePosition(id) {
-    return apiClient.post('/deletePosition', { id: id });
+  getDescription() {
+    return apiClient.get('/Description');
+  },
+  getQualification() {
+    return apiClient.get('/Qualification');
   }
 };

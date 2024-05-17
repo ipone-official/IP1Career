@@ -1,25 +1,24 @@
 <template>
   <div class="job-listings-container">
     <div class="filter-section">
-      <h2>Job Filter</h2>
+      <h2 style="border-bottom: 1px solid #000; padding-bottom:10px;">Job Filter</h2>
       <div>
-        <h3>Areas</h3>
-        <ul>
-          <li v-for="department in departments" :key="department.departmentID">
-            <label>
-              <input type="checkbox" :value="department.departmentID" v-model="selectID">
+        <!-- <h3>Areas</h3> -->
+        <div>
+          <div v-for="department in departments" :key="department.departmentID" class="depart-text">
+            <label >
+              <input type="checkbox" :value="department.departmentID" v-model="selectID" style="transform: scale(1.25);">
                {{ department.department_DescEN }}
-               {{ selectID }}
+               <!-- {{ seledctID }} -->
             </label>
-          </li>
-        </ul>
+          </div>
+        </div>
       </div>
     </div>
     <div class="results-section">
-      <h2>Job Vacancies</h2>
-      <div class="job-item" v-for="position in positions">
-        <h3>{{ position.position_Name }} </h3>
-        <p>job.description- job.date</p>
+      <h2 style="border-bottom: 1px solid #000; padding-bottom:10px;">Job Vacancies</h2>
+      <div class="job-item" v-for="position in positions" :key="position.positionID" @click="goToJobDesc(position.positionID)">
+        <h2>{{ position.position_Name }} </h2>
       </div>
     </div>
   </div>
@@ -108,18 +107,27 @@ export default {
         console.error(error);
       }
     },
+    goToJobDesc(id) {
+      this.$router.push({ name: 'JobDesc', params: { jobId: id } });  // ใช้ jobId
+    }
   }
 };
 </script>
 
 <style>
+.depart-text {
+  /* display: flex; */
+  font-size: 17px;
+  padding-top: 10px;
+}
+
 .job-listings-container {
   display: flex;
   justify-content: space-between;
 }
 
 .filter-section {
-  width: 25%;
+  width: 30%;
   padding: 20px;
   border-right: 1px solid #ddd;
 }
@@ -130,9 +138,16 @@ export default {
 }
 
 .job-item {
+  cursor: pointer;
   border-bottom: 1px solid #ddd;
-  padding: 10px 0;
+  padding: 20px 0;
+  transition: font-size 0.3s;
 }
+
+.job-item:hover {
+  font-size: 19px;
+}
+
 .theme--light.v-table thead th {
   background-image: -webkit-gradient(
     linear,

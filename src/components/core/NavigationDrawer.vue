@@ -36,6 +36,12 @@
         </v-list-tile-action>
         <v-list-tile-title :class="[{'active': selectedIndex === 4}, 'item-title' ]" >{{ $t('Career') }}</v-list-tile-title>
       </v-list-tile>
+      <v-list-tile @click="changeRoute('JobDesc', 5)" style="margin-left: 1rem">
+        <v-list-tile-action>
+          <v-icon >mdi-billboard</v-icon>
+        </v-list-tile-action>
+        <v-list-tile-title :class="[{'active': selectedIndex === 5}, 'item-title' ]" >{{ $t('JobDesc') }}</v-list-tile-title>
+      </v-list-tile>
     </v-list-group>
 
     <v-list-tile @click="changeRoute('Transactions', 2)">

@@ -7,6 +7,8 @@ import Error from '../pages/core/Error.vue';
 import Transactions from '../pages/Transactions.vue';
 import ImportExcel from '../pages/ImportExcel.vue'
 import Career from '../pages/Career.vue';
+import JobDesc from '../pages/JobDesc.vue';
+
 Vue.use(Router);
 
 export default new Router({
@@ -43,6 +45,16 @@ export default new Router({
       meta: {
         breadcrumb: [
           { name: 'Career' }
+        ]
+      }
+    },
+    {
+      path: '/JobDesc/:jobId',
+      name: 'JobDesc',
+      component: JobDesc,
+      meta: {
+        breadcrumb: [
+          { name: 'JobDesc' }
         ]
       }
     },
