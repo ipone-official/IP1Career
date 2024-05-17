@@ -41,7 +41,9 @@ export default new Router({
       name: 'Career',
       component: Career,
       meta: {
-        allowAnonymous: true
+        breadcrumb: [
+          { name: 'Career' }
+        ]
       }
     },
     {

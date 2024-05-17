@@ -1,122 +1,27 @@
 <template>
-  <div>
-    <v-toolbar flat color="white">
-      <v-flex xs12 sm8>
-        <v-text-field
-          v-model="search"
-          append-icon="search"
-          label="Search"
-          single-line
-          hide-details
-        ></v-text-field>
-      </v-flex>
-      <v-dialog v-model="dialog" persistent max-width="600px">
-        <template v-slot:activator="{ on }">
-          <v-btn color="#007fc4" dark class="mb-2" @click="dialog = true">Add</v-btn>
-          <v-btn color="#007fc4" dark class="mb-2">Import Excel</v-btn>
-          <v-btn color="#007fc4" dark class="mb-2">Export Excel</v-btn>
-          <v-file-input label="File input"></v-file-input>
-        </template>
-        <v-card>
-          <v-card-title>
-            <span class="headline">{{ "Add Transaction" }}</span>
-          </v-card-title>
-
-          <v-card-text>
-            <v-container grid-list-md>
-              <v-layout wrap>
-                <v-flex xs12 sm6 md6>
-                  <v-text-field
-                    prefix="*"
-                    style="color: red"
-                    @keydown.native="keyFilter($event, 'number')"
-                    maxlength="50"
-                    label="Delivery Document"
-                  ></v-text-field>
-                </v-flex>
-                <v-flex xs12 sm6 md6>
-                  <v-text-field
-                    prefix="*"
-                    style="color: red"
-                    maxlength="50"
-                    @keydown.native="keyFilter($event, 'number')"
-                    label="Billing Document"
-                  ></v-text-field>
-                </v-flex>
-                <v-flex xs12 sm6 md6>
-                  <v-text-field
-                    prefix="*"
-                    style="color: red"
-                    maxlength="50"
-                    label="ShipTo"
-                    @keydown.native="keyFilter($event, 'number')"
-                  ></v-text-field>
-                </v-flex>
-                <v-flex xs12 sm6 md6>
-                  <v-text-field
-                    prefix="*"
-                    style="color: red"
-                    @keydown.native="keyFilter($event, 'Th')"
-                    label="Customer Name"
-                  ></v-text-field>
-                </v-flex>
-                <v-flex xs12 sm6 md6>
-                  <v-text-field
-                    prefix="*"
-                    style="color: red"
-                    @keydown.native="keyFilter($event, 'number')"
-                    maxlength="50"
-                    label="SaleCode"
-                  ></v-text-field>
-                </v-flex>
-                <v-flex xs12 sm6 md6>
-                  <v-text-field
-                    prefix="*"
-                    style="color: red"
-                    @keydown.native="keyFilter($event, 'number')"
-                    maxlength="50"
-                    label="PODDate"
-                  ></v-text-field>
-                </v-flex>
-              </v-layout>
-            </v-container>
-          </v-card-text>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="blue darken-1" flat @click="dialog = false">Cancel</v-btn>
-            <v-btn
-              color="blue darken-1"
-              class="white--text"
-              :loading="loading"
-              @click="dialog = false"
-              >Save</v-btn
-            >
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-    </v-toolbar>
-    <v-data-table
-      :headers="headers"
-      :items="BillingData"
-      :search="search"
-      :pagination.sync="pagination"
-    >
-      <template v-slot:items="props">
-        <td>{{ props.item.DeliveryDocument }}</td>
-        <td class="text-xs-left">{{ props.item.BillingDocument }}</td>
-        <td class="text-xs-left">{{ props.item.ShipTo }}</td>
-        <td class="text-xs-left">{{ props.item.CustomerName }}</td>
-        <td class="text-xs-left">{{ props.item.SaleCode }}</td>
-        <td class="text-xs-left">{{ props.item.POD_Date }}</td>
-      </template>
-      <template v-slot:no-data> </template>
-    </v-data-table>
-    <div v-if="loadingDialog">
-      <Loading :value="loadingDialog" />
+  <div class="job-listings-container">
+    <div class="filter-section">
+      <h2>Job Filter</h2>
+      <div>
+        <h3>Areas</h3>
+        <ul>
+          <li v-for="department in departments" :key="department.departmentID">
+            <label>
+              <input type="checkbox" :value="department.departmentID" v-model="selectID">
+               {{ department.department_DescEN }}
+               {{ selectID }}
+            </label>
+          </li>
+        </ul>
+      </div>
     </div>
-    <v-snackbar color="orange" v-model="showResult" :timeout="3500">
-      {{ msgResult }}
-    </v-snackbar>
+    <div class="results-section">
+      <h2>Job Vacancies</h2>
+      <div class="job-item" v-for="position in positions">
+        <h3>{{ position.position_Name }} </h3>
+        <p>job.description- job.date</p>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -127,6 +32,8 @@ import keyFilter from "@/plugins/keyFilter";
 import Swal from "sweetalert2";
 import Loading from "../components/core/Loading";
 import { sync } from "vuex-pathify";
+import apiService from '@/services/apiService';
+import { watch } from "vue";
 
 export default {
   components: {
@@ -134,99 +41,98 @@ export default {
   },
   data() {
     return {
-      pagination: {
-        rowsPerPage: 10,
-      },
-      loading: false,
-      keyFilter,
-      loadingDialog: false,
-      showResult: false,
-      msgResult: "",
-      BillingData: [],
-      search: "",
-      dialog: false,
+      departments:[],
+      positions:[],
+      selectID: [],
+      rawData: [],
     };
   },
 
   computed: {
     ...sync("*"),
+    // filteredPositions() {
+    //   if (this.selectedAreas.length === 0) {
+    //     return this.positions;
+    //   }
+    //   return this.positions.filter(position => 
+    //     this.selectedAreas.includes(position.departmentID)
+    //   );
+    // }
   },
 
-  async created() {
-    this.$store.commit("resetState");
-    this.headers = [
-      {
-        text: "DeliveryDocument",
-        align: "left",
-        sortable: false,
-        value: "DeliveryDocument",
-      },
-      {
-        text: "BillingDocument",
-        align: "left",
-        sortable: false,
-        value: "BillingDocument",
-      },
-      { text: "ShipTo", align: "left", sortable: false, value: "ShipTo" },
-      { text: "CustomerName", align: "left", sortable: false, value: "CustomerName" },
-      { text: "SaleCode", align: "left", sortable: false, value: "SaleCode" },
-      { text: "POD_Date", align: "left", sortable: false, value: "POD_Date" },
-    ];
-    this.getTransactions();
+  watch: {
+    selectID(){
+      console.log(this.selectID.length);
+      if (this.selectID.length == 0) {
+        console.log(this.rawData);
+        this.positions = this.rawData;
+        
+      } 
+      // else if (this.selectID.length === []){
+      //   return this.positions;
+      // }
+      else {
+        // console.log(this.positions);
+        // console.log(this.positions.map(zxc => zxc.departmentID))
+        this.positions = this.rawData.filter((position) => 
+          this.selectID.includes(position.departmentID)
+        );
+      }
+    }
   },
 
+  created() {
+    this.fetchDepartments();
+    this.fetchPositions();
+  },
+  
   methods: {
-    async getTransactions() {
+    async fetchDepartments() {
       try {
-        const response = await axios.get(
-          "https://externalportal.ip-one.com/api/Logistics/v1/SoDoBilling"
-        );
-        response.data.detail.forEach((element, index) =>
-          this.BillingData.push({
-            index: index + 1,
-            DeliveryDocument: element.deliveryDocument.trim(),
-            BillingDocument: element.billingDocument.trim(),
-            ShipTo: element.shipTo.trim(),
-            CustomerName: element.customerName.trim(),
-            SaleCode: element.saleCode.trim(),
-            POD_Date: element.podDate,
-          })
-        );
-
-        // this.listLocation.sort((a, b) => a.index - b.index);
+        const response = await apiService.getDepartment();
+        // const departments = response.data;
+        this.departments = response.data;
+        console.log("Test")
       } catch (error) {
         console.error(error);
       }
     },
-  },
-  handleFileImport() {
-    this.isSelecting = true;
-
-    // After obtaining the focus when closing the FilePicker, return the button state to normal
-    window.addEventListener(
-      "focus",
-      () => {
-        this.isSelecting = false;
-      },
-      { once: true }
-    );
-
-    // Trigger click on the FileInput
-    this.$refs.uploader.click();
-  },
-     exportToExcel() {
-      // Convert dataObjects to worksheet
-      const ws = XLSX.utils.json_to_sheet(this.DataImport);
-      // Create a new workbook and append the worksheet
-      const wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
-      // Generate Excel file and trigger download
-      XLSX.writeFile(wb, "exported_data.xlsx");
+    async fetchPositions() {
+      try {
+        const response = await apiService.getPosition();
+        this.positions = response.data;
+        this.rawData = response.data;
+        // this.positions = response.data.map(dept => dept.position_Name);
+        console.log("Test1")
+      } catch (error) {
+        console.error(error);
+      }
     },
+  }
 };
 </script>
 
 <style>
+.job-listings-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.filter-section {
+  width: 25%;
+  padding: 20px;
+  border-right: 1px solid #ddd;
+}
+
+.results-section {
+  width: 70%;
+  padding: 20px;
+}
+
+.job-item {
+  border-bottom: 1px solid #ddd;
+  padding: 10px 0;
+}
 .theme--light.v-table thead th {
   background-image: -webkit-gradient(
     linear,
