@@ -49,7 +49,7 @@ export default new Router({
       }
     },
     {
-      path: '/JobDesc/:jobId',
+      path: '/JobDesc',
       name: 'JobDesc',
       component: JobDesc,
       meta: {

@@ -1,20 +1,36 @@
 <template>
-  <div class="job-listings-container">
-    <div class="results-section">
-      <h2 style="border-bottom: 1px solid #000; padding-bottom:10px;">Job Description {{ jobId }}</h2>
-      <div class="desc-item" v-for="description in descriptions">
-        <h3>{{ description.descriptionEN }} </h3>
-        <h3>{{ description.positionID }} </h3>
+  <div>
+    <div class="job-listings-container">
+      <div class="results-section">
+        <div class="header">
+          <h2>{{ descriptionTitle }}</h2>
+          <select v-model="language" @change="switchLanguage()" class="language-select">
+            <option v-for="lang in languages" :value="lang.value" :key="lang.value">
+              {{ lang.text }}
+            </option>
+          </select>
+        </div>
+        <ul>
+          <li class="desc-item" v-for="resultDesc in selectDesc" :key="resultDesc.id">
+            <p class="txt">{{ getJobDesc(resultDesc) }}</p>
+          </li>
+        </ul>
+        <p style="border-bottom: 1px solid #000; padding-top: 20px"></p>
+        <h2 style="padding-top: 20px;">{{ qualificationTitle }}</h2>
+        <ul>
+          <li class="qua-item" v-for="resultQua in selectQua" :key="resultQua.id">
+            <p class="txt">{{ getJobQua(resultQua) }}</p>
+          </li>
+        </ul>
       </div>
-      <h2 style="border-bottom: 1px solid #000; padding-bottom:10px; padding-top: 20px;">Qualification</h2>
-      <div class="qua-item" v-for="qualification in qualifications">
-        <h3>{{ qualification.qualificationsTH }} </h3>
-        <h3>{{ qualification.positionID }} </h3>
-      </div>
+    </div>
+    <div class="btn-section">
+      <v-btn color="info" @click="goBack()">กลับหน้าแรก</v-btn>
+      <v-btn color="info">สมัครงาน</v-btn>
     </div>
   </div>
 </template>
-  
+
   <script>
   import axios from "axios";
   import { isEmpty } from "lodash";
@@ -24,6 +40,9 @@
   import { sync } from "vuex-pathify";
   import apiService from '@/services/apiService';
   import { watch } from "vue";
+  import { forEach } from "lodash";
+  import { result } from "lodash";
+  import { mdiConsoleLine } from "@mdi/js";
   
   export default {
     components: {
@@ -32,31 +51,37 @@
 
     data() {
       return {
-        descriptions:[],
-        qualifications:[],
-        rawData: [],
-        jobId : this.$route.params.jobId,
+        descriptions: [],
+        selectDesc: [],
+        selectQua: [],
+        qualifications: [],
+        descResult: [],
+        quaResult: [],
+        language: 'en',
+        languages: [
+          { text: 'English', value: 'en' },
+          { text: 'ภาษาไทย', value: 'th' }
+        ],
+        titles: {
+          description: {
+            en: 'Description',
+            th: 'รายละเอียดงาน'
+          },
+          qualification: {
+            en: 'Qualification',
+            th: 'คุณสมบัติ'
+          }
+        }
       };
     },
   
     computed: {
       ...sync("*"),
-    },
-  
-    watch: {
-      selectID(){
-        console.log(this.selectID.length);
-        if (this.selectID.length == 0) {
-          console.log(this.rawData);
-          this.positions = this.rawData;         
-        } 
-        else {
-          // console.log(this.positions);
-          // console.log(this.positions.map(zxc => zxc.departmentID))
-          this.positions = this.rawData.filter((position) => 
-            this.selectID.includes(position.departmentID)
-          );
-        }
+      descriptionTitle() {
+      return this.language === 'en' ? this.titles.description.en : this.titles.description.th;
+      },
+      qualificationTitle() {
+      return this.language === 'en' ? this.titles.qualification.en : this.titles.qualification.th;
       }
     },
   
@@ -69,9 +94,11 @@
       async fetchDescription() {
         try {
           const response = await apiService.getDescription();
-          this.descriptions = response.data;
-          console.log("Test")
-          
+          this.descResult = response.data
+          this.selectDesc = this.descResult.filter(element => 
+            this.PositionDesc.includes(element.positionID)
+          );
+        console.log("Filtered results", this.selectDesc);
         } catch (error) {
           console.error(error);
         }
@@ -79,26 +106,43 @@
       async fetchQualification() {
         try {
           const response = await apiService.getQualification();
-          this.qualifications = response.data;
-          console.log("Test1")
+          this.quaResult = response.data
+          this.selectQua = this.quaResult.filter(element => 
+            this.PositionDesc.includes(element.positionID)
+          );
+        console.log("Filtered results", this.quaResult);
         } catch (error) {
           console.error(error);
         }
       },
+      goBack() {
+      this.$router.push({ name: 'Career'});
+      },
+      switchLanguage() {
+      return this.language;
+      },
+      getJobDesc(resultDesc) {
+        return this.language === 'en' ? resultDesc.descriptionEN : resultDesc.descriptionTH;
+      },
+      getJobQua(resultQua) {
+        return this.language === 'en' ? resultQua.qualificationsEN : resultQua.qualificationsTH;
+      },
+
     }
   };
   </script>
   
   <style>
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
   .job-listings-container {
     display: flex;
     justify-content: space-between;
-  }
-
-  .filter-section {
-    width: 30%;
-    padding: 20px;
-    border-right: 1px solid #ddd;
   }
 
   .results-section {
@@ -106,15 +150,28 @@
     padding: 20px;
   }
 
+  .btn-section {
+    padding: 15px;
+  }
+
   .desc-item {
-    border-bottom: 1px solid #ddd;
-    padding: 20px 0;
+    padding-top: 20px;
   }
 
   .qua-item {
-    border-bottom: 1px solid #ddd;
-    padding: 20px 0;
+    padding-top: 20px;
   }
+
+  .txt {
+    font-size: 17px;
+    color: rgb(121, 118, 118);
+  }
+
+  .language-select {
+  padding: 5px;
+  border: 1px solid #bbb5b5;
+  border-radius: 5px;
+}
 
   .theme--light.v-table thead th {
     background-image: -webkit-gradient(
@@ -140,4 +197,3 @@
     color: #ffffff !important;
   }
   </style>
-  

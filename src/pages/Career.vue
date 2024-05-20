@@ -1,26 +1,33 @@
 <template>
   <div class="job-listings-container">
     <div class="filter-section">
-      <h2 style="border-bottom: 1px solid #000; padding-bottom:10px;">Job Filter</h2>
+      <h1 style="border-bottom: 1px solid #000; padding-bottom:10px;">{{ departmentTitle }}</h1>
       <div>
         <!-- <h3>Areas</h3> -->
         <div>
           <div v-for="department in departments" :key="department.departmentID" class="depart-text">
-            <label >
-              <input type="checkbox" :value="department.departmentID" v-model="selectID" style="transform: scale(1.25);">
-               {{ department.department_DescEN }}
-               <!-- {{ seledctID }} -->
+            <label class="department-label">
+              <input type="checkbox" :value="department.departmentID" v-model="selectID" style="transform: scale(1.3);">
+              {{ getDepartmentDesc(department) }}
             </label>
           </div>
         </div>
       </div>
     </div>
     <div class="results-section">
-      <h2 style="border-bottom: 1px solid #000; padding-bottom:10px;">Job Vacancies</h2>
+      <div class="header">
+        <h1>{{ vacanciesTitle }}</h1>
+        <select v-model="language" @change="switchLanguage()" class="language-select">
+          <option v-for="lang in languages" :value="lang.value" :key="lang.value">
+            {{ lang.text }}
+          </option>
+        </select>
+      </div>
       <div class="job-item" v-for="position in positions" :key="position.positionID" @click="goToJobDesc(position.positionID)">
         <h2>{{ position.position_Name }} </h2>
       </div>
     </div>
+
   </div>
 </template>
 
@@ -44,19 +51,32 @@ export default {
       positions:[],
       selectID: [],
       rawData: [],
+      language: 'en',
+      languages: [
+        { text: 'English', value: 'en' },
+        { text: 'ภาษาไทย', value: 'th' }
+      ],
+      titles: {
+        department: {
+          en: 'Department',
+          th: 'แผนก'
+        },
+        vacancies: {
+          en: 'Job Vacancies',
+          th: 'ตำแหน่งงานที่รับสมัคร'
+        }
+      }
     };
   },
 
   computed: {
     ...sync("*"),
-    // filteredPositions() {
-    //   if (this.selectedAreas.length === 0) {
-    //     return this.positions;
-    //   }
-    //   return this.positions.filter(position => 
-    //     this.selectedAreas.includes(position.departmentID)
-    //   );
-    // }
+    departmentTitle() {
+      return this.language === 'en' ? this.titles.department.en : this.titles.department.th;
+    },
+    vacanciesTitle() {
+      return this.language === 'en' ? this.titles.vacancies.en : this.titles.vacancies.th;
+    }
   },
 
   watch: {
@@ -66,11 +86,7 @@ export default {
         console.log(this.rawData);
         this.positions = this.rawData;
         
-      } 
-      // else if (this.selectID.length === []){
-      //   return this.positions;
-      // }
-      else {
+      } else {
         // console.log(this.positions);
         // console.log(this.positions.map(zxc => zxc.departmentID))
         this.positions = this.rawData.filter((position) => 
@@ -89,7 +105,6 @@ export default {
     async fetchDepartments() {
       try {
         const response = await apiService.getDepartment();
-        // const departments = response.data;
         this.departments = response.data;
         console.log("Test")
       } catch (error) {
@@ -101,24 +116,45 @@ export default {
         const response = await apiService.getPosition();
         this.positions = response.data;
         this.rawData = response.data;
-        // this.positions = response.data.map(dept => dept.position_Name);
         console.log("Test1")
       } catch (error) {
         console.error(error);
       }
     },
     goToJobDesc(id) {
-      this.$router.push({ name: 'JobDesc', params: { jobId: id } });  // ใช้ jobId
-    }
+      console.log("id", id)
+      this.PositionDesc = [id]
+      console.log("PositionDesc", this.PositionDesc)
+      this.$router.push({ name: 'JobDesc'});  // ใช้ jobId
+    },
+    switchLanguage() {
+      return this.language;
+    },
+    getDepartmentDesc(department) {
+      return this.language === 'en' ? department.department_DescEN : department.department_DescTH;
+    },
   }
 };
 </script>
 
-<style>
+<style scoped>
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #000;
+  padding-bottom:10px;
+}
+
+.department-label input[type="checkbox"] {
+  margin-right: 5px; /* ปรับระยะห่างตามต้องการ */
+}
+
 .depart-text {
   /* display: flex; */
   font-size: 17px;
-  padding-top: 10px;
+  padding-top: 15px;
 }
 
 .job-listings-container {
@@ -133,7 +169,7 @@ export default {
 }
 
 .results-section {
-  width: 70%;
+  width: 100%;
   padding: 20px;
 }
 
@@ -142,10 +178,17 @@ export default {
   border-bottom: 1px solid #ddd;
   padding: 20px 0;
   transition: font-size 0.3s;
+  color: rgb(121, 118, 118);
 }
 
 .job-item:hover {
   font-size: 19px;
+}
+
+.language-select {
+  padding: 5px;
+  border: 1px solid #bbb5b5;
+  border-radius: 5px;
 }
 
 .theme--light.v-table thead th {

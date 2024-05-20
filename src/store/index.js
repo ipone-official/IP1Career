@@ -9,13 +9,13 @@ const getDefaultState = () => ({
   userMember: [],
   disabledFormReport: false,
   subHeaders: [],
-  disabledAddPhone: false
-
+  disabledAddPhone: false,
+  PositionDesc : [0]
 });
 const loginInfo = () => ({
   drawer: true,
   toggle: true,
-  titleNavigation: 'Billing Portal',
+  titleNavigation: 'I.P. ONE CAREER',
   selectedIndexStr: 1,
   infoLogin: {
     isLogin: false,
