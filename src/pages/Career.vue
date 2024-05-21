@@ -23,7 +23,7 @@
           </option>
         </select>
       </div>
-      <div class="job-item" v-for="position in positions" :key="position.positionID" @click="goToJobDesc(position.positionID)">
+      <div class="job-item" v-for="position in positions" :key="position.positionID" @click="goToJobDesc(position.positionID, position.position_Name)">
         <h2>{{ position.position_Name }} </h2>
       </div>
     </div>
@@ -121,10 +121,12 @@ export default {
         console.error(error);
       }
     },
-    goToJobDesc(id) {
+    goToJobDesc(id, name) {
       console.log("id", id)
       this.PositionDesc = [id]
+      this.PositionName = name
       console.log("PositionDesc", this.PositionDesc)
+      console.log("PositionName", this.PositionName)
       this.$router.push({ name: 'JobDesc'});  // ใช้ jobId
     },
     switchLanguage() {
@@ -178,7 +180,7 @@ export default {
   border-bottom: 1px solid #ddd;
   padding: 20px 0;
   transition: font-size 0.3s;
-  color: rgb(121, 118, 118);
+  color: rgb(105, 105, 105);
 }
 
 .job-item:hover {

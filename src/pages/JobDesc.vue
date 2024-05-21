@@ -3,30 +3,36 @@
     <div class="job-listings-container">
       <div class="results-section">
         <div class="header">
-          <h2>{{ descriptionTitle }}</h2>
+          <h1 style="padding-bottom: 20px;">{{ PositionName }}</h1>
           <select v-model="language" @change="switchLanguage()" class="language-select">
             <option v-for="lang in languages" :value="lang.value" :key="lang.value">
               {{ lang.text }}
             </option>
           </select>
         </div>
+        <p style="border-bottom: 1px solid #000;"></p>
+
+        <h2 style="padding-top: 15px;">{{ descriptionTitle }}</h2>
         <ul>
           <li class="desc-item" v-for="resultDesc in selectDesc" :key="resultDesc.id">
-            <p class="txt">{{ getJobDesc(resultDesc) }}</p>
+            <p class="txt">{{ getJobDesc(resultDesc) }} </p>
           </li>
         </ul>
-        <p style="border-bottom: 1px solid #000; padding-top: 20px"></p>
-        <h2 style="padding-top: 20px;">{{ qualificationTitle }}</h2>
+
+        <p style="border-bottom: 1px solid #000; padding-top: 15px"></p>
+
+        <h2 style="padding-top: 15px;">{{ qualificationTitle }}</h2>
         <ul>
           <li class="qua-item" v-for="resultQua in selectQua" :key="resultQua.id">
             <p class="txt">{{ getJobQua(resultQua) }}</p>
           </li>
         </ul>
+        
       </div>
     </div>
-    <div class="btn-section">
-      <v-btn color="info" @click="goBack()">กลับหน้าแรก</v-btn>
-      <v-btn color="info">สมัครงาน</v-btn>
+    <div class="btn-section" >
+      <v-btn color="info" @click="goBack()" style="border-radius: 10px; height: 45px">&larr; กลับหน้าแรก</v-btn>
+      <v-btn color="info" @click="goForm()" style="border-radius: 10px; height: 45px">สมัครงาน &rarr;</v-btn>
     </div>
   </div>
 </template>
@@ -118,6 +124,9 @@
       goBack() {
       this.$router.push({ name: 'Career'});
       },
+      goForm() {
+      this.$router.push({ name: 'RegForm'});
+      },
       switchLanguage() {
       return this.language;
       },
@@ -137,7 +146,7 @@
   .header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: self-start;
   }
 
   .job-listings-container {
@@ -169,9 +178,17 @@
 
   .language-select {
   padding: 5px;
-  border: 1px solid #bbb5b5;
+  border: 3px solid #2ea4e7;
   border-radius: 5px;
-}
+  background-color: #2ea4e7;
+  color: white;
+  }
+
+  .language-select:active {
+  padding: 5px;
+  border: 3px solid #bbb5b5;
+  border-radius: 5px;
+  }
 
   .theme--light.v-table thead th {
     background-image: -webkit-gradient(

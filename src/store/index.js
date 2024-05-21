@@ -10,7 +10,8 @@ const getDefaultState = () => ({
   disabledFormReport: false,
   subHeaders: [],
   disabledAddPhone: false,
-  PositionDesc : [0]
+  PositionDesc : [0],
+  PositionName : "",
 });
 const loginInfo = () => ({
   drawer: true,

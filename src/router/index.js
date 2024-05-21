@@ -8,6 +8,7 @@ import Transactions from '../pages/Transactions.vue';
 import ImportExcel from '../pages/ImportExcel.vue'
 import Career from '../pages/Career.vue';
 import JobDesc from '../pages/JobDesc.vue';
+import RegForm from '../pages/RegForm.vue';
 
 Vue.use(Router);
 
@@ -55,6 +56,16 @@ export default new Router({
       meta: {
         breadcrumb: [
           { name: 'JobDesc' }
+        ]
+      }
+    },
+    {
+      path: '/RegForm',
+      name: 'RegForm',
+      component: RegForm,
+      meta: {
+        breadcrumb: [
+          { name: 'RegForm' }
         ]
       }
     },
