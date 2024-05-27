@@ -4,35 +4,40 @@
       <div class="results-section">
         <div class="header">
           <h1 style="padding-bottom: 20px;">{{ PositionName }}</h1>
-          <select v-model="language" @change="switchLanguage()" class="language-select">
-            <option v-for="lang in languages" :value="lang.value" :key="lang.value">
-              {{ lang.text }}
-            </option>
-          </select>
+          <v-select style="max-width: 100px; "
+                v-model="language" 
+                @change="switchLanguage()" 
+                :items="languages"
+                solo color="blue">
+          </v-select>
         </div>
-        <p style="border-bottom: 1px solid #000;"></p>
+        <p style="border-bottom: 1px solid #78909C;"></p>
 
+        <div class="card">
         <h2 style="padding-top: 15px;">{{ descriptionTitle }}</h2>
         <ul>
           <li class="desc-item" v-for="resultDesc in selectDesc" :key="resultDesc.id">
             <p class="txt">{{ getJobDesc(resultDesc) }} </p>
           </li>
         </ul>
+        </div>
 
-        <p style="border-bottom: 1px solid #000; padding-top: 15px"></p>
+        <!-- <p style="border-bottom: 1px solid #000; padding-top: 15px"></p> -->
 
+        <div class="card">
         <h2 style="padding-top: 15px;">{{ qualificationTitle }}</h2>
         <ul>
           <li class="qua-item" v-for="resultQua in selectQua" :key="resultQua.id">
             <p class="txt">{{ getJobQua(resultQua) }}</p>
           </li>
         </ul>
+        </div>
         
       </div>
     </div>
     <div class="btn-section" >
-      <v-btn color="info" @click="goBack()" style="border-radius: 10px; height: 45px">&larr; กลับหน้าแรก</v-btn>
-      <v-btn color="info" @click="goForm()" style="border-radius: 10px; height: 45px">สมัครงาน &rarr;</v-btn>
+      <v-btn color="info" @click="goBack()" style="border-radius: 10px; height: 45px">&larr; {{btnbackTitle}}</v-btn>
+      <v-btn color="info" @click="goForm()" style="border-radius: 10px; height: 45px">{{ btnformTitle }} &rarr;</v-btn>
     </div>
   </div>
 </template>
@@ -66,7 +71,7 @@
         language: 'en',
         languages: [
           { text: 'English', value: 'en' },
-          { text: 'ภาษาไทย', value: 'th' }
+          { text: 'ไทย', value: 'th' }
         ],
         titles: {
           description: {
@@ -76,7 +81,15 @@
           qualification: {
             en: 'Qualification',
             th: 'คุณสมบัติ'
-          }
+          },
+          btnback: {
+            en: 'Go Back',
+            th: 'กลับหน้าแรก'
+          },
+          btnform: {
+            en: 'Apply',
+            th: 'สมัครงาน'
+          },
         }
       };
     },
@@ -84,10 +97,16 @@
     computed: {
       ...sync("*"),
       descriptionTitle() {
-      return this.language === 'en' ? this.titles.description.en : this.titles.description.th;
+        return this.language === 'en' ? this.titles.description.en : this.titles.description.th;
       },
       qualificationTitle() {
-      return this.language === 'en' ? this.titles.qualification.en : this.titles.qualification.th;
+        return this.language === 'en' ? this.titles.qualification.en : this.titles.qualification.th;
+      },
+      btnbackTitle() {
+        return this.language === 'en' ? this.titles.btnback.en : this.titles.btnback.th;
+      },
+      btnformTitle() {
+        return this.language === 'en' ? this.titles.btnform.en : this.titles.btnform.th;
       }
     },
   
@@ -104,7 +123,6 @@
           this.selectDesc = this.descResult.filter(element => 
             this.PositionDesc.includes(element.positionID)
           );
-        console.log("Filtered results", this.selectDesc);
         } catch (error) {
           console.error(error);
         }
@@ -116,7 +134,6 @@
           this.selectQua = this.quaResult.filter(element => 
             this.PositionDesc.includes(element.positionID)
           );
-        console.log("Filtered results", this.quaResult);
         } catch (error) {
           console.error(error);
         }
@@ -142,16 +159,40 @@
   </script>
   
   <style>
+  /* .theme--light.v-text-field--solo>.v-input__control>.v-input__slot {
+    border-radius: 10px;
+    background: #0e9cdf;
+  }
+
+  .theme--light.v-list {
+    background: #0e9cdf;
+    color: white;
+  } 
+
+  .theme--light.v-select .v-select__selections {
+    color: white;
+  } */
+
+  .card {
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.1);
+    padding-top: 10px;
+    padding-bottom: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+    margin: 25px 15px 0px 15px;
+    background: linear-gradient(to top, #f5f7fa 0%, #c3cfe2 100%);
+  }
+
+  .card h2 {
+    margin-top: 0;
+  }
 
   .header {
     display: flex;
     justify-content: space-between;
-    align-items: self-start;
-  }
-
-  .job-listings-container {
-    display: flex;
-    justify-content: space-between;
+    align-items: center;
   }
 
   .results-section {
@@ -173,21 +214,7 @@
 
   .txt {
     font-size: 17px;
-    color: rgb(121, 118, 118);
-  }
-
-  .language-select {
-  padding: 5px;
-  border: 3px solid #2ea4e7;
-  border-radius: 5px;
-  background-color: #2ea4e7;
-  color: white;
-  }
-
-  .language-select:active {
-  padding: 5px;
-  border: 3px solid #bbb5b5;
-  border-radius: 5px;
+    color: ergb(107, 105, 105);
   }
 
   .theme--light.v-table thead th {

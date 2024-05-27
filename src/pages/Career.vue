@@ -1,9 +1,8 @@
 <template>
   <div class="job-listings-container">
     <div class="filter-section">
-      <h1 style="border-bottom: 1px solid #000; padding-bottom:10px;">{{ departmentTitle }}</h1>
+      <h1 style="border-bottom: 1px solid #000; padding-bottom:10px; font-size: 40px;">{{ departmentTitle }}</h1>
       <div>
-        <!-- <h3>Areas</h3> -->
         <div>
           <div v-for="department in departments" :key="department.departmentID" class="depart-text">
             <label class="department-label">
@@ -16,18 +15,18 @@
     </div>
     <div class="results-section">
       <div class="header">
-        <h1>{{ vacanciesTitle }}</h1>
-        <select v-model="language" @change="switchLanguage()" class="language-select">
-          <option v-for="lang in languages" :value="lang.value" :key="lang.value">
-            {{ lang.text }}
-          </option>
-        </select>
+        <h1 style="font-size: 40px;">{{ vacanciesTitle }}</h1>
+        <v-select style="max-width: 100px; height:60px"
+                v-model="language" 
+                @change="switchLanguage()" 
+                :items="languages"
+                solo color="blue">
+          </v-select>
       </div>
       <div class="job-item" v-for="position in positions" :key="position.positionID" @click="goToJobDesc(position.positionID, position.position_Name)">
         <h2>{{ position.position_Name }} </h2>
       </div>
     </div>
-
   </div>
 </template>
 

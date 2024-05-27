@@ -1,36 +1,53 @@
 <template>
-    <div id="app" class="container">
-        <h1>Candidate Form</h1>
-        <v-app id="inspire">
-        <v-form ref="form" v-model="valid" lazy-validation>
-        <v-text-field v-model="PositionName" label="Position" disabled></v-text-field>
+  <div id="app" class="container">
+      <h1 >Candidate Form</h1>
 
-        <v-layout>
-            <v-flex sm2 style="padding-right: 10px;">
-                <v-select v-model="title" :items="titles" label="Title" required ></v-select>
-            </v-flex>
-            <v-flex sm5 style="padding-right: 10px;">
-                <v-text-field v-model="firstname" label="First Name" required></v-text-field>
-            </v-flex>
-            <v-flex sm5 style="padding-left: 10px;">
-                <v-text-field v-model="lastname" label="Last Name" required></v-text-field>
-            </v-flex>
-        </v-layout>
+        <v-form v-model="valid" ref="form">
+          <v-text-field v-model="PositionName" label="Position" disabled></v-text-field>
 
-        <v-text-field v-model="email" label="E-mail" required></v-text-field>
-        <v-text-field v-model="phone" label="Phone" required></v-text-field>
+            <v-layout>
+              <v-flex sm2 style="padding-right: 10px;">
+                  <v-select v-model="title" :items="titles" label="Title"></v-select>
+              </v-flex>
+              <v-flex sm5 style="padding-right: 10px;">
+                <v-text-field v-model="firstname" label="First Name"></v-text-field>
+              </v-flex>
+              <v-flex sm5 style="padding-left: 10px;">
+                <v-text-field v-model="lastname" label="Last Name"></v-text-field>
+              </v-flex>
+            </v-layout>
+            
+            <v-text-field v-model="email" label="E-mail"></v-text-field>
+            <v-text-field v-model="phone" label="Phone"></v-text-field>
 
-        <label for="resume" style="display: block; margin-bottom: 5px; font-size: 17px; padding-top: 5px;">Resume</label>
-        <input type="file" id="resume" name="resume" style="padding-bottom: 10px;">
-        <v-select v-model="select" :items="items" label="How did you hear about us?" required></v-select>
+            <label for="resume" style="display: block; margin-bottom: 5px; font-size: 17px; padding-top: 5px;">Resume</label>
+            <input type="file" id="resume" ref="resume" style="padding-bottom: 10px;">
 
-        <v-checkbox v-model="checkbox" :rules="[v => !!v || 'You must agree to continue!']" label="Do you agree?" required></v-checkbox>
+            <v-select v-model="social" :items="listSocial" label="How did you hear about us?"></v-select>
+      
+            <a @click="dialog = true" class="policy-link">อ่าน Terms and Policy</a>
+            <v-dialog v-model="dialog" width="auto">
+              <v-card>
+                <v-card-title>
+                  <v-icon left>mdi-update</v-icon>{{ myJson.title }}
+                </v-card-title>
+                <v-card-text>{{ myJson.name }}</v-card-text>
+                <v-card-text>{{ myJson.name2 }}</v-card-text>
+                <v-card-actions>
+                  <v-btn text @click="dialog = false">Ok</v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
     
-        <v-btn :disabled="!valid" color="success">Submit</v-btn>
-        <v-btn color="error" @click="reset">Clear</v-btn>
+            <v-btn color="success" @click="submitForm">Submit</v-btn>
+            <v-btn color="error" @click="reset">Clear</v-btn>
+            <v-btn color="blue-grey lighten-2" @click="goBack()">Go Back</v-btn>
         </v-form>
-        </v-app>
-    </div>
+        <v-snackbar v-model="snackbar" multi-line top left color="info" class="snackbar">
+          {{ remind }}
+          <v-btn dark flat @click="snackbar = false" class="btn-snackbar">Close</v-btn>
+        </v-snackbar>
+  </div>
 </template>
   
 <script>
@@ -45,31 +62,25 @@
   import { forEach } from "lodash";
   import { result } from "lodash";
   import { mdiConsoleLine } from "@mdi/js";
+  import json from '../i18n/data.json';
 
   export default {
     data() {
       return {
-        valid: true,
+        snackbar: false,
+        dialog: false,
         title: '',
         firstname: '',
         lastname: '',
         phone: '',
         email: '',
-        select: null,
-        items: [
-        'Facebook',
-        'Instagram',
-        'Tiktok',
-        'JobsDB',
-        'JobThai',
-        'อื่นๆ'
-        ],
-        titles: [
-        'นาย',
-        'นาง',
-        'นาวสาว',
-        ],
-        checkbox: false,
+        resume: '',
+        social: '',
+        listSocial: ['Facebook','Instagram','Tiktok','JobsDB','JobThai','อื่นๆ'],
+        titles: ['นาย','นาง','นางสาว'],
+        consent: '',
+        myJson: json,
+        remind: '',
       };
     },
 
@@ -77,27 +88,91 @@
       ...sync("*"),
     },
     
+    created() {
+      this.storage = this.PositionName;
+    },
+
     methods: {
-        submit() {
-            if (this.$refs.form.validate()) {
-            alert('Form submitted!');
-            console.log(this.candidate);
-            }
-        },
-        reset () {
-            this.$refs.form.reset()
-        },
-        triggerFileInput() {
-            this.$refs.fileInput.click();
-        },
-        handleFileUpload(event) {
-            const file = event.target.files[0];
-            if (file) {
-                this.fileName = file.name;
-                // Reset input value to allow re-uploading the same file
-                this.$refs.fileInput.value = null;
-            }
-        },
+      checkf(){
+        if (this.title.length < 1) {
+          // this.remind.push('T Error');
+          this.remind = 'T Error';
+          this.snackbar = true;
+          return
+        }
+        else if (this.firstname.length < 1) {
+          // this.remind.push('F Error');
+          this.remind = 'F Error';
+          this.snackbar = true;
+        }
+        else if (this.lastname.length < 1) {
+          // this.remind.push('L Error');
+          this.remind = 'L Error';
+          this.snackbar = true;
+        }
+        else if (this.email.length < 1) {
+          // this.remind.push('E Error');
+          this.remind = 'E Error';
+          this.snackbar = true;
+        }
+        else if (this.phone.length != 10) {
+          // this.remind.push('P Error');
+          this.remind = 'P Error';
+          this.snackbar = true;
+        }
+        else if (this.social.length < 1) {
+          // this.remind.push('S Error');
+          this.remind = 'S Error';
+          this.snackbar = true;
+        }
+        else {
+          this.snackbar = false;
+        }
+      },
+
+      getFile() {
+        this.resume = this.$refs.resume.files[0];
+      },
+
+      async submitForm() {
+        this.checkf();
+        this.getFile();
+        const consent =  'Y';
+        const formData = new FormData();
+        formData.append('First_Name', this.firstname);
+        formData.append('Last_Name', this.lastname);
+        formData.append('Title', this.title);
+        formData.append('Email', this.email);
+        formData.append('Phone', this.phone);
+        formData.append('Resume', this.resume);
+        formData.append('Position_Name', this.PositionName);
+        formData.append('Social', this.social);
+        formData.append('Consent', consent);
+
+        console.log('resume', this.resume);
+        console.log('position', this.PositionName);
+        console.log('Data', formData);
+        try {
+          const response = await apiService.postCandidate(formData);
+          console.log('Response:', response.data);
+        } catch (error) {
+          console.error('Error:', error);
+        }
+      },
+      reset () {
+        this.title = ""
+        this.firstname = ""
+        this.lastname = ""
+        this.email = ""
+        this.phone = ""
+        this.social = ""
+      },
+      triggerFileInput() {
+        this.$refs.fileInput.click();
+      },
+      goBack() {
+      this.$router.push({ name: 'Career'});
+      },
     },
   };
 </script>
@@ -111,113 +186,49 @@
   max-width: 80%;
   margin: 40px auto;
   padding: 20px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  background: linear-gradient(to top, #f5f7fa 0%, #c3cfe2 100%);
 }
 
 h1 {
   text-align: center;
   margin-bottom: 20px;
-  color: #333;
+  color: #0a0a0a;
 }
 
-
-.row {
-  display: flex;
-  flex-wrap: wrap;
-  margin-bottom: 20px;
-}
-
-.col {
-  flex: 1;
-  padding: 0 10px;
-}
-
-.col-tit {
-  padding: 0 10px;
-}
-
-.col label {
-  display: block;
-  margin-bottom: 5px;
-  font-weight: bold;
-}
-
-.col-tit label {
-  display: block;
-  margin-bottom: 5px;
-  font-weight: bold;
-}
-
-.col input,
-.col select {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  background-color: #f9f9f9;
-}
-
-.col-tit input,
-.col-tit select {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  background-color: #f9f9f9;
-}
-
-.col input:focus,
-.col select:focus {
-  border-color: #777;
-  background-color: #fff;
-}
-
-.btn {
+.v-btn {
   display: inline-block;
-  padding: 10px 20px;
-  margin-right: 10px;
-  background-color: #06aad3;
-  color: #fff;
-  border: none;
+  padding: 0px 20px;
+  margin-right: 5px;
+  margin-top: 20px;
   border-radius: 4px;
   cursor: pointer;
   text-align: center;
   text-decoration: none;
 }
 
-.btn:hover {
-  background-color: #218838;
+.v-form {
+  font-size: 17px;
 }
 
-.btn-clear {
-  background-color: #dc3545;
+.policy-link {
+  font-size: 20px;
 }
 
-.btn-clear:hover {
-  background-color: #c82333;
+.v-text-field {
+  font-size: 19px;
+  color: #0a0a0a;
 }
 
-.select-wrapper {
-  position: relative;
+.snackbar {
+  font-size: 20px;
+  color: whitesmoke;
 }
 
-.select-wrapper select {
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  padding-right: 20px; /* Space for the arrow */
-}
-
-.select-wrapper::after {
-  content: "\2304";
-  position: absolute;
-  top: 12.5%;
-  right: 10px;
-  color: #777;
-  background-color: #c82333;
+.btn-snackbar{
+  font-weight: bold;
+  align-items: center;
 }
 
 @media (max-width: 600px) {
