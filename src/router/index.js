@@ -9,6 +9,7 @@ import ImportExcel from '../pages/ImportExcel.vue'
 import Career from '../pages/Career.vue';
 import JobDesc from '../pages/JobDesc.vue';
 import RegForm from '../pages/RegForm.vue';
+import ManageData from '../pages/ManageData.vue';
 
 Vue.use(Router);
 
@@ -66,6 +67,16 @@ export default new Router({
       meta: {
         breadcrumb: [
           { name: 'RegForm' }
+        ]
+      }
+    },
+    {
+      path: '/ManageData',
+      name: 'ManageData',
+      component: ManageData,
+      meta: {
+        breadcrumb: [
+          { name: 'ManageData' }
         ]
       }
     },

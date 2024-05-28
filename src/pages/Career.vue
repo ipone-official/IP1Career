@@ -1,37 +1,47 @@
 <template>
+  <div class="container">
   <div class="job-listings-container">
+
     <div class="filter-section">
-      <h1 style="border-bottom: 1px solid #000; padding-bottom:10px; font-size: 40px;">{{ departmentTitle }}</h1>
-      <div>
-        <div>
-          <div v-for="department in departments" :key="department.departmentID" class="depart-text">
-            <label class="department-label">
-              <input type="checkbox" :value="department.departmentID" v-model="selectID" style="transform: scale(1.3);">
-              {{ getDepartmentDesc(department) }}
-            </label>
-          </div>
-        </div>
+      <div style="display: flex; align-items: center; ">
+        <h1 style="padding-bottom:10px; font-size: 40px;">{{ departmentTitle }}</h1>
+      </div>
+      <div v-for="department in departments" :key="department.departmentID" class="depart-text" >
+        <label class="department-label">
+          <input type="checkbox" :value="department.departmentID" v-model="selectID" style="transform: scale(1.3);">
+            {{ getDepartmentDesc(department) }}
+        </label>
       </div>
     </div>
+
     <div class="results-section">
-      <div class="header">
-        <h1 style="font-size: 40px;">{{ vacanciesTitle }}</h1>
-        <v-select style="max-width: 100px; height:60px"
-                v-model="language" 
-                @change="switchLanguage()" 
-                :items="languages"
-                solo color="blue">
-          </v-select>
+      <div style="display: flex; align-items: center; justify-content: space-between;">
+        <h1 style="padding-bottom:10px; font-size: 40px;">{{ vacanciesTitle }}</h1>
+
+        <select v-model="language"  class="form-select form-select-lg language-select" onchange="switchLanguage()">
+          <option value="en">English</option>
+          <option value="th">Thai</option>
+        </select>
       </div>
-      <div class="job-item" v-for="position in positions" :key="position.positionID" @click="goToJobDesc(position.positionID, position.position_Name)">
+
+      <!-- <div class="job-item" v-for="position in positions" :key="position.positionID" @click="goToJobDesc(position.positionID, position.position_Name)">
         <h2>{{ position.position_Name }} </h2>
-      </div>
+      </div> -->
+
+      <table class="table table-bordered table-striped">
+      <tbody>
+        <tr v-for="(position, index) in positions" :key="position.positionID" @click="goToJobDesc(position.positionID, position.position_Name)">
+          <td class="job-item">{{ position.position_Name }}<span style='font-size:30px;'>&#x1F8A7;</span></td>
+        </tr>
+      </tbody>
+      </table>
     </div>
   </div>
+</div>
 </template>
 
 <script>
-import axios from "axios";
+import axios from "axios";  
 import { isEmpty } from "lodash";
 import keyFilter from "@/plugins/keyFilter";
 import Swal from "sweetalert2";
@@ -51,10 +61,6 @@ export default {
       selectID: [],
       rawData: [],
       language: 'en',
-      languages: [
-        { text: 'English', value: 'en' },
-        { text: 'ภาษาไทย', value: 'th' }
-      ],
       titles: {
         department: {
           en: 'Department',
@@ -86,8 +92,6 @@ export default {
         this.positions = this.rawData;
         
       } else {
-        // console.log(this.positions);
-        // console.log(this.positions.map(zxc => zxc.departmentID))
         this.positions = this.rawData.filter((position) => 
           this.selectID.includes(position.departmentID)
         );
@@ -140,12 +144,20 @@ export default {
 
 <style scoped>
 
+.container{
+  max-width: 95%;
+  margin: 40px auto;
+  padding: 20px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  background: #f5f7fa 0%;
+}
+
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid #000;
-  padding-bottom:10px;
 }
 
 .department-label input[type="checkbox"] {
@@ -153,9 +165,10 @@ export default {
 }
 
 .depart-text {
-  /* display: flex; */
   font-size: 17px;
-  padding-top: 15px;
+  padding: 15px 15px 15px 15px;
+  background-color: rgb(255, 255, 255);
+  border: 1px solid #ddd;
 }
 
 .job-listings-container {
@@ -177,20 +190,22 @@ export default {
 .job-item {
   cursor: pointer;
   border-bottom: 1px solid #ddd;
-  padding: 20px 0;
+  padding: 20px;
   transition: font-size 0.3s;
-  color: rgb(105, 105, 105);
-}
-
-.job-item:hover {
-  font-size: 19px;
+  color: rgb(0, 0, 0);
+  font-size: 23px;
+  justify-content: space-between;
+  align-items: center;
+  display: flex;
 }
 
 .language-select {
-  padding: 5px;
-  border: 1px solid #bbb5b5;
-  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 9px;
+  border-radius: 7px;
+  width: 110px;
 }
+
 
 .theme--light.v-table thead th {
   background-image: -webkit-gradient(

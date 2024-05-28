@@ -1,49 +1,90 @@
 <template>
   <div id="app" class="container">
-      <h1 >Candidate Form</h1>
+    <h1>I.P. ONE Application Form</h1>
 
-        <v-form v-model="valid" ref="form">
-          <v-text-field v-model="PositionName" label="Position" disabled></v-text-field>
+      <v-form v-model="valid" ref="form">
+        <div class="form-group">
+        <label for="position">Position</label>
+        <input type="text" class="form-control form-control-lg" v-model="PositionName" disabled></input>
+        </div>
 
-            <v-layout>
-              <v-flex sm2 style="padding-right: 10px;">
-                  <v-select v-model="title" :items="titles" label="Title"></v-select>
-              </v-flex>
-              <v-flex sm5 style="padding-right: 10px;">
-                <v-text-field v-model="firstname" label="First Name"></v-text-field>
-              </v-flex>
-              <v-flex sm5 style="padding-left: 10px;">
-                <v-text-field v-model="lastname" label="Last Name"></v-text-field>
-              </v-flex>
-            </v-layout>
-            
-            <v-text-field v-model="email" label="E-mail"></v-text-field>
-            <v-text-field v-model="phone" label="Phone"></v-text-field>
+        
+        <v-layout>
 
-            <label for="resume" style="display: block; margin-bottom: 5px; font-size: 17px; padding-top: 5px;">Resume</label>
-            <input type="file" id="resume" ref="resume" style="padding-bottom: 10px;">
+          <v-flex sm2 style="padding-right: 10px;">
+            <div class="form-group">
+            <label for="title">Title</label>
+              <select v-model="title" class="form-select form-select-lg">
+                <option disabled selected value>Select</option>
+                <option value="นาย">นาย</option>
+                <option value="นาง">นาง</option>
+                <option value="นางสาว">นางสาว</option>
+              </select>
+            </div>
+          </v-flex>
 
-            <v-select v-model="social" :items="listSocial" label="How did you hear about us?"></v-select>
+          <v-flex sm5 style="padding-right: 10px;">
+            <div class="form-group">
+            <label for="firstname">First Name</label>
+            <input type="text" class="form-control form-control-lg" v-model="firstname" placeholder="First Name"></input>
+            </div>
+          </v-flex>
+          <v-flex sm5>
+            <div class="form-group">
+            <label for="lastname">Last Name</label>
+            <input v-model="lastname" type="text" class="form-control form-control-lg" placeholder="Last Name"></input>
+            </div>
+          </v-flex>
+        </v-layout>
       
-            <a @click="dialog = true" class="policy-link">อ่าน Terms and Policy</a>
-            <v-dialog v-model="dialog" width="auto">
-              <v-card>
-                <v-card-title>
-                  <v-icon left>mdi-update</v-icon>{{ myJson.title }}
-                </v-card-title>
-                <v-card-text>{{ myJson.name }}</v-card-text>
-                <v-card-text>{{ myJson.name2 }}</v-card-text>
-                <v-card-actions>
-                  <v-btn text @click="dialog = false">Ok</v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-dialog>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input v-model="email" class="form-control form-control-lg" type="text" placeholder="Email"></input>
+      </div>
+      <div class="form-group">
+        <label for="phone">Phone</label>
+        <input v-model="phone" class="form-control form-control-lg" type="text" placeholder="Phone"></input>
+      </div>
+
+      <div class="form-group">
+        <label for="resume">Resume</label>
+        <input type="file" id="resume" ref="resume" class="form-control">
+      </div>
+      
+      <div class="form-group">
+        <label for="social">How did you hear about us?</label>
+        <select v-model="social" label="How did you hear about us?" class="form-select form-select-lg" >
+          <option disabled selected value>Select</option>
+          <option value="Facebook" style="color: black;">Facebook</option>
+          <option value="Instagram" style="color: black;">Instagram</option>
+          <option value="Tiktok" style="color: black;">Tiktok</option>
+          <option value="JobsDB" style="color: black;">JobsDB</option>
+          <option value="JobThai" style="color: black;">JobThai</option>
+          <option value="อื่นๆ" style="color: black;">อื่นๆ</option>
+        </select>
+      </div>
+
+        <a @click="dialog = true" class="policy-link">อ่าน Terms and Policy</a>
+          <v-dialog v-model="dialog" width="50%">
+            <v-card>
+              <v-card-title>
+                <v-icon left>mdi-update</v-icon>{{ myJson.title }}
+              </v-card-title>
+              <v-card-text>{{ myJson.name }}</v-card-text>
+              <v-card-text>{{ myJson.name2 }}</v-card-text>
+              <v-card-actions>
+                <v-btn text @click="dialog = false">Ok</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
     
-            <v-btn color="success" @click="submitForm">Submit</v-btn>
-            <v-btn color="error" @click="reset">Clear</v-btn>
-            <v-btn color="blue-grey lighten-2" @click="goBack()">Go Back</v-btn>
-        </v-form>
-        <v-snackbar v-model="snackbar" multi-line top left color="info" class="snackbar">
+          <v-btn style="background-color: #007fc4;" @click="submitForm">Submit</v-btn>
+          <v-btn color="amber" @click="reset">Clear</v-btn>
+          <v-btn color="blue-grey lighten-3" @click="goBack()">Go Back</v-btn>
+      </v-form>
+        
+        <v-snackbar v-model="snackbar" multi-line color="blue darken-2" class="snackbar">
           {{ remind }}
           <v-btn dark flat @click="snackbar = false" class="btn-snackbar">Close</v-btn>
         </v-snackbar>
@@ -96,7 +137,7 @@
       checkf(){
         if (this.title.length < 1) {
           // this.remind.push('T Error');
-          this.remind = 'T Error';
+          this.remind = 'T Error QWERTYQWERTYQWERTYQWERTY';
           this.snackbar = true;
           return
         }
@@ -181,9 +222,8 @@
 * {
   box-sizing: border-box;
 }
-
 .container {
-  max-width: 80%;
+  max-width: 95%;
   margin: 40px auto;
   padding: 20px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
@@ -216,19 +256,42 @@ h1 {
   font-size: 20px;
 }
 
-.v-text-field {
-  font-size: 19px;
-  color: #0a0a0a;
-}
-
 .snackbar {
-  font-size: 20px;
+  font-size: 21px;
   color: whitesmoke;
 }
 
 .btn-snackbar{
   font-weight: bold;
+  font-size: 18px;
   align-items: center;
+}
+
+.form-control:focus{
+	border-color: #00bcd9;
+	box-shadow: 0px 0px 20px rgba(0, 0, 0, .1);
+}
+
+.form-control{
+  color: rgb(104, 104, 104);
+}
+
+.form-group{
+	margin-bottom: 25px;
+}
+
+.form-group > label{
+	display: block;
+	font-size: 18px;	
+	color: #000;
+}
+
+.form-select {
+  color: rgb(104, 104, 104); 
+}
+
+.form-select option:checked {
+  color: black; 
 }
 
 @media (max-width: 600px) {

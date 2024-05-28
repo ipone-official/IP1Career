@@ -48,6 +48,12 @@
         </v-list-tile-action>
         <v-list-tile-title :class="[{'active': selectedIndex === 6}, 'item-title' ]" >{{ $t('RegForm') }}</v-list-tile-title>
       </v-list-tile>
+      <v-list-tile @click="changeRoute('ManageData', 7)" style="margin-left: 1rem">
+        <v-list-tile-action>
+          <v-icon >mdi-billboard</v-icon>
+        </v-list-tile-action>
+        <v-list-tile-title :class="[{'active': selectedIndex === 7}, 'item-title' ]" >{{ $t('ManageData') }}</v-list-tile-title>
+      </v-list-tile>
     </v-list-group>
 
     <v-list-tile @click="changeRoute('Transactions', 2)">

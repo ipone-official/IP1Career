@@ -1,43 +1,46 @@
 <template>
-  <div>
+  <div class="container">
     <div class="job-listings-container">
       <div class="results-section">
         <div class="header">
-          <h1 style="padding-bottom: 20px;">{{ PositionName }}</h1>
-          <v-select style="max-width: 100px; "
-                v-model="language" 
-                @change="switchLanguage()" 
-                :items="languages"
-                solo color="blue">
-          </v-select>
+          <h1>{{ PositionName }}</h1>
+          <select v-model="language"  class="form-select form-select-lg language-select" onchange="switchLanguage()">
+          <option value="en">English</option>
+          <option value="th">Thai</option>
+        </select>
         </div>
-        <p style="border-bottom: 1px solid #78909C;"></p>
+        <!-- <p style="border-bottom: 1px solid #78909C;"></p> -->
 
         <div class="card">
-        <h2 style="padding-top: 15px;">{{ descriptionTitle }}</h2>
-        <ul>
-          <li class="desc-item" v-for="resultDesc in selectDesc" :key="resultDesc.id">
-            <p class="txt">{{ getJobDesc(resultDesc) }} </p>
-          </li>
-        </ul>
+          <div class="card-header">
+            <h2 style="padding-top: 15px;">{{ descriptionTitle }}</h2>
+          </div>
+          <ul class="list-group list-group-flush">
+            <li class="desc-item list-group-item" v-for="resultDesc in selectDesc" :key="resultDesc.id">
+              <p class="txt">{{ getJobDesc(resultDesc) }} </p>
+            </li>
+          </ul>
         </div>
 
         <!-- <p style="border-bottom: 1px solid #000; padding-top: 15px"></p> -->
 
         <div class="card">
-        <h2 style="padding-top: 15px;">{{ qualificationTitle }}</h2>
-        <ul>
-          <li class="qua-item" v-for="resultQua in selectQua" :key="resultQua.id">
-            <p class="txt">{{ getJobQua(resultQua) }}</p>
-          </li>
-        </ul>
+          <div class="card-header">
+            <h2 style="padding-top: 15px;">{{ qualificationTitle }}</h2>
+          </div>  
+          <ul class="list-group list-group-flush">
+            <li class="qua-item list-group-item" v-for="resultQua in selectQua" :key="resultQua.id">
+              <p class="txt">{{ getJobQua(resultQua) }}</p>
+            </li>
+          </ul>
         </div>
         
       </div>
     </div>
-    <div class="btn-section" >
-      <v-btn color="info" @click="goBack()" style="border-radius: 10px; height: 45px">&larr; {{btnbackTitle}}</v-btn>
-      <v-btn color="info" @click="goForm()" style="border-radius: 10px; height: 45px">{{ btnformTitle }} &rarr;</v-btn>
+    
+    <div class="section" >
+      <button type="button" class="btn btn-lg" @click="goBack()">&larr; {{btnbackTitle}}</button>
+      <button type="button" class="btn btn-lg" @click="goForm()">{{ btnformTitle }} &rarr;</button>
     </div>
   </div>
 </template>
@@ -158,35 +161,33 @@
   };
   </script>
   
-  <style>
-  /* .theme--light.v-text-field--solo>.v-input__control>.v-input__slot {
-    border-radius: 10px;
-    background: #0e9cdf;
-  }
+<style scoped>
 
-  .theme--light.v-list {
-    background: #0e9cdf;
-    color: white;
-  } 
-
-  .theme--light.v-select .v-select__selections {
-    color: white;
-  } */
+.container{
+  max-width: 95%;
+  margin: 40px auto;
+  padding: 20px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  background: #f5f7fa 0%;
+}
 
   .card {
     border: 1px solid #e0e0e0;
     border-radius: 10px;
     box-shadow: 0 4px 4px rgba(0, 0, 0, 0.1);
-    padding-top: 10px;
-    padding-bottom: 20px;
-    padding-left: 20px;
-    padding-right: 20px;
+    /* padding-top: 10px; */
+    /* padding-bottom: 20px; */
+    /* padding-left: 20px;
+    padding-right: 20px; */
     margin: 25px 15px 0px 15px;
-    background: linear-gradient(to top, #f5f7fa 0%, #c3cfe2 100%);
+    /* background: linear-gradient(to top, #f5f7fa 0%, #c3cfe2 100%); */
   }
 
-  .card h2 {
-    margin-top: 0;
+  .card-header {
+    padding-left: 20px;
+    padding-right: 20px;
+    background-color: rgb(228, 227, 227);
   }
 
   .header {
@@ -199,9 +200,16 @@
     width: 100%;
     padding: 20px;
   }
+  
+  .btn {
+    box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1);
+    margin-right: 20px;
+    background-color: #007fc4;
+    color: white;
+  }
 
-  .btn-section {
-    padding: 15px;
+  .section {
+    padding: 0px 40px 0px 37px;
   }
 
   .desc-item {
@@ -214,7 +222,13 @@
 
   .txt {
     font-size: 17px;
-    color: ergb(107, 105, 105);
+  }
+
+  .language-select {
+    padding: 10px;
+    margin-bottom: 9px;
+    border-radius: 5px;
+    width: 110px
   }
 
   .theme--light.v-table thead th {
@@ -240,4 +254,4 @@
   .theme--light.v-datatable thead th.column.sortable:hover {
     color: #ffffff !important;
   }
-  </style>
+</style>
