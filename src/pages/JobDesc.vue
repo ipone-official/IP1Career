@@ -1,62 +1,72 @@
 <template>
-  <div class="container">
-    <div class="job-listings-container">
-      <div class="results-section">
-        <div class="header">
-          <h1>{{ PositionName }}</h1>
-          <select v-model="language"  class="form-select form-select-lg language-select" onchange="switchLanguage()">
-          <option value="en">English</option>
-          <option value="th">Thai</option>
-        </select>
-        </div>
-        <!-- <p style="border-bottom: 1px solid #78909C;"></p> -->
+    <!-- <div class="header">
+      <p class="font-head">{{ PositionName }}</p> -->
+        <!-- <select v-model="language"  class="form-select form-select-lg language-select" onchange="switchLanguage()">
+        <option value="en">English</option>
+        <option value="th">Thai</option>
+        </select> -->
+    <!-- </div> -->
 
-        <div class="card">
-          <div class="card-header">
-            <h2 style="padding-top: 15px;">{{ descriptionTitle }}</h2>
-          </div>
-          <ul class="list-group list-group-flush">
-            <li class="desc-item list-group-item" v-for="resultDesc in selectDesc" :key="resultDesc.id">
-              <p class="txt">{{ getJobDesc(resultDesc) }} </p>
-            </li>
-          </ul>
-        </div>
+    <div class="container">
 
-        <!-- <p style="border-bottom: 1px solid #000; padding-top: 15px"></p> -->
-
-        <div class="card">
-          <div class="card-header">
-            <h2 style="padding-top: 15px;">{{ qualificationTitle }}</h2>
-          </div>  
-          <ul class="list-group list-group-flush">
-            <li class="qua-item list-group-item" v-for="resultQua in selectQua" :key="resultQua.id">
-              <p class="txt">{{ getJobQua(resultQua) }}</p>
-            </li>
-          </ul>
-        </div>
-        
+      <div class="font-head">
+        {{ PositionName }}
       </div>
+      
+      <div class="section" >
+        <v-btn color="yellow darken-2" @click="goForm()">สมัครงาน &rarr;</v-btn>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-font-head">
+            <v-icon style="color: white;">mdi-file-document-outline</v-icon>
+            {{ descriptionTitle }}
+          </div>
+        </div>
+        <ul class="list-group list-group-flush">
+          <li class="desc-item list-group-item" v-for="resultDesc in selectDesc" :key="resultDesc.id">
+            <div style="padding-right: 7.5px;">&#10148;</div>
+            <div class="txt">{{ getJobDesc(resultDesc) }} </div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-font-head">
+            <v-icon style="color: white;">mdi-clipboard-check-outline</v-icon>
+            {{ qualificationTitle }}
+          </div>
+        </div>  
+        <ul class="list-group list-group-flush">
+          <li class="qua-item list-group-item" v-for="resultQua in selectQua" :key="resultQua.id">
+            <div style="padding-right: 7.5px;">&#10148;</div>
+            <div class="txt">{{ getJobQua(resultQua) }}</div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="section" >
+        <v-btn color="yellow darken-2" @click="goForm()">สมัครงาน &rarr;</v-btn>
+      </div>
+
     </div>
-    
-    <div class="section" >
-      <button type="button" class="btn btn-lg" @click="goBack()">&larr; {{btnbackTitle}}</button>
-      <button type="button" class="btn btn-lg" @click="goForm()">{{ btnformTitle }} &rarr;</button>
-    </div>
-  </div>
+
 </template>
 
-  <script>
-  import axios from "axios";
-  import { isEmpty } from "lodash";
-  import keyFilter from "@/plugins/keyFilter";
-  import Swal from "sweetalert2";
-  import Loading from "../components/core/Loading";
-  import { sync } from "vuex-pathify";
-  import apiService from '@/services/apiService';
-  import { watch } from "vue";
-  import { forEach } from "lodash";
-  import { result } from "lodash";
-  import { mdiConsoleLine } from "@mdi/js";
+<script>
+import axios from "axios";
+import { isEmpty } from "lodash";
+import keyFilter from "@/plugins/keyFilter";
+import Swal from "sweetalert2";
+import Loading from "../components/core/Loading";
+import { sync } from "vuex-pathify";
+import apiService from '@/services/apiService';
+import { watch } from "vue";
+import { forEach } from "lodash";
+import { result } from "lodash";
+import { mdiConsoleLine } from "@mdi/js";
   
   export default {
     components: {
@@ -71,7 +81,6 @@
         qualifications: [],
         descResult: [],
         quaResult: [],
-        language: 'en',
         languages: [
           { text: 'English', value: 'en' },
           { text: 'ไทย', value: 'th' }
@@ -85,14 +94,14 @@
             en: 'Qualification',
             th: 'คุณสมบัติ'
           },
-          btnback: {
-            en: 'Go Back',
-            th: 'กลับหน้าแรก'
-          },
           btnform: {
             en: 'Apply',
             th: 'สมัครงาน'
           },
+          // btnback: {
+          //   en: 'Go Back',
+          //   th: 'กลับหน้าแรก'
+          // },
         }
       };
     },
@@ -118,6 +127,22 @@
       this.fetchQualification();
     },
     
+    watch: {
+      PositionDesc(){
+        this.fetchDescription();
+        this.fetchQualification();
+      // if (this.selectID.length == 0) {
+      //   console.log(this.rawData);
+      //   this.positions = this.rawData;
+        
+      // } else {
+      //   this.positions = this.rawData.filter((position) => 
+      //     this.selectID.includes(position.departmentID)
+      //   );
+      // }
+      }
+    },
+
     methods: {
       async fetchDescription() {
         try {
@@ -141,11 +166,12 @@
           console.error(error);
         }
       },
-      goBack() {
-      this.$router.push({ name: 'Career'});
-      },
+      // goBack() {
+      // this.$router.push({ name: 'Career'});
+      // },
       goForm() {
-      this.$router.push({ name: 'RegForm'});
+      this.Applyform = true;
+      this.Applydesc = false;
       },
       switchLanguage() {
       return this.language;
@@ -159,76 +185,96 @@
 
     }
   };
-  </script>
+</script>
   
 <style scoped>
-
-.container{
-  max-width: 95%;
-  margin: 40px auto;
-  padding: 20px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-  border-radius: 10px;
-  background: #f5f7fa 0%;
-}
+  .container{
+    max-width: 100%;
+    padding: 20px;
+    background: #ffffff 0%;
+    max-height: 750px;
+    min-height: 750px;
+    overflow: auto;
+    scrollbar-width: none;
+  }
 
   .card {
     border: 1px solid #e0e0e0;
-    border-radius: 10px;
+    border-radius: 6px;
     box-shadow: 0 4px 4px rgba(0, 0, 0, 0.1);
     /* padding-top: 10px; */
     /* padding-bottom: 20px; */
     /* padding-left: 20px;
     padding-right: 20px; */
-    margin: 25px 15px 0px 15px;
-    /* background: linear-gradient(to top, #f5f7fa 0%, #c3cfe2 100%); */
+    margin: 25px 20px 25px 20px;
   }
 
   .card-header {
-    padding-left: 20px;
-    padding-right: 20px;
-    background-color: rgb(228, 227, 227);
+    /* background: linear-gradient(to bottom, #007fc4 50%, #0977b3 50%); */
+    background-color: #007fc4;
+    color:white;
+    border-radius: 6px 6px 0px 0px !important;
   }
-
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
+  
   .results-section {
     width: 100%;
     padding: 20px;
   }
   
-  .btn {
-    box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1);
-    margin-right: 20px;
-    background-color: #007fc4;
-    color: white;
+  .v-btn {
+    border-radius: 4px;
+    color: rgb(0, 0, 0);
   }
 
   .section {
-    padding: 0px 40px 0px 37px;
+    padding: 0px 40px 0px 15px;
   }
 
   .desc-item {
-    padding-top: 20px;
+    padding-top: 17.5px;
+    padding-bottom: 17.5px;
+    display: flex;
   }
 
   .qua-item {
-    padding-top: 20px;
+    padding-top: 17.5px;
+    padding-bottom: 17.5px;
+    display: flex;
+  }
+  
+  .font-head {
+    font-size: 1.75em;
+    padding-top: 30px;
+    padding-bottom: 10px;
+    font-weight: bold;
+    color: #1b489b;
+    text-align: center;
   }
 
   .txt {
-    font-size: 17px;
+    font-size: 16px;
   }
 
-  .language-select {
-    padding: 10px;
-    margin-bottom: 9px;
-    border-radius: 5px;
-    width: 110px
+  .card-font-head {
+    font-size: 1.2em; 
+    font-weight: bold; 
+    padding: 2.5px 20px 2.5px 0px;
+  }
+
+  li:nth-child(even) {
+    background-color: #e9e7e7;
+  }
+
+  @media (max-width: 1400px) {
+    .font-head {
+      font-size: 1.5em;
+    }
+    .txt {
+      font-size: 14px;
+    }
+    .card-font-head {
+      font-size: 1.1em; 
+    }
   }
 
   .theme--light.v-table thead th {
@@ -254,4 +300,5 @@
   .theme--light.v-datatable thead th.column.sortable:hover {
     color: #ffffff !important;
   }
+
 </style>

@@ -5,7 +5,7 @@
     
             <div class="text-xs-center">
     
-                <v-dialog v-model="dialog" persistent overlay width="300">
+                <v-dialog v-model="dialog" persistent overlay  width="300">
     
                     <v-card>
     

@@ -1,14 +1,15 @@
-@font-face {
+/* @font-face {
   font-family: "SukhumvitSet";
   src: url("../fonts/SukhumvitSet-Light.ttf") format("truetype");
-}
+} */
 
 * {
-  font-family: "SukhumvitSet", sans-serif;
+  font-family: "Prompt", sans-serif;
+  font-weight: 400;
 }
 
 .font-title {
-  font-size: 3em;
+  font-size: 2em;
 }
 
 .font-subtitle {
@@ -53,7 +54,7 @@
 
 @media only screen and (max-width: 600px) {
   .font-title {
-    font-size: 2em;
+    font-size: 1em;
   }
 
   .font-subtitle {

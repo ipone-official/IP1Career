@@ -3,33 +3,19 @@ import Router from 'vue-router';
 
 import Reports from '../pages/Reports.vue';
 import Login from '../pages/core/Login.vue';
-import Error from '../pages/core/Error.vue';
-import Transactions from '../pages/Transactions.vue';
-import ImportExcel from '../pages/ImportExcel.vue'
 import Career from '../pages/Career.vue';
 import JobDesc from '../pages/JobDesc.vue';
 import RegForm from '../pages/RegForm.vue';
 import ManageData from '../pages/ManageData.vue';
+import DisplayPage from '../pages/DisplayPage.vue';
+import Applicant from '../pages/Applicant.vue';
+import Candidate from '../pages/Candidate.vue';
+import NewEmpForm from '../pages/NewEmpForm.vue';
 
 Vue.use(Router);
 
 export default new Router({
   routes: [
-    {
-      path: '/',
-      name: 'ImportExcel',
-      component: ImportExcel,
-    },
-    {
-      path: '/Transactions',
-      name: 'Transactions',
-      component: Transactions,
-      meta: {
-        breadcrumb: [
-          { name: 'Transactions' }
-        ]
-      }
-    },
     {
       path: '/Reports',
       name: 'Reports',
@@ -81,17 +67,50 @@ export default new Router({
       }
     },
     {
-      path: '/',
-      name: 'Login',
-      component: Login,
+      path: '/DisplayPage',
+      name: 'DisplayPage',
+      component: DisplayPage,
       meta: {
-        allowAnonymous: true
+        allowAnonymous: true,
+        // breadcrumb: [
+        //   { name: 'DisplayPage' }
+        // ]
       }
     },
     {
-      path: '/error',
-      name: 'Error',
-      component: Error,
+      path: '/Applicant',
+      name: 'Applicant',
+      component: Applicant,
+      meta: {
+        breadcrumb: [
+          { name: 'Applicant' }
+        ]
+      }
+    },
+    {
+      path: '/Candidate',
+      name: 'Candidate',
+      component: Candidate,
+      meta: {
+        breadcrumb: [
+          { name: 'Candidate' }
+        ]
+      }
+    },
+    {
+      path: '/NewEmpForm',
+      name: 'NewEmpForm',
+      component: NewEmpForm,
+      meta: {
+        breadcrumb: [
+          { name: 'NewEmpForm' }
+        ]
+      }
+    },
+    {
+      path: '/',
+      name: 'Login',
+      component: Login,
       meta: {
         allowAnonymous: true
       }

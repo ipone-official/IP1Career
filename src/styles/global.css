@@ -2,4 +2,6 @@ html,
 body {
   font-weight: 500;
   font-size: 15px;
+  overflow: auto;
+  scrollbar-width: none;
 }

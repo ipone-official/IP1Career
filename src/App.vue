@@ -15,11 +15,23 @@
           </template>
 
           <template v-else>
-              <transition>
+          
+              <!-- <transition>
                   <keep-alive>
                       <router-view></router-view>
                   </keep-alive>
-              </transition>
+              </transition> -->
+              <v-app id="inspire">
+                <div class="app-container">
+                  <!-- <toolbar @toggleNavigationBar="drawer = !drawer"/>
+                  <navigation :toggle="drawer"/> -->
+                  <v-content>
+                    <breadcrumbs />
+                    <router-view/>
+                    <!-- <page-footer /> -->
+                  </v-content>
+                </div>
+              </v-app>
           </template>
       </div>
 </template>
@@ -85,7 +97,7 @@ export default {
 
 <style>
 @import url("./assets/styles/main.css");
-.v-btn:hover:before {
+/* .v-btn:hover:before {
     color: transparent !important;
-}
+} */
 </style>

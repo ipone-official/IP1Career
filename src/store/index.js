@@ -12,10 +12,14 @@ const getDefaultState = () => ({
   disabledAddPhone: false,
   PositionDesc : [0],
   PositionName : "",
+  Applyform : false,
+  Applydesc : false,
+  Apply100w : true,
+  language: 'th',
 });
 const loginInfo = () => ({
-  drawer: true,
-  toggle: true,
+  drawer: false,
+  toggle: false,
   titleNavigation: 'I.P. ONE CAREER',
   selectedIndexStr: 1,
   infoLogin: {

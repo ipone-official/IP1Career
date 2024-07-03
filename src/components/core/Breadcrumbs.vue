@@ -1,9 +1,9 @@
 <template>
-  <v-breadcrumbs :items="items" class="breadcrumbs" divider="/">
+  <v-breadcrumbs v-if="items" :items="items" class="breadcrumbs" divider="/">
     <template slot="item" slot-scope="props">
-      <!-- <router-link :to="{ name: props.item.href }" class="link">{{ $t(props.item.name) }}</router-link> -->
     </template>
   </v-breadcrumbs>
+<!-- <router-link :to="{ name: props.item.href }" class="link">{{ $t(props.item.name) }}</router-link> -->
 </template>
 
 <script>
@@ -17,11 +17,11 @@ export default {
   watch: {
     '$route' () {
       const vm = this;
-
+      
       vm.updateBreadcrumbs();
     }
   },
-
+  
   mounted() {
     const vm = this;
 
@@ -31,7 +31,7 @@ export default {
   methods: {
     updateBreadcrumbs() {
       const vm = this;
-
+      
       vm.items = vm.$route.meta.breadcrumb;
     }
   }

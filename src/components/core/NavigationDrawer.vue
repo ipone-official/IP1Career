@@ -4,74 +4,60 @@
     class="page-sidebar"
     fixed app>
     <v-toolbar class="page-sidebar">
-      <!-- <router-link :to="{ name: 'Dashboard' }"> -->
         <img src="static/logo.png" width="100vh"></img>
-       <h3>{{ titleNavigation }}</h3> 
-      <!-- </router-link>
-      <router-link :to="{ name: 'Dashboard' }" class="text">
-         
-      </router-link> -->
+       <p style="font-size: 17px; margin-bottom: 0px; font-weight: bold;">{{ titleNavigation }}</p> 
+
     </v-toolbar>
     <v-list > 
-    <v-list-group 
-      prepend-icon="mdi-chart-bar-stacked">
-      <v-list-tile slot="activator" >
-        <v-list-tile-title class="item-title">{{ $t('Reports') }}</v-list-tile-title>
-      </v-list-tile>
-      <v-list-tile @click="changeRoute('Reports', 1)" style="margin-left: 1rem">
-        <v-list-tile-action>
-          <v-icon >mdi-billboard</v-icon>
-        </v-list-tile-action>
-        <v-list-tile-title :class="[{'active': selectedIndex === 1}, 'item-title' ]" >{{ $t('POD') }}</v-list-tile-title>
-      </v-list-tile>
-      <v-list-tile @click="changeRoute('Reports', 3)" style="margin-left: 1rem">
-        <v-list-tile-action>
-          <v-icon >mdi-billboard</v-icon>
-        </v-list-tile-action>
-        <v-list-tile-title :class="[{'active': selectedIndex === 3}, 'item-title' ]" >{{ $t('Billing') }}</v-list-tile-title>
-      </v-list-tile>
-      <v-list-tile @click="changeRoute('Career', 4)" style="margin-left: 1rem">
+      <!-- <v-list-tile @click="changeRoute('Career', 4)" style="margin-left: 1rem">
         <v-list-tile-action>
           <v-icon >mdi-billboard</v-icon>
         </v-list-tile-action>
         <v-list-tile-title :class="[{'active': selectedIndex === 4}, 'item-title' ]" >{{ $t('Career') }}</v-list-tile-title>
-      </v-list-tile>
-      <v-list-tile @click="changeRoute('JobDesc', 5)" style="margin-left: 1rem">
+      </v-list-tile> -->
+      <!-- <v-list-tile @click="changeRoute('JobDesc', 5)" style="margin-left: 1rem">
         <v-list-tile-action>
           <v-icon >mdi-billboard</v-icon>
         </v-list-tile-action>
         <v-list-tile-title :class="[{'active': selectedIndex === 5}, 'item-title' ]" >{{ $t('JobDesc') }}</v-list-tile-title>
-      </v-list-tile>
-      <v-list-tile @click="changeRoute('RegForm', 6)" style="margin-left: 1rem">
+      </v-list-tile> -->
+      <!-- <v-list-tile @click="changeRoute('RegForm', 6)" style="margin-left: 1rem">
         <v-list-tile-action>
           <v-icon >mdi-billboard</v-icon>
         </v-list-tile-action>
         <v-list-tile-title :class="[{'active': selectedIndex === 6}, 'item-title' ]" >{{ $t('RegForm') }}</v-list-tile-title>
+      </v-list-tile> -->
+      <v-list-tile @click="changeRoute('ManageData', 1)" style="margin-left: 1rem">
+        <v-list-tile-action>
+          <v-icon >mdi-text-box-edit</v-icon>
+        </v-list-tile-action>
+        <v-list-tile-title :class="[{'active': selectedIndex === 1}, 'item-title' ]" >{{ $t('ManageData') }}</v-list-tile-title>
       </v-list-tile>
-      <v-list-tile @click="changeRoute('ManageData', 7)" style="margin-left: 1rem">
+      <!-- <v-list-tile @click="changeRoute('DisplayPage', 8)" style="margin-left: 1rem">
         <v-list-tile-action>
           <v-icon >mdi-billboard</v-icon>
         </v-list-tile-action>
-        <v-list-tile-title :class="[{'active': selectedIndex === 7}, 'item-title' ]" >{{ $t('ManageData') }}</v-list-tile-title>
+        <v-list-tile-title :class="[{'active': selectedIndex === 8}, 'item-title' ]" >{{ $t('DisplayPage') }}</v-list-tile-title>
+      </v-list-tile> -->
+      <v-list-tile @click="changeRoute('Applicant', 2)" style="margin-left: 1rem">
+        <v-list-tile-action>
+          <v-icon >mdi-account-tie</v-icon>
+        </v-list-tile-action>
+        <v-list-tile-title :class="[{'active': selectedIndex === 2}, 'item-title' ]" >{{ $t('Applicant') }}</v-list-tile-title>
       </v-list-tile>
-    </v-list-group>
-
-    <v-list-tile @click="changeRoute('Transactions', 2)">
-            <v-list-tile-action>
-              <v-icon>mdi-file-arrow-left-right</v-icon>
-            </v-list-tile-action>
-            <v-list-tile-title :class="[{'active': selectedIndex === 2}, 'item-title' ]">{{ $t('Transactions') }}</v-list-tile-title>
-          </v-list-tile>
-
-
-    <v-list-tile @click="changeRoute('ImportExcel', 3)">
-            <v-list-tile-action>
-              <v-icon>mdi-file-arrow-left-right</v-icon>
-            </v-list-tile-action>
-            <v-list-tile-title :class="[{'active': selectedIndex === 3}, 'item-title' ]">{{ $t('ImportExcel') }}</v-list-tile-title>
-          </v-list-tile>
-
-        </v-list>
+      <v-list-tile @click="changeRoute('Candidate', 3)" style="margin-left: 1rem">
+        <v-list-tile-action>
+          <v-icon >mdi-account-star</v-icon>
+        </v-list-tile-action>
+        <v-list-tile-title :class="[{'active': selectedIndex === 3}, 'item-title' ]" >{{ $t('Candidate') }}</v-list-tile-title>
+      </v-list-tile>
+      <v-list-tile @click="changeRoute('NewEmpForm', 4)" style="margin-left: 1rem">
+        <v-list-tile-action>
+          <v-icon >mdi-billboard</v-icon>
+        </v-list-tile-action>
+        <v-list-tile-title :class="[{'active': selectedIndex === 4}, 'item-title' ]" >{{ $t('NewEmpForm') }}</v-list-tile-title>
+      </v-list-tile>
+    </v-list>
   </v-navigation-drawer>
 </template>
 

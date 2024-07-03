@@ -1,94 +1,201 @@
 <template>
-  <div id="app" class="container">
-    <h1>I.P. ONE Application Form</h1>
+  <div class="container">
+    <div class="font-head">
+      <v-icon style="font-size: 32.5px;">mdi-text-box</v-icon>
+      ใบสมัครงาน
+    </div>
 
-      <v-form v-model="valid" ref="form">
-        <div class="form-group">
-        <label for="position">Position</label>
-        <input type="text" class="form-control form-control-lg" v-model="PositionName" disabled></input>
-        </div>
+      <v-form ref="form" v-model="valid">
+        <v-layout class="custom-size" aligh-center wrap>
+          <v-flex sm2 md2 lg2 xl2 style="padding-top: 10px;">
+            <v-icon>mdi-briefcase-account</v-icon>
+            <span style="padding-left: 0.2em; font-size: 14px;">ตำแหน่ง</span>
+          </v-flex>
 
+          <v-flex md6 lg6 xl6>
+            <v-text-field type="text" v-model="PositionName" disabled single-line solo label="ตำแหน่ง" class="dis" background-color="#CFE7FB"></v-text-field>
+          </v-flex>
+        </v-layout>
         
-        <v-layout>
 
-          <v-flex sm2 style="padding-right: 10px;">
-            <div class="form-group">
-            <label for="title">Title</label>
-              <select v-model="title" class="form-select form-select-lg">
-                <option disabled selected value>Select</option>
-                <option value="นาย">นาย</option>
-                <option value="นาง">นาง</option>
-                <option value="นางสาว">นางสาว</option>
-              </select>
-            </div>
+        <v-layout class="custom-size">
+          <v-flex xs12 sm2 md2 lg2 xl2 style="padding-top: 5px;">
+            <v-icon>mdi-account</v-icon>
+            <span style="padding-left: 0.2em; font-size: 14px;">ชื่อ</span>
           </v-flex>
 
-          <v-flex sm5 style="padding-right: 10px;">
-            <div class="form-group">
-            <label for="firstname">First Name</label>
-            <input type="text" class="form-control form-control-lg" v-model="firstname" placeholder="First Name"></input>
-            </div>
+          <v-flex xs12 sm2 md3 lg2 xl2 class="custom-text-field1">
+            <v-select v-model="title" :items="vse" single-line solo placeholder="คำนำหน้า" background-color="#CFE7FB" class="custom-text-field" ></v-select>
           </v-flex>
-          <v-flex sm5>
-            <div class="form-group">
-            <label for="lastname">Last Name</label>
-            <input v-model="lastname" type="text" class="form-control form-control-lg" placeholder="Last Name"></input>
-            </div>
+
+          <v-flex xs12 sm4 md4 lg4 xl4 >
+            <v-text-field v-model="firstname" maxlength="40" @keydown.native="keyFilter($event, 'Th')" single-line solo  placeholder="ชื่อ (ไทย)" background-color="#CFE7FB" class="custom-text-field"></v-text-field>
+          </v-flex>
+
+          <v-flex xs12 sm4 md4 lg4 xl4 class="custom-text-field2">
+                <v-text-field v-model="lastname" maxlength="40" @keydown.native="keyFilter($event, 'Th')" single-line solo placeholder="นามสกุล (ไทย)" background-color="#CFE7FB" class="custom-text-field"></v-text-field>
           </v-flex>
         </v-layout>
       
+        <v-layout class="custom-size">
+          <v-flex xs12 sm2 md2 lg2 xl2 style="padding-top: 5px;">
+            <v-icon>mdi-email</v-icon>
+            <span style="padding-left: 0.2em;  font-size: 14px;">อีเมล</span>
+          </v-flex>
+          <v-flex sm6 md6 lg6 xl6 >
+            <div class="form-group">
+              <v-text-field v-model="email" type="email" @keydown.native="keyFilterEmail($event, 'emailV')" single-line placeholder="อีเมล" solo background-color="#CFE7FB" class="custom-text-field" ></v-text-field>
+            </div>  
+          </v-flex>
+        </v-layout>
 
-      <div class="form-group">
-        <label for="email">Email</label>
-        <input v-model="email" class="form-control form-control-lg" type="text" placeholder="Email"></input>
-      </div>
-      <div class="form-group">
-        <label for="phone">Phone</label>
-        <input v-model="phone" class="form-control form-control-lg" type="text" placeholder="Phone"></input>
-      </div>
+        <v-layout class="custom-size" wrap>
+          <v-flex xs12 sm2 md2 lg2 xl2 style="padding-top: 5px;">
+            <v-icon>mdi-phone</v-icon>
+            <span style="padding-left: 0.2em;  font-size: 14px;">โทรศัพท์</span>
+          </v-flex>
+          <v-flex sm6 md6 lg6 xl6 >
+                <div class="form-group">
+                  <v-text-field v-model="phone"  type="text" maxlength="10" @keydown.native="keyFilter($event, 'number')" single-line solo placeholder="หมายเลขที่สามารถติดต่อได้" 
+                  background-color="#CFE7FB" 
+                  class="custom-text-field" 
+                  >
+                  </v-text-field>
+                </div>
+          </v-flex>
+        </v-layout>
 
-      <div class="form-group">
-        <label for="resume">Resume</label>
-        <input type="file" id="resume" ref="resume" class="form-control">
-      </div>
+          
+        <v-layout class="custom-size">
+          <v-flex xs12 sm2 md2 lg2 xl2 style="padding-top: 5px;">
+            <v-icon medium style="align-items: flex-start;">mdi-file-document-outline</v-icon>
+            <span for="resume" style="padding-left: 0.2em;  font-size: 14px;">เรซูเม่</span>
+          </v-flex>
+          <v-flex xs12 sm6 md6 lg6 xl6 >
+            <v-text-field v-model="fileName" ref="resume" @change="validateFile" disabled single-line solo background-color="#CFE7FB" class="custom-text-field dis" ></v-text-field>
+          </v-flex>
+          <v-flex class="custom-file-res">
+            <input type="file" id="resume" ref="resume" @change="validateFile" accept=".pdf, .png, .jpg, .jpeg">
+            <label for="resume" class="custom-file-upload">&#129137; เลือกไฟล์</label>
+          </v-flex>
+        </v-layout>
+
       
-      <div class="form-group">
-        <label for="social">How did you hear about us?</label>
-        <select v-model="social" label="How did you hear about us?" class="form-select form-select-lg" >
-          <option disabled selected value>Select</option>
-          <option value="Facebook" style="color: black;">Facebook</option>
-          <option value="Instagram" style="color: black;">Instagram</option>
-          <option value="Tiktok" style="color: black;">Tiktok</option>
-          <option value="JobsDB" style="color: black;">JobsDB</option>
-          <option value="JobThai" style="color: black;">JobThai</option>
-          <option value="อื่นๆ" style="color: black;">อื่นๆ</option>
-        </select>
-      </div>
+        <v-layout class="custom-size" wrap>
+          <v-flex xs12 sm2 md2 lg2 xl2 style="padding-top: 5px;">
+            <v-icon>mdi-bullhorn</v-icon>
+            <span style="padding-left: 0.2em;  font-size: 14px;">คุณได้รับข่าวสารการสมัครจากช่องทางไหน ?</span>
+          </v-flex>
+          <v-flex >
+            <div class="form-group">
+              <v-select v-model="social" :items="vse2" single-line solo background-color="#CFE7FB" class="custom-text-field" ></v-select>
+            </div>
+          </v-flex>
+        </v-layout>
 
-        <a @click="dialog = true" class="policy-link">อ่าน Terms and Policy</a>
-          <v-dialog v-model="dialog" width="50%">
-            <v-card>
-              <v-card-title>
-                <v-icon left>mdi-update</v-icon>{{ myJson.title }}
-              </v-card-title>
-              <v-card-text>{{ myJson.name }}</v-card-text>
-              <v-card-text>{{ myJson.name2 }}</v-card-text>
-              <v-card-actions>
-                <v-btn text @click="dialog = false">Ok</v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
+          <!-- กลุ่ม radio buttons -->
+        <!-- <v-layout style="display: flex; align-items: center;">
+          <v-radio-group 
+            v-model="checkbox" 
+            :error="submitClicked && !selectedOption"
+            @change="handleRadioChange"
+            style="flex: none; align-items: center;"
+            row>
+            <v-radio label="ยอมรับ" value="accept"></v-radio>
+            <v-radio label="ไม่ยอมรับ" value="reject"></v-radio>
+          </v-radio-group>
+          <a @click="dialog = true" class="policy-link">Terms and Policy</a>
+        </v-layout> -->
+        <div style="padding-top: 15px;">
+          <v-checkbox v-model="checkboxA" :error="submitClicked" @change="handleRadioChange">
+            <template v-slot:label>
+              <div style="font-size: 15px;">
+                ท่านได้อ่านวัตถุประสงค์การใช้ข้อมูลส่วนบุคคลเพื่อการสมัครงานของบริษัท ฯ และเข้าใจเป็นอันดีแล้วก่อนให้คำยินยอม
+              </div>
+            </template>
+          </v-checkbox>
+          <v-checkbox v-model="checkboxF" :error="submitClicked"  @change="handleRadioChange2">
+            <template v-slot:label>
+              <div style="font-size: 15px;">
+                ท่านได้อ่านคำประกาศการใช้ข้อมูลส่วนบุคคลของบริษัท ฯ และเข้าใจเป็นอันดีแล้วก่อนกดยอมรับ
+                <a @click="dialog2 = true" class="policy-link">นโยบายของบริษัท ฯ</a>
+              </div>
+            </template>
+          </v-checkbox>
+        </div>
+
+        <v-dialog v-model="dialog" width="50%" persistent>
+          <v-card>
+            <v-card-title style="font-weight: bold; align-items: center;">
+              <v-icon>mdi-text-box</v-icon>&nbsp; &nbsp; {{ myJson.title }}
+            </v-card-title>
+            <v-card-text>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; {{ myJson.name2 }}</v-card-text>
+            <v-card-text>{{ myJson.name3 }}</v-card-text>
+            <v-card-text style="font-weight: bold;">{{ myJson.name4 }}</v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="primary" @click="dialog = false" >ตกลง</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+
+        <v-dialog v-model="dialog2" width="50%" persistent>
+          <v-card>
+            <v-card-title style="font-weight: bold; align-items: center;">
+              <v-icon>mdi-text-box</v-icon>&nbsp; &nbsp; {{ myJson2.poTitle }}
+            </v-card-title>
+            <v-card-text style="font-weight: bold;">{{ myJson2.headTerm1 }}</v-card-text>
+            <v-card-text>{{ myJson2.term1 }}</v-card-text>
+            <v-card-text style="font-weight: bold;">{{ myJson2.headTerm2 }}</v-card-text>
+            <v-card-text>{{ myJson2.term2 }}</v-card-text>
+            <v-card-text>
+              <ul>
+                <li>{{ myJson2.subTerm21 }}</li>
+                <li>{{ myJson2.subTerm22 }}</li>
+                <li>{{ myJson2.subTerm23 }}</li>
+              </ul>
+            </v-card-text>
+            <v-card-text style="font-weight: bold;">{{ myJson2.headTerm3 }}</v-card-text>
+            <v-card-text>{{ myJson2.term3 }}</v-card-text>
+            <v-card-text style="font-weight: bold;">{{ myJson2.headTerm4 }}</v-card-text>
+            <v-card-text>{{ myJson2.term4 }}</v-card-text>
+            <v-card-text style="font-weight: bold;">{{ myJson2.headTerm5 }}</v-card-text>
+            <v-card-text>{{ myJson2.term5 }}</v-card-text>
+            <v-card-text style="font-weight: bold;">{{ myJson2.headTerm6 }}</v-card-text>
+            <v-card-text>{{ myJson2.term6 }}</v-card-text>
+            <v-card-text>{{ myJson2.footer }}</v-card-text>
+            <v-card-text v-html="myJson2.contact"></v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="primary" @click="dialog2 = false" >ตกลง</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
     
-          <v-btn style="background-color: #007fc4;" @click="submitForm">Submit</v-btn>
-          <v-btn color="amber" @click="reset">Clear</v-btn>
-          <v-btn color="blue-grey lighten-3" @click="goBack()">Go Back</v-btn>
+          <v-btn color="primary" @click="checkf">ยืนยัน</v-btn>
+          <v-btn color="yellow darken-2" @click="reset">ล้างข้อมูล</v-btn>
+          <v-btn outline color="primary" @click="goBack()">ย้อนกลับ</v-btn>
       </v-form>
         
-        <v-snackbar v-model="snackbar" multi-line color="blue darken-2" class="snackbar">
-          {{ remind }}
-          <v-btn dark flat @click="snackbar = false" class="btn-snackbar">Close</v-btn>
-        </v-snackbar>
-  </div>
+      <v-snackbar color="#007fc4" v-model="snackbar" multi-line class="snackbar">
+        {{ remind }}
+        <v-btn flat @click="snackbar = false" class="btn-snackbar">ปิด</v-btn>
+      </v-snackbar>
+
+      <!-- <v-dialog v-model="loading" hide-overlay persistent width="300">
+        <v-card color="primary" dark>
+          <v-card-text>
+            กำลังโหลด...
+            <v-progress-linear indeterminate color="white" class="mt-3"></v-progress-linear>
+          </v-card-text>
+        </v-card>
+      </v-dialog> -->
+
+      <div v-if="loadingDialog">
+        <Loading :value="loadingDialog" />
+      </div>
+
+    </div>
 </template>
   
 <script>
@@ -104,29 +211,48 @@
   import { result } from "lodash";
   import { mdiConsoleLine } from "@mdi/js";
   import json from '../i18n/data.json';
+  import policyJson from '../i18n/policy.json';
 
   export default {
+    components: {
+      Loading,
+      json,
+    },
+
     data() {
       return {
         snackbar: false,
         dialog: false,
+        dialog2: false,
+        checkboxA: false,
+        checkboxF: false,
+        keyFilter,
         title: '',
         firstname: '',
         lastname: '',
         phone: '',
         email: '',
         resume: '',
-        social: '',
-        listSocial: ['Facebook','Instagram','Tiktok','JobsDB','JobThai','อื่นๆ'],
-        titles: ['นาย','นาง','นางสาว'],
+        social: 'Facebook',
         consent: '',
         myJson: json,
+        myJson2: policyJson,
         remind: '',
+        valid: true,
+        submitClicked: false,
+        vse: ['นาย', 'นาง', 'นางสาว'],
+        vse2: ['Facebook', 'Instagram', 'Tiktok', 'Jobsdb', 'JobThai', 'อื่นๆ'],
+        fileName: '',
+        fileType: '',
+        loadingDialog: false,
       };
     },
 
     computed: {
       ...sync("*"),
+      contactLines() {
+        return this.myJson2.contact.split('\n');
+      }
     },
     
     created() {
@@ -134,40 +260,73 @@
     },
 
     methods: {
+      chDialog(){
+        if(this.checkboxA == true){
+          this.dialog = true;
+        } else{
+          this.dialog = false;
+        }
+      },
+
       checkf(){
+        const regex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
         if (this.title.length < 1) {
-          // this.remind.push('T Error');
-          this.remind = 'T Error QWERTYQWERTYQWERTYQWERTY';
+          this.remind = 'กรุณาเลือกคำนำหน้า';
           this.snackbar = true;
           return
         }
         else if (this.firstname.length < 1) {
-          // this.remind.push('F Error');
-          this.remind = 'F Error';
+          this.remind = 'กรุณากรอกชื่อ';
           this.snackbar = true;
+          return
         }
         else if (this.lastname.length < 1) {
-          // this.remind.push('L Error');
-          this.remind = 'L Error';
+          this.remind = 'กรุณากรอกนามสกุล';
           this.snackbar = true;
+          return
         }
         else if (this.email.length < 1) {
-          // this.remind.push('E Error');
-          this.remind = 'E Error';
+          this.remind = 'กรุณากรอกอีเมล';
           this.snackbar = true;
+          return
+        }
+        else if (!this.email.match(regex)) {
+          this.remind = 'กรุณากรอกอีเมลที่ถูกต้อง';
+          this.snackbar = true;
+          return
         }
         else if (this.phone.length != 10) {
-          // this.remind.push('P Error');
-          this.remind = 'P Error';
+          this.remind = 'กรุณาใส่เบอร์โทรศัพท์ 10 หลัก';
           this.snackbar = true;
+          return
         }
         else if (this.social.length < 1) {
-          // this.remind.push('S Error');
-          this.remind = 'S Error';
+          this.remind = 'กรุณาเลือกช่องทางการได้รับข่าวสารการสมัคร';
           this.snackbar = true;
+          return
         }
-        else {
-          this.snackbar = false;
+        else if (this.checkboxF == true && this.checkboxA == false) {
+          this.remind = 'กรุณายอมรับวัตถุประสงค์การใช้ข้อมูลส่วนบุคคลของบริษัท ฯ';
+          this.snackbar = true;
+          return
+        }
+        else if (this.checkboxF == false && this.checkboxA == true) {
+          this.remind = 'กรุณายอมรับคำประกาศการใช้ข้อมูลส่วนบุคคลของบริษัท ฯ';
+          this.snackbar = true;
+          return
+        }
+        else if (this.checkboxA == false && this.checkboxF == false) {
+          this.remind = 'กรุณายอมรับวัตถุประสงค์และคำประกาศของบริษัท';
+          this.submitClicked = true;
+          this.snackbar = true;
+          return
+        }
+        this.submitForm();
+      },
+
+      keyFilterEmail(event, type) {
+        if (type === 'emailV' && !event.key.match(/^[a-zA-Z0-9@.,-\_]+$/) && event.key !== 'Backspace' && event.key !== 'Tab' && event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') {
+          event.preventDefault(); // ป้องกันการป้อนข้อมูลที่ไม่ต้องการ
         }
       },
 
@@ -175,10 +334,42 @@
         this.resume = this.$refs.resume.files[0];
       },
 
+      validateFile(event) {
+        const file = event.target.files[0];
+        if (file == undefined){
+          this.fileName = '';
+        }
+        else {
+          this.fileName = file.name;
+          this.fileType = file.type;
+        }
+        const validTypes = ['application/pdf', 'image/png', 'image/jpeg'];
+          if (!validTypes.includes(this.fileType)) {
+            this.remind = 'สามารถใส่ได้แค่ไฟล์ PDF, PNG, JPG และ JPEG';
+            this.snackbar = true;
+            event.target.value = ''; // Reset the value
+            this.fileName = '';
+        }
+      },
+
+      handleRadioChange() {
+        if (this.checkboxA) {
+          this.submitClicked = false;  // รีเซ็ตสถานะ submitClicked เมื่อมีการเลือก radio button
+          this.chDialog();
+        }
+      },
+
+      handleRadioChange2() {
+        if (this.checkboxF) {
+          this.submitClicked = false;  // รีเซ็ตสถานะ submitClicked เมื่อมีการเลือก radio button
+        }
+      },
+
       async submitForm() {
-        this.checkf();
         this.getFile();
         const consent =  'Y';
+        const version = 'Beta';
+        const fStatus = 'REGISTERED';
         const formData = new FormData();
         formData.append('First_Name', this.firstname);
         formData.append('Last_Name', this.lastname);
@@ -189,138 +380,198 @@
         formData.append('Position_Name', this.PositionName);
         formData.append('Social', this.social);
         formData.append('Consent', consent);
+        formData.append('Status', fStatus);
+        formData.append('Consent_Version', version);
 
         console.log('resume', this.resume);
-        console.log('position', this.PositionName);
         console.log('Data', formData);
+        this.loadingDialog = true; // แสดง Loader
         try {
-          const response = await apiService.postCandidate(formData);
+          const response = await apiService.postApplicant(formData);
           console.log('Response:', response.data);
+
+          this.loadingDialog = false; // ซ่อน Loader
+
+            Swal.fire({
+              title: 'สำเร็จ!',
+              text: 'ขอบคุณที่สนใจและสมัครงานกับเรา!',
+              icon: 'success',
+              confirmButtonText: 'ตกลง',
+              allowOutsideClick: false,
+            });
+
+          this.Applyform = false;
+          this.Applydesc = false;
+          this.Apply100w = true;
         } catch (error) {
           console.error('Error:', error);
+
+          Swal.fire({
+            title: 'ไม่สำเร็จ!',
+            text: 'การสมัครไม่สำเร็จ!',
+            icon: 'error',
+            confirmButtonText: 'ตกลง',
+            allowOutsideClick: false,
+          });
         }
       },
+
       reset () {
         this.title = ""
         this.firstname = ""
         this.lastname = ""
         this.email = ""
         this.phone = ""
-        this.social = ""
+        this.$refs.resume.value = "";
+        this.fileName = ""
+        this.social = "Facebook"
+        this.checkboxA = ""
+        this.checkboxF = ""
       },
+
       triggerFileInput() {
         this.$refs.fileInput.click();
       },
+
       goBack() {
-      this.$router.push({ name: 'Career'});
+      // this.$router.push({ name: 'Career'});
+      this.Applyform = false;
+      this.Applydesc = true;
       },
     },
   };
 </script>
 
 <style scoped>
+  
+.theme--light.v-icon {
+  color: #007fc4;
+}
+
 * {
   box-sizing: border-box;
 }
-.container {
-  max-width: 95%;
-  margin: 40px auto;
-  padding: 20px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-  border-radius: 10px;
-  background: linear-gradient(to top, #f5f7fa 0%, #c3cfe2 100%);
-}
 
-h1 {
-  text-align: center;
-  margin-bottom: 20px;
-  color: #0a0a0a;
+.container {
+  max-width: 100%;
+  padding: 60px 60px 20px 60px;
+  background: #ffffff;
+  max-height: 750px;
+  min-height: 750px;
+  overflow: auto;
+  scrollbar-width: none;
 }
 
 .v-btn {
-  display: inline-block;
-  padding: 0px 20px;
   margin-right: 5px;
-  margin-top: 20px;
+  margin-top: 15px;
   border-radius: 4px;
-  cursor: pointer;
-  text-align: center;
-  text-decoration: none;
-}
-
-.v-form {
-  font-size: 17px;
 }
 
 .policy-link {
-  font-size: 20px;
+  font-size: 16px;
 }
 
 .snackbar {
-  font-size: 21px;
-  color: whitesmoke;
+  font-size: 18px;
+  color: rgb(255, 255, 255);
 }
 
 .btn-snackbar{
   font-weight: bold;
-  font-size: 18px;
+  font-size: 17px;
   align-items: center;
+  color: rgb(255, 255, 255);
 }
 
-.form-control:focus{
-	border-color: #00bcd9;
-	box-shadow: 0px 0px 20px rgba(0, 0, 0, .1);
+input[type="file"] {
+  display: none;
 }
 
-.form-control{
-  color: rgb(104, 104, 104);
+.custom-file-upload {
+  border-radius: 4px; /* ขอบโค้ง */
+  border: none; /* ลบเส้นขอบ */
+  white-space: nowrap;
+  padding: 7.5px 20px 0px 20px;
+  /* margin-left: 10px; */
+  cursor: pointer;
+  background-color: #1976D2; /* สีฟ้าของ Vuetify */
+  color: white; /* ข้อความสีขาว */
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* เพิ่มเงาเบาๆ */
+  height: 40px;
 }
 
-.form-group{
-	margin-bottom: 25px;
+.custom-filename-upload{
+  border: 1px solid rgb(229, 239, 253);
+  display: inline-block;
+  padding: 6px 12px;
+  margin-bottom: 15px;
+  background-image: linear-gradient(to right, rgba(51, 148, 225, .18), transparent); 
+  width: 100%;
 }
 
-.form-group > label{
-	display: block;
-	font-size: 18px;	
-	color: #000;
+.dis{ /* ตัวหนังสือในช่อง position */
+  font-size: 16px; 
+  font-weight: bold;
+  color: black;
 }
 
-.form-select {
-  color: rgb(104, 104, 104); 
+.font-head{
+  font-size: 1.75em;
+  font-weight: bold;
+  padding-bottom: 25px;
+  text-align: center;
+  color: rgb(0, 0, 0);
 }
 
-.form-select option:checked {
-  color: black; 
+.custom-text-field1{
+  padding-right: 20px;
+}
+
+.custom-text-field2{
+  padding-left: 20px;
+}
+
+.custom-file-res{
+  padding-left: 10px;
+}
+
+.v-input--selection-controls{
+  margin-top: 0px;
+}
+
+.v-card__text{
+  padding: 10px 16px 10px 16px !important;
+}
+@media (max-width: 599px) {
+  .custom-size {
+    display: block;
+  }
+  .custom-text-field1{
+    padding-right: 0px;
+  }
+  .custom-text-field2{
+    padding-left: 0px;
+  }
+  .custom-file-res{
+    padding-left: 0px;
+    padding-bottom: 20px;
+  }
 }
 
 @media (max-width: 600px) {
   .row {
     flex-direction: column;
   }
+  .policy-link {
+    font-size: 15px;
+  }
 }
 
-.theme--light.v-table thead th {
-  background-image: -webkit-gradient(
-    linear,
-    right top,
-    left top,
-    from(rgba(51, 148, 225, 0.18)),
-    to(transparent)
-  );
-  background-image: linear-gradient(270deg, rgba(51, 148, 225, 0.18), transparent);
-  background-color: #a7b0b9 !important;
-  font-size: 15px !important;
-  color: #ffffff !important;
-  /* background-color: #222d32;
-    background-color: #007fc4;
-    background-color: #000000;
-    background-color: #ffffff; */
+@media (max-width: 1400px) {
+  .font-head {
+    font-size: 1.4em;
+  }
 }
 
-.theme--light.v-datatable thead th.column.sortable.active,
-.theme--light.v-datatable thead th.column.sortable.active .v-icon,
-.theme--light.v-datatable thead th.column.sortable:hover {
-  color: #ffffff !important;
-}
 </style>

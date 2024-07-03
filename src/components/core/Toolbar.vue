@@ -6,61 +6,13 @@
     <v-toolbar-title>
       <v-toolbar-side-icon @click="toggleNavigationBar"></v-toolbar-side-icon>
     </v-toolbar-title>
-    <!-- <v-text-field
-      flat
-      solo-inverted
-      append-icon="search"
-      :label="$t('search')">
-    </v-text-field> -->
-    <v-spacer></v-spacer>
+    <!-- <v-spacer></v-spacer> -->
 
 
      
-    <v-snackbar
-      v-model="showResult"
-      :timeout="2000"
-      top>
-      {{ result }}
-    </v-snackbar>
 
-    <v-menu  class="toolbar-menu-item" offset-y origin="center center" :nudge-bottom="10" transition="scale-transition">
 
-      <!-- <v-btn icon flat slot="activator" @click="notifications.map(x => x.isActive = false)">
-        <v-badge color="green" overlap>
-          <span slot="badge" v-if="notifications.filter(x => x.isActive).length > 0">
-             {{ notifications.filter(x => x.isActive).length }}
-          </span>
-          <v-icon medium>notifications</v-icon>
-        </v-badge>
-      </v-btn> -->
 
-      <v-card class="elevation-0">
-        <v-toolbar card dense color="transparent">
-          <v-toolbar-title><h5>You have {{ notifications.length }} new notification(s)</h5></v-toolbar-title>
-        </v-toolbar>
-        <v-card-text class="pa-0">
-          <v-list two-line class="pa-0">
-          <template v-for="(item, index) in notifications">
-            <v-divider :key="index" />
-            <v-list-tile avatar :key="item.title" @click.parent="item.onClick">
-            <v-list-tile-avatar :color="item.color">
-              <v-icon dark>{{item.icon}}</v-icon>
-            </v-list-tile-avatar>
-            <v-list-tile-content>
-              <v-list-tile-sub-title v-html="item.title"></v-list-tile-sub-title>
-            </v-list-tile-content>
-            <v-list-tile-action class="caption">
-              {{item.actionAt}}
-            </v-list-tile-action>
-            </v-list-tile>
-          </template>
-          </v-list>
-          <v-divider></v-divider>
-          <v-btn block flat v-if="false">See all notifications</v-btn>
-          <v-divider></v-divider>
-        </v-card-text>
-      </v-card>
-    </v-menu>
     <!-- <v-menu  class="toolbar-menu-item" offset-y origin="center center" :nudge-bottom="10" transition="scale-transition" content-class="language-menu">
       <v-btn icon large flat slot="activator" :ripple="false" >
         <img :src="selectedLanguageFlag" class="selected-language-flag" />
@@ -79,11 +31,13 @@
             </v-list-tile-content>
         </v-list-tile>
       </v-list>
-    </v-menu> -->
+    </v-menu>
+
+
     <div>
       <h3>DHL</h3>
-    </div>
-    <v-menu class="toolbar-menu-item" offset-y origin="center center" :nudge-bottom="10" transition="scale-transition">
+    </div> -->
+    <!-- <v-menu class="toolbar-menu-item" offset-y origin="center center" :nudge-bottom="10" transition="scale-transition">
       <v-btn icon large flat slot="activator" :ripple="false">
         <v-avatar size="42px">
           <img src="https://avataaars.io/?avatarStyle=Circle&topType=ShortHairShortFlat&accessoriesType=Sunglasses&hairColor=Black&facialHairType=Blank&clotheType=CollarSweater&clotheColor=Black&eyeType=Default&eyebrowType=Default&mouthType=Smile&skinColor=Light"/>
@@ -107,7 +61,7 @@
           </v-list-tile-content>
         </v-list-tile>
       </v-list>
-    </v-menu>
+    </v-menu> -->
   </v-toolbar>
 </template>
 <script>

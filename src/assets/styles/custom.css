@@ -1,0 +1,7 @@
+ .custom-text-field.v-text-field.v-text-field--solo .v-input__control .v-input__slot {
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+    min-height: 40px !important;
+    border-radius: 5px !important;
+    font-size: 15px !important;
+  }
