@@ -38,7 +38,7 @@
         </v-layout>
 
         <v-layout class="custom-size">
-          <v-flex xs12 sm2 md2 lg2 xl2 class="space-label">
+          <v-flex xs12 sm2 md2 lg2 xl2>
             <!-- <v-icon>mdi-account</v-icon>
             <span style="padding-left: 0.2em; font-size: 14px;">ชื่อ</span> -->
           </v-flex>
@@ -146,11 +146,11 @@
         <v-dialog v-model="dialog" width="80%" persistent>
           <v-card>
             <v-card-title style="font-weight: bold; align-items: center;">
-              <v-icon>mdi-text-box</v-icon>&nbsp; {{ myJson.title }}
+              <v-icon>mdi-text-box</v-icon>&nbsp; {{ objective.title }}
             </v-card-title>
-            <v-card-text>&nbsp; &nbsp; &nbsp; &nbsp;{{ myJson.name2 }}</v-card-text>
-            <v-card-text>{{ myJson.name3 }}</v-card-text>
-            <v-card-text style="font-weight: bold;">{{ myJson.name4 }}</v-card-text>
+            <v-card-text>&nbsp; &nbsp; &nbsp; &nbsp;{{ objective.name2 }}</v-card-text>
+            <v-card-text>{{ objective.name3 }}</v-card-text>
+            <v-card-text style="font-weight: bold;">{{ objective.name4 }}</v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="primary" @click="dialog = false" >ตกลง</v-btn>
@@ -161,29 +161,29 @@
         <v-dialog v-model="dialog2" width="80%" persistent>
           <v-card>
             <v-card-title style="font-weight: bold; align-items: center;">
-              <v-icon>mdi-text-box</v-icon>&nbsp; {{ myJson2.poTitle }}
+              <v-icon>mdi-text-box</v-icon>&nbsp; {{ policy.title }}
             </v-card-title>
-            <v-card-text style="font-weight: bold;">{{ myJson2.headTerm1 }}</v-card-text>
-            <v-card-text>{{ myJson2.term1 }}</v-card-text>
-            <v-card-text style="font-weight: bold;">{{ myJson2.headTerm2 }}</v-card-text>
-            <v-card-text>{{ myJson2.term2 }}</v-card-text>
+            <v-card-text style="font-weight: bold;">{{ policy.headTerm1 }}</v-card-text>
+            <v-card-text>{{ policy.term1 }}</v-card-text>
+            <v-card-text style="font-weight: bold;">{{ policy.headTerm2 }}</v-card-text>
+            <v-card-text>{{ policy.term2 }}</v-card-text>
             <v-card-text>
               <ul>
-                <li>{{ myJson2.subTerm21 }}</li>
-                <li>{{ myJson2.subTerm22 }}</li>
-                <li>{{ myJson2.subTerm23 }}</li>
+                <li>{{ policy.subTerm21 }}</li>
+                <li>{{ policy.subTerm22 }}</li>
+                <li>{{ policy.subTerm23 }}</li>
               </ul>
             </v-card-text>
-            <v-card-text style="font-weight: bold;">{{ myJson2.headTerm3 }}</v-card-text>
-            <v-card-text>{{ myJson2.term3 }}</v-card-text>
-            <v-card-text style="font-weight: bold;">{{ myJson2.headTerm4 }}</v-card-text>
-            <v-card-text>{{ myJson2.term4 }}</v-card-text>
-            <v-card-text style="font-weight: bold;">{{ myJson2.headTerm5 }}</v-card-text>
-            <v-card-text>{{ myJson2.term5 }}</v-card-text>
-            <v-card-text style="font-weight: bold;">{{ myJson2.headTerm6 }}</v-card-text>
-            <v-card-text>{{ myJson2.term6 }}</v-card-text>
-            <v-card-text>{{ myJson2.footer }}</v-card-text>
-            <v-card-text v-html="myJson2.contact"></v-card-text>
+            <v-card-text style="font-weight: bold;">{{ policy.headTerm3 }}</v-card-text>
+            <v-card-text>{{ policy.term3 }}</v-card-text>
+            <v-card-text style="font-weight: bold;">{{ policy.headTerm4 }}</v-card-text>
+            <v-card-text>{{ policy.term4 }}</v-card-text>
+            <v-card-text style="font-weight: bold;">{{ policy.headTerm5 }}</v-card-text>
+            <v-card-text>{{ policy.term5 }}</v-card-text>
+            <v-card-text style="font-weight: bold;">{{ policy.headTerm6 }}</v-card-text>
+            <v-card-text>{{ policy.term6 }}</v-card-text>
+            <v-card-text>{{ policy.footer }}</v-card-text>
+            <v-card-text v-html="policy.contact"></v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="primary" @click="dialog2 = false" >ตกลง</v-btn>
@@ -229,13 +229,12 @@
   import { forEach } from "lodash";
   import { result } from "lodash";
   import { mdiConsoleLine } from "@mdi/js";
-  import json from '../i18n/data.json';
+  import objectiveJson from '../i18n/data.json';
   import policyJson from '../i18n/policy.json';
 
   export default {
     components: {
       Loading,
-      json,
     },
 
     data() {
@@ -257,8 +256,8 @@
         resume: '',
         social: 'Facebook',
         consent: '',
-        myJson: json,
-        myJson2: policyJson,
+        objective: objectiveJson,
+        policy: policyJson,
         remind: '',
         valid: true,
         submitClicked: false,
@@ -275,7 +274,7 @@
     computed: {
       ...sync("*"),
       contactLines() {
-        return this.myJson2.contact.split('\n');
+        return this.policy.contact.split('\n');
       }
     },
     
@@ -414,7 +413,7 @@
       async submitForm() {
         this.getFile();
         const consent =  'Y';
-        const version = 'Beta';
+        const version = this.policy.version;
         const fStatus = 'REGISTERED';
         const formData = new FormData();
         formData.append('First_Name', this.firstname);
