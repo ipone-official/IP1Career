@@ -19,8 +19,20 @@ export default {
   getDescription() {
     return apiClient.get('/Description');
   },
+  getDescriptionDetail(data) {
+    return apiClient.get(`/DescriptionDetail/${data}`);
+  },
+  getSelectDescriptionDetail(data) {
+    return apiClient.get(`/SelectDescriptionDetail/${data}`);
+  },
   getQualification() {
     return apiClient.get('/Qualification');
+  },
+  getQualificationDetail(data) {
+    return apiClient.get(`/QualificationDetail/${data}`);
+  },
+  getSelectQualificationDetail(data) {
+    return apiClient.get(`/SelectQualificationDetail/${data}`);
   },
   getApplicant() {
     return apiClient.get('/Applicant');
@@ -51,12 +63,6 @@ export default {
   },
   updatePosition(data) {
     return apiClient.post('/updatePosition', data);
-  },
-  updateDescription(data) {
-    return apiClient.post('/updateDescription', data);
-  },
-  updateQualification(data) {
-    return apiClient.post('/updateQualification', data);
   },
   updateCandidate(data) {
     return apiClient.post('/updateCandidate', data);

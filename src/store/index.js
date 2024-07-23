@@ -12,10 +12,16 @@ const getDefaultState = () => ({
   disabledAddPhone: false,
   PositionDesc : [0],
   PositionName : "",
+  PositionDepart : "",
+  PositionPriority : "",
+  PositionJD : "",
+  PositionJQ : "",
   Applyform : false,
   Applydesc : false,
   Apply100w : true,
   language: 'th',
+  selectID: [],
+  searchVal: ""
 });
 const loginInfo = () => ({
   drawer: false,

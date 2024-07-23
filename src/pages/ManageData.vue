@@ -1,39 +1,39 @@
 <template>
   <div style="padding: 0px 20px 0px 20px;">
     <div class="section">
-        <!-- Button to show table -->
-      <v-btn @click="showTable = 1" color="#007fc4" dark class="mb-2">
+      <!-- Button to show table -->
+      <v-btn @click="showTable = 1, fetchDepartments()" color="#007fc4" dark class="mb-2">
         Table Department
       </v-btn>
-      <v-btn @click="showTable = 2, filterDepartment = 'All Department'" color="#007fc4" dark class="mb-2">
+      <v-btn @click="showTable = 2, filterDepartment = 'All Department', fetchPositions()" color="#007fc4" dark class="mb-2">
         Table Position
       </v-btn>
-      <v-btn @click="showTable = 3, filterPositionDesc = 'All Position'" color="#007fc4" dark class="mb-2">
+      <v-btn @click="showTable = 3, filterPositionDesc = 'All Position', fetchDescriptions()" color="#007fc4" dark class="mb-2">
         Table Description
       </v-btn>
-      <v-btn @click="showTable = 4, filterPositionQua = 'All Position'" color="#007fc4" dark class="mb-2">
+      <v-btn @click="showTable = 4, filterPositionQua = 'All Position', fetchQualifications()" color="#007fc4" dark class="mb-2">
         Table Qualification
       </v-btn>
     </div>
 
     <!-- Form Add Department -->
     <v-dialog v-model="showDepDialog" persistent  width="50%">
-      <v-card>
+      <v-card style="padding-bottom: 10px;">
         <v-card-title style="font-weight: bold;">
           <v-icon left>home</v-icon>{{ formtype1 === 'add' ? 'Add New Department' : 'Update Department' }}
         </v-card-title>
         <v-form ref="form" style="padding: 10px 20px 10px 20px;">
           <label class="custom-label">Department EN</label>
-          <v-text-field v-model="descEN" solo placeholder="EN" @keydown.native="keyFilter($event, 'Group')" background-color="#E9ECEF"></v-text-field>
+          <v-text-field v-model="descEN" outline single-line placeholder="EN" @keydown.native="keyFilter($event, 'Group')" background-color="#64B5F6"></v-text-field>
           <label class="custom-label">Department TH</label>
-          <v-text-field v-model="descTH" solo placeholder="TH" @keydown.native="keyFilter($event, 'GroupTh')" background-color="#E9ECEF"></v-text-field>
+          <v-text-field v-model="descTH" outline single-line placeholder="TH" @keydown.native="keyFilter($event, 'GroupTh')" background-color="#64B5F6"></v-text-field>
           <label class="custom-label">Status</label>
-          <v-select v-model="descStatus" :items="statusList" label="Select Status" solo background-color="#E9ECEF"></v-select>
+          <v-select v-model="descStatus" :items="statusList" label="Select Status" outline single-line background-color="#64B5F6"></v-select>
         </v-form>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="#007fc4" @click="validateDepartment">Submit</v-btn>
-          <v-btn color="yellow darken-3" @click="showDepDialog = false">Close</v-btn>
+          <v-btn color="#007fc4" dark @click="validateDepartment">Submit</v-btn>
+          <v-btn color="yellow darken-3" dark @click="showDepDialog = false">Close</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -71,12 +71,8 @@
               </div>
             </td>
             <td class="text-left">
-              <!-- <v-btn fab small depressed color="yellow darken-2"> -->
-                <v-icon color="yellow darken-2" @click="showDepAdd('edit', props)">mdi-pencil</v-icon>
-              <!-- </v-btn> -->
-              <!-- <v-btn fab small depressed color="red"> -->
-                <v-icon color="red" @click="deleteDep(props.item.departmentID)">mdi-delete</v-icon>
-              <!-- </v-btn> -->
+              <v-icon color="yellow darken-2" @click="showDepAdd('edit', props)">mdi-pencil</v-icon>
+              <v-icon color="red" @click="deleteDep(props.item.departmentID)">mdi-delete</v-icon>
             </td>
           </tr>
         </template>
@@ -85,22 +81,40 @@
 
     <!-- Form Add Position -->
     <v-dialog v-model="showPosDialog" persistent width="50%">
-      <v-card>
+      <v-card style="padding-bottom: 10px;">
         <v-card-title style="font-weight: bold;">
           <v-icon left>home</v-icon>{{ formtype2 === 'add' ? 'Add New Position' : 'Update Position' }}
         </v-card-title>
         <v-form ref="form" style="padding: 10px 20px 10px 20px;">
           <label class="custom-label">Position Name</label>
-          <v-text-field v-model="posName" type="text" placeholder="EN" solo @keydown.native="keyFilter($event, 'Group')" background-color="#E9ECEF"></v-text-field>
+          <v-text-field v-model="posName" type="text" placeholder="EN" outline single-line @keydown.native="keyFilter($event, 'Group')" background-color="#64B5F6"></v-text-field>
           <label class="custom-label">Department Name</label>
-          <v-select v-model="depID" :items="departments" item-text="department_DescEN" item-value="departmentID" label="Select Department" solo background-color="#E9ECEF"></v-select>
-          <label class="custom-label">Status</label>
-          <v-select v-model="posStatus" :items="statusList" label="Select Status" solo background-color="#E9ECEF"></v-select>
+          <v-autocomplete v-model="depID" :items="departments" item-text="department_DescEN" item-value="departmentID" label="Select Department" outline single-line background-color="#64B5F6"></v-autocomplete>
+          <v-layout>
+            <v-flex style="padding-right: 10px;">
+              <label class="custom-label">JD Name</label>
+              <v-autocomplete v-model="posJD" :items="selectJD" item-text="jD_Name" item-value="descriptionID" label="Select Description" outline single-line background-color="#64B5F6"></v-autocomplete>
+            </v-flex>
+            <v-flex style="padding-left: 10px;">
+              <label class="custom-label">JQ Name</label>
+              <v-autocomplete v-model="posJQ" :items="selectJQ" item-text="jQ_Name" item-value="qualificationID" label="Select Qualification" outline single-line background-color="#64B5F6"></v-autocomplete>
+            </v-flex>
+          </v-layout>
+          <v-layout>
+            <v-flex style="padding-right: 10px;">
+              <label class="custom-label">Status</label>
+              <v-select v-model="posStatus" :items="statusList" label="Select Status" outline single-line background-color="#64B5F6"></v-select>
+            </v-flex>
+            <v-flex style="padding-left: 10px;">
+              <label class="custom-label">Priority</label>
+              <v-select v-model="posPriority" :items="priorityList" label="Select Priority" outline single-line background-color="#64B5F6"></v-select>
+            </v-flex>
+          </v-layout>
         </v-form>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="#007fc4" @click="validatePosition">Submit</v-btn>
-          <v-btn color="yellow darken-3" @click="showPosDialog = false">Close</v-btn>
+          <v-btn color="#007fc4" dark @click="validatePosition">Submit</v-btn>
+          <v-btn color="yellow darken-3" dark @click="showPosDialog = false">Close</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -123,7 +137,7 @@
         <v-flex md3 xl3 lg3 class="filter-select2">
           <v-autocomplete outlined v-model="filterDepartment" :items="['All Department', ...departmentList]" dense label="Filter Department" return-object hide-details></v-autocomplete>
         </v-flex>
-        <v-btn color="#007fc4" dark @click="showPosAdd('add')">ADD</v-btn>
+        <v-btn color="#007fc4" dark @click="setPositionModel('add')">ADD</v-btn>
       </v-card-title>
       <v-data-table
       :headers="headersPos"
@@ -135,42 +149,27 @@
             <td>{{ props.item.positionID }}</td>
             <td>{{ props.item.position_Name }}</td>
             <td>{{ props.item.department_DescEN }}</td>
+            <td>{{ props.item.jD_Name }}</td>
+            <td>{{ props.item.jQ_Name }}</td>
             <td>
               <div :class="['status-badge', props.item.status.toLowerCase()]">
                 {{ props.item.status }}
               </div>
             </td>
             <td>
-            <v-icon color="yellow darken-2" @click="showPosAdd('edit', props)">mdi-pencil</v-icon>
-            <v-icon color="red" @click="deletePos(props.item.positionID)">mdi-delete</v-icon>
+              <div :class="['priority-badge', props.item.priority.toLowerCase()]">
+                {{ props.item.priority }}
+              </div>
+            </td>
+            <td>
+              <v-icon color="yellow darken-2" @click="setPositionModel('edit', props)">mdi-pencil</v-icon>
+              <v-icon color="red" @click="deletePos(props.item.positionID)">mdi-delete</v-icon>
             </td>
           </tr>
         </template>
       </v-data-table>
     </v-card>
 
-    <!-- Form Add Description -->
-    <v-dialog v-model="showDescDialog" persistent width="50%">
-      <v-card>
-        <v-card-title style="font-weight: bold;">
-          <v-icon left>home</v-icon>{{ formtype3 === 'add' ? 'Add New Description' : 'Update Description' }}
-        </v-card-title>
-        <v-form ref="form" style="padding: 10px 20px 10px 20px;">
-          <label class="custom-label" >Position</label>
-          <v-select outlined v-model="filterDepartment" :items="['All Department', ...departmentList]" dense label="Filter Department" return-object solo background-color="#E9ECEF"></v-select>
-          <v-select v-model="posID" :items="positions" item-text="position_Name" item-value="positionID" label="Select Position" outlined solo background-color="#E9ECEF"></v-select>
-          <label class="custom-label">Description EN</label>
-          <v-text-field v-model="jobDescEN" type="text" placeholder="EN" solo @keydown.native="keyFilter($event, 'Group')" background-color="#E9ECEF"></v-text-field>
-          <label class="custom-label">Description TH</label>
-          <v-text-field v-model="jobDescTH" type="text" placeholder="TH" solo @keydown.native="keyFilter($event, 'GroupTh')" background-color="#E9ECEF"></v-text-field>
-        </v-form>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="#007fc4" @click="validateDesc">Submit</v-btn>
-          <v-btn color="yellow darken-3" @click="showDescDialog = false">Close</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
     <!-- Table Description -->
     <v-card v-if="showTable == 3">
       <v-card-title>
@@ -187,53 +186,90 @@
             hide-details
           ></v-text-field>
         </v-flex>
-        <v-flex md3 xl3 lg3 class="filter-select2">
+        <!-- <v-flex md3 xl3 lg3 class="filter-select2">
         <v-autocomplete outlined v-model="filterPositionDesc" :items="['All Position', ...descPositionList]" dense label="Filter Position" return-object hide-details></v-autocomplete>
-        </v-flex>
-        <v-btn color="#007fc4" dark @click="showDescAdd('add'), filterDepartment = 'All Department'">ADD</v-btn>
+        </v-flex> -->
+        <v-btn color="#007fc4" dark @click="setDescModel('add')">ADD</v-btn>
       </v-card-title>
       <v-data-table
       :headers="headersDesc"
       :search="searchDesc"
-      :items="descriptions"
+      :items="descRawData"
       >
         <template v-slot:items="props">
           <tr>
             <td class="text-left">{{ props.item.descriptionID }}</td>
-            <td class="text-left">{{ props.item.descriptionEN }}</td>
-            <td class="text-left">{{ props.item.descriptionTH }}</td>
-            <td class="text-left">{{ props.item.position_Name }}</td>
+            <td class="text-left">{{ props.item.jD_Name }}</td>
+            <td class="text-left">{{ props.item.department_DescEN }}</td>
             <td class="text-left">
-            <v-icon color="yellow darken-2" @click="showDescAdd('edit', props), filterDepartment = 'All Department'">mdi-pencil</v-icon>
+            <v-icon color="yellow darken-2" @click="fetchDescriptionsDetail(props.item.descriptionID), setDescModel('edit', props)">mdi-pencil</v-icon>
             <v-icon color="red" @click="deleteDesc(props.item.descriptionID)">mdi-delete</v-icon>
             </td>
           </tr>
         </template>
       </v-data-table>
     </v-card>
+    <!-- New Description -->
+    <v-dialog v-model="descDetailTable" persistent width="75%">
+      <v-card style="padding: 15px;">
+        <v-card-tile style="display: flex; align-items: center; justify-content: space-between; padding: 0px 0px 15px 15px;">
+          <v-flex style="display: flex; align-items: center; font-weight: bold;">
+            <v-icon style="padding-right: 10px;">home</v-icon>{{ formtype3 === 'add' ? 'Add New Description' : 'Update Description' }}
+          </v-flex>
+          <v-icon size="30" color="red" @click="descDetailTable = false">mdi-close-box</v-icon>
+        </v-card-tile>
 
-    <!-- Form Add Qualification -->
-    <v-dialog v-model="showQuaDialog" persistent width="50%">
-      <v-card>
-        <v-card-title style="font-weight: bold;">
-          <v-icon left>home</v-icon>{{ formtype4 === 'add' ? 'Add New Qualification' : 'Update Qualification' }}
-        </v-card-title>
-        <v-form ref="form" style="padding: 10px 20px 10px 20px;">
-          <label class="custom-label" >Position</label>
-          <v-select outlined v-model="filterDepartment" :items="['All Department', ...departmentList]" dense label="Filter Department" return-object solo background-color="#E9ECEF"></v-select>
-          <v-select v-model="posID" :items="positions" item-text="position_Name" item-value="positionID" label="Select Position" outlined solo background-color="#E9ECEF"></v-select>
-          <label class="custom-label">Qualification EN</label>
-          <v-text-field v-model="quaEN" type="text" placeholder="EN" solo @keydown.native="keyFilter($event, 'Group')" background-color="#E9ECEF"></v-text-field>
-          <label class="custom-label">Qualification TH</label>
-          <v-text-field v-model="quaTH" type="text" placeholder="TH" solo @keydown.native="keyFilter($event, 'GroupTh')" background-color="#E9ECEF"></v-text-field>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn color="#007fc4" @click="validateQua">Submit</v-btn>
-            <v-btn color="yellow darken-3" @click="showQuaDialog = false">Close</v-btn>
-          </v-card-actions>
+        <v-form ref="form" style="padding: 10px 10px 10px 10px;">
+          <v-layout>
+            <v-flex style="padding-right: 10px;">
+              <label class="custom-label">JD Name</label>
+              <v-text-field v-model="jobDescName" type="text" placeholder="EN" outline single-line @keydown.native="keyFilter($event, 'Group')" background-color="#64B5F6"></v-text-field>
+            </v-flex>
+            <v-flex style="padding-left: 10px;">
+              <label class="custom-label">Department</label>
+              <v-autocomplete v-model="depDescID" :items="departments" item-text="department_DescEN" item-value="departmentID" label="Select Department" outlined outline single-line background-color="#64B5F6"></v-autocomplete>
+            </v-flex>
+          </v-layout>
+          <v-layout>
+            <v-flex style="padding-right: 10px;">
+              <label class="custom-label">Description EN</label>
+              <v-textarea rows="1" v-model="jobDescEN" type="text" placeholder="EN" outline single-line @keydown.native="keyFilter($event, 'Group')" background-color="#64B5F6"></v-textarea>
+            </v-flex>
+            <v-flex style="padding-left: 10px;">
+              <label class="custom-label">Description TH</label>
+              <v-textarea rows="1" v-model="jobDescTH" type="text" placeholder="TH" outline single-line @keydown.native="keyFilter($event, 'GroupTh')" background-color="#64B5F6"></v-textarea>
+            </v-flex>
+            <div style="display:flex; align-items: center; padding-left: 5px;">
+              <v-btn fab dark color="cyan" @click="validateDescItemEdit" v-if="descItemButton == 'old'"><v-icon>mdi-pencil</v-icon></v-btn>
+              <v-btn fab dark color="cyan" @click="validateDescItemAdd" v-if="descItemButton == 'new'"><v-icon>mdi-plus</v-icon></v-btn>
+            </div>
+          </v-layout>
         </v-form>
+        
+        <v-data-table
+        :headers="headersDescDetail"
+        :items="descDetailData"
+        >
+          <template v-slot:items="props">
+            <tr>
+              <td class="text-left">{{ props.item.descriptionNo }}</td>
+              <td class="text-left">{{ props.item.descriptionEN }}</td>
+              <td class="text-left">{{ props.item.descriptionTH }}</td>
+              <td class="text-left">
+              <v-icon color="yellow darken-2" @click="setItemDescModel(props)">mdi-pencil</v-icon>
+              <v-icon color="red" @click="deleteItemDescription(props.index)">mdi-delete</v-icon>
+              </td>
+            </tr>
+          </template>
+        </v-data-table>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="#007fc4" dark @click="validateDescription()">Submit</v-btn>
+          <v-btn color="yellow darken-3" dark @click="descDetailTable = false">Close</v-btn>
+        </v-card-actions>
       </v-card>
     </v-dialog>
+
     <!-- Table Qualification -->
     <v-card v-if="showTable == 4">
       <v-card-title>
@@ -250,30 +286,90 @@
             hide-details
           ></v-text-field>
         </v-flex>
-        <v-flex md3 xl3 lg3 class="filter-select2">
+        <!-- <v-flex md3 xl3 lg3 class="filter-select2">
           <v-autocomplete outlined v-model="filterPositionQua" :items="['All Position', ...quaPositionList]" dense label="Filter Position" return-object hide-details></v-autocomplete>
-        </v-flex>
-        <v-btn color="#007fc4" dark @click="showQuaAdd('add'), filterDepartment = 'All Department'">ADD</v-btn>
+        </v-flex> -->
+        <v-btn color="#007fc4" dark @click="setQuaModel('add')">ADD</v-btn>
       </v-card-title>
       <v-data-table
       :headers="headersQua"
       :search="searchQua"
-      :items="qualifications"
+      :items="quaRawData"
       >
         <template v-slot:items="props">
           <tr>
-            <td class="text-left">{{ props.item.qualificationsID }}</td>
-            <td class="text-left">{{ props.item.qualificationsEN }}</td>
-            <td class="text-left">{{ props.item.qualificationsTH }}</td>
-            <td class="text-left">{{ props.item.position_Name }}</td>
+            <td class="text-left">{{ props.item.qualificationID }}</td>
+            <td class="text-left">{{ props.item.jQ_Name }}</td>
+            <td class="text-left">{{ props.item.department_DescEN }}</td>
             <td class="text-left">
-            <v-icon color="yellow darken-2" @click="showQuaAdd('edit', props), filterDepartment = 'All Department'">mdi-pencil</v-icon>
-            <v-icon color="red" @click="deleteQua(props.item.qualificationsID)">mdi-delete</v-icon>
+            <v-icon color="yellow darken-2" @click="fetchQualificationsDetail(props.item.qualificationID), setQuaModel('edit', props)">mdi-pencil</v-icon>
+            <v-icon color="red" @click="deleteQua(props.item.qualificationID)">mdi-delete</v-icon>
             </td>
           </tr>
         </template>
       </v-data-table>
     </v-card>
+    <!-- New Qualification -->
+    <v-dialog v-model="quaDetailTable" persistent width="75%">
+      <v-card style="padding: 15px;">
+        <v-card-tile style="display: flex; align-items: center; justify-content: space-between; padding: 0px 0px 15px 15px;">
+          <v-flex style="display: flex; align-items: center; font-weight: bold;">
+            <v-icon style="padding-right: 10px;">home</v-icon>{{ formtype4 === 'add' ? 'Add New Qualification' : 'Update Qualification' }}
+          </v-flex>
+          <v-icon size="30" color="red" @click="quaDetailTable = false">mdi-close-box</v-icon>
+        </v-card-tile>
+
+        <v-form ref="form" style="padding: 10px 20px 10px 20px;">
+          <v-layout>
+            <v-flex style="padding-right: 10px;">
+              <label class="custom-label">JQ Name</label>
+              <v-text-field v-model="jobQuaName" type="text" placeholder="EN" outline single-line @keydown.native="keyFilter($event, 'Group')" background-color="#64B5F6"></v-text-field>
+            </v-flex>
+            <v-flex style="padding-left: 10px;">
+              <label class="custom-label" >Department</label>
+              <v-autocomplete v-model="depQuaID" :items="departments" item-text="department_DescEN" item-value="departmentID" label="Select Department" outlined outline single-line background-color="#64B5F6"></v-autocomplete>
+            </v-flex>
+          </v-layout>
+          <v-layout>
+            <v-flex style="padding-right: 10px;" >
+              <label class="custom-label">Qualification EN</label>
+              <v-textarea rows="1" v-model="jobQuaEN" type="text" placeholder="EN" outline single-line @keydown.native="keyFilter($event, 'Group')" background-color="#64B5F6"></v-textarea>
+            </v-flex>
+            <v-flex style="padding-left: 10px;">
+              <label class="custom-label">Qualification TH</label>
+              <v-textarea rows="1" v-model="jobQuaTH" type="text" placeholder="TH" outline single-line @keydown.native="keyFilter($event, 'GroupTh')" background-color="#64B5F6"></v-textarea>
+            </v-flex>
+            <div style="display:flex; align-items: center; padding-left: 5px;">
+              <v-btn fab dark color="cyan" @click="validateQuaItemEdit" v-if="quaItemButton == 'old'"><v-icon>mdi-pencil</v-icon></v-btn>
+              <v-btn fab dark color="cyan" @click="validateQuaItemAdd" v-if="quaItemButton == 'new'"><v-icon>mdi-plus</v-icon></v-btn>
+            </div>
+          </v-layout>
+        </v-form>
+        
+        <v-data-table
+        :headers="headersQuaDetail"
+        :items="quaDetailData"
+        >
+          <template v-slot:items="props">
+            <tr>
+              <td class="text-left">{{ props.item.qualificationNo }}</td>
+              <td class="text-left">{{ props.item.qualificationEN }}</td>
+              <td class="text-left">{{ props.item.qualificationTH }}</td>
+              <td class="text-left">
+              <v-icon color="yellow darken-2" @click="setItemQuaModel(props)">mdi-pencil</v-icon>
+              <v-icon color="red" @click="deleteItemQualification(index)">mdi-delete</v-icon>
+              </td>
+            </tr>
+          </template>
+        </v-data-table>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="#007fc4" dark @click="validateQualification()">Submit</v-btn>
+          <v-btn color="yellow darken-3" dark @click="quaDetailTable = false">Close</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+
 
     <v-snackbar v-model="snackbar" color="red">
       {{ snackbarMessage }}
@@ -301,8 +397,6 @@
       return {
         showDepDialog: false,
         showPosDialog: false,
-        showDescDialog: false,
-        showQuaDialog: false,
         formtype1: '',
         formtype2: '',
         formtype3: '',
@@ -321,22 +415,32 @@
         filterPositionQua: null,
         posRawData: [],
         descRawData: [],
+        descDetailData: [],
         quaRawData: [],
+        quaDetailData: [],
         departmentList: [], 
-        descPositionList: [],
-        quaPositionList: [],
+        descPositionList: [], //ปิด
+        quaPositionList: [], //ปิด
         descEN: '',
         descTH: '',
         descStatus: '',
         posStatus: '',
+        posPriority: '',
         statusList: ['ACTIVE', 'INACTIVE'],
+        priorityList: ['URGENT', 'NORMAL'],
         posName: '',
         depID: '',
+        posID: '',
+        posJD: '',
+        posJQ: '',
+        jobDescName: '',
+        jobQuaName: '',
+        depDescID: '',
+        depQuaID: '',
         jobDescEN: '',
         jobDescTH: '',
-        posID: '',
-        quaEN: '',
-        quaTH: '',
+        jobQuaEN: '',
+        jobQuaTH: '',
         headersDep: [
           { text: 'ID', value: 'departmentID' },
           { text: 'Department EN', value: 'department_DescEN' },
@@ -348,21 +452,34 @@
           { text: 'ID', value: 'positionID' },
           { text: 'Position', value: 'position_Name' },
           { text: 'Department', value: 'department_DescEN' },
+          { text: 'JD', value: 'descriptionID' },
+          { text: 'JQ', value: 'qualificationID' },
           { text: 'Status', value: 'status' },
+          { text: 'Priority', value: 'priority' },
           { text: 'Action', sortable: false}
         ],
         headersDesc: [
           { text: 'ID', value: 'descriptionID' },
-          { text: 'Description EN', value: 'descriptionEN' },
-          { text: 'Description TH', value: 'descriptionTH' },
-          { text: 'Position', value: 'position_Name' },
+          { text: 'Name', value: 'jD_Name' },
+          { text: 'Department', value: 'department_DescEN' },
+          { text: 'Action', sortable: false}
+        ],
+        headersDescDetail: [
+          { text: 'No', value: 'descriptionNo' },
+          { text: 'EN', value: 'descriptionEN' },
+          { text: 'TH', value: 'descriptionTH' },
           { text: 'Action', sortable: false}
         ],
         headersQua: [
-          { text: 'ID', value: 'qualificationsID' },
-          { text: 'Qualification EN', value: 'qualificationsEN' },
-          { text: 'Qualification TH', value: 'qualificationsTH' },
-          { text: 'Position', value: 'position_Name' },
+          { text: 'ID', value: 'qualificationID' },
+          { text: 'Name', value: 'jQ_Name' },
+          { text: 'Department', value: 'department_DescEN' },
+          { text: 'Action', sortable: false}
+        ],
+        headersQuaDetail: [
+          { text: 'No', value: 'qualificationNo' },
+          { text: 'EN', value: 'qualificationEN' },
+          { text: 'TH', value: 'qualificationTH' },
           { text: 'Action', sortable: false}
         ],
         snackbar: false,
@@ -372,6 +489,13 @@
         searchPos: '',
         searchDesc: '',
         searchQua: '',
+        descDetailTable: false,
+        quaDetailTable: false,
+        descItemButton: 'new',
+        quaItemButton: 'new',
+        selectIndex: null,
+        selectJD: [],
+        selectJQ: []
       };
     },
   
@@ -389,16 +513,20 @@
     watch: {
       filterDepartment: {
         handler: 'filterDepartments',
-        immediate: true // เรียกใช้ filterDepartments เมื่อค่าเริ่มต้นของ filterDepartment มีค่า
+        immediate: true
       },
-      filterPositionDesc: {
-        handler: 'filterPositions',
-        immediate: true // เรียกใช้ filterDepartments เมื่อค่าเริ่มต้นของ filterDepartment มีค่า
+      depID: {
+        handler: 'combinedFilter',
+        immediate: true
       },
-      filterPositionQua: {
-        handler: 'filterQualifications',
-        immediate: true // เรียกใช้ filterDepartments เมื่อค่าเริ่มต้นของ filterDepartment มีค่า
-      }
+      // filterPositionDesc: {
+      //   handler: 'filterPositions',
+      //   immediate: true
+      // },
+      // filterPositionQua: {
+      //   handler: 'filterQualifications',
+      //   immediate: true
+      // }
     },
     
     methods: {
@@ -412,24 +540,19 @@
         }
       },
 
-      filterPositions() { // filter ตาราง description โดยใช้ position
-        if (this.filterPositionDesc === 'All Position') {
-          this.descriptions = this.descRawData;
-        } else {
-          this.descriptions = this.descRawData.filter((description) =>
-            description.position_Name === this.filterPositionDesc
-          );
-        }
+      filterJDs() { 
+        this.selectJD = this.descRawData.filter((description) =>
+          description.departmentID == this.depID
+        );
       },
-
-      filterQualifications() { // filter ตาราง qualification โดยใช้ position
-        if (this.filterPositionQua === 'All Position') {
-          this.qualifications = this.quaRawData;
-        } else {
-          this.qualifications = this.quaRawData.filter((qualification) =>
-            qualification.position_Name === this.filterPositionQua
-          );
-        }
+      filterJQs() { 
+        this.selectJQ = this.quaRawData.filter((qualification) =>
+          qualification.departmentID == this.depID
+        );
+      },
+      combinedFilter() {
+        this.filterJDs();
+        this.filterJQs();
       },
 
       async showDepAdd(type, data){
@@ -455,7 +578,7 @@
         }
       },
 
-      async showPosAdd(type, data){
+      async setPositionModel(type, data){
         if(type == 'edit'){
           this.showPosDialog = true;
           this.formtype2 = type;
@@ -466,6 +589,12 @@
           this.depID = data.item.departmentID;
           this.posStatus = '';
           this.posStatus = data.item.status;
+          this.posPriority = '';
+          this.posPriority = data.item.priority;
+          this.posJD = '';
+          this.posJD = data.item.descriptionID;
+          this.posJQ = '';
+          this.posJQ = data.item.qualificationID;
         }
         else{
           this.showPosDialog = true;
@@ -473,49 +602,166 @@
           this.posName = '';
           this.depID = '';
           this.posStatus = '';
+          this.posPriority = '';
+          this.posJD = '';
+          this.posJQ = '';
+          this.selectJD = this.descRawData;
+          this.selectJQ = this.quaRawData;
         }
       },
 
-      async showDescAdd(type, data){
+      async setDescModel(type, data){
         if(type == 'edit'){
-          this.showDescDialog = true;
+          this.descDetailTable = true;
+          this.descItemButton = 'new';
           this.formtype3 = type;
           this.selectID3 = data.item.descriptionID;
+          this.jobDescName = '';
+          this.jobDescName = data.item.jD_Name
+          this.depDescID = '';
+          this.depDescID = data.item.departmentID
           this.jobDescEN = '';
           this.jobDescEN = data.item.descriptionEN;
           this.jobDescTH = '';
           this.jobDescTH = data.item.descriptionTH;
-          this.posID = '';
-          this.posID = data.item.positionID;
         }
         else{
-          this.showDescDialog = true;
+          this.descDetailTable = true;
+          this.descItemButton = 'new';
           this.formtype3 = type;
+          this.selectID3 = '';
+          this.jobDescName = '';
+          this.depDescID = '';
           this.jobDescEN = '';
           this.jobDescTH = '';
-          this.posID = '';
+          this.descDetailData = [];
         }
       },
+      async setItemDescModel(data){
+          this.descItemButton = 'old';
+          this.editingIndex = data.item.descriptionNo - 1;
+          this.jobDescEN = '';
+          this.jobDescEN = data.item.descriptionEN;
+          this.jobDescTH = '';
+          this.jobDescTH = data.item.descriptionTH;
+      },
 
-      async showQuaAdd(type, data){
+      addItemDescription() {
+        const itemDescription = {
+          descriptionNo: this.descDetailData.length + 1,
+          descriptionEN: this.jobDescEN,
+          descriptionTH: this.jobDescTH,
+        };
+        this.descDetailData.push(itemDescription);
+        this.jobDescEN = "";
+        this.jobDescTH = "";
+      },
+      editItemDescription() {
+        this.descDetailData[this.editingIndex].descriptionEN = this.jobDescEN;
+        this.descDetailData[this.editingIndex].descriptionTH = this.jobDescTH;
+        this.editingIndex = null;
+        this.jobDescEN = "";
+        this.jobDescTH = "";
+        this.descItemButton = 'new';
+      },
+      // async deleteItemDescription(index) {
+      //   Swal.fire({
+      //     title: 'Are you sure you want to delete this item ?',
+      //     text: "You won't be able to revert this!",
+      //     icon: 'warning',
+      //     showCancelButton: true,
+      //     confirmButtonColor: '#3085d6',
+      //     cancelButtonColor: '#d33',
+      //     confirmButtonText: 'Yes, delete it!',
+      //     allowOutsideClick: false,
+      //   }).then((result) => {
+      //     if (result.isConfirmed) {
+      //       this.confirmDeleteItemDescription(index);
+      //     }
+      //   });
+      // },
+      deleteItemDescription(index) {
+        this.descDetailData.splice(index, 1);
+        this.descDetailData.forEach((item, i) => {
+          item.descriptionNo = i + 1;
+        });
+      },
+
+      async setQuaModel(type, data){
         if(type == 'edit'){
-          this.showQuaDialog = true;
+          this.quaDetailTable = true;
+          this.quaItemButton = 'new';
           this.formtype4 = type;
-          this.selectID4 = data.item.qualificationsID;
-          this.quaEN = '';
-          this.quaEN = data.item.qualificationsEN;
-          this.quaTH = '';
-          this.quaTH = data.item.qualificationsTH;
-          this.posID = '';
-          this.posID = data.item.positionID;
+          this.selectID4 = data.item.qualificationID;
+          this.jobQuaName = '';
+          this.jobQuaName = data.item.jQ_Name
+          this.depQuaID = '';
+          this.depQuaID = data.item.departmentID
+          this.jobQuaEN = '';
+          this.jobQuaEN = data.item.qualificationEN;
+          this.jobQuaTH = '';
+          this.jobQuaTH = data.item.qualificationTH;
         }
         else{
-          this.showQuaDialog = true;
+          this.quaItemButton = 'new';
+          this.quaDetailTable = true;
           this.formtype4 = type;
-          this.quaEN = '';
-          this.quaTH = '';
-          this.posID = '';
+          this.selectID4 = '';
+          this.jobQuaName = '';
+          this.depQuaID = '';
+          this.jobQuaEN = '';
+          this.jobQuaTH = '';
+          this.quaDetailData = [];
         }
+      },
+      async setItemQuaModel(data){
+          this.quaItemButton = 'old';
+          this.editingIndex2 = data.item.qualificationNo - 1;
+          this.jobQuaEN = '';
+          this.jobQuaEN = data.item.qualificationEN;
+          this.jobQuaTH = '';
+          this.jobQuaTH = data.item.qualificationTH;
+      },
+
+      addItemQualification() {
+        const itemQualification = {
+          qualificationNo: this.quaDetailData.length + 1,
+          qualificationEN: this.jobQuaEN,
+          qualificationTH: this.jobQuaTH,
+        };
+        this.quaDetailData.push(itemQualification);
+        this.jobQuaEN = "";
+        this.jobQuaTH = "";
+      },
+      editItemQualification() {
+        this.quaDetailData[this.editingIndex2].qualificationEN = this.jobQuaEN;
+        this.quaDetailData[this.editingIndex2].qualificationTH = this.jobQuaTH;
+        this.editingIndex2 = null;
+        this.jobQuaEN = "";
+        this.jobQuaTH = "";
+        this.quaItemButton = 'new';
+      },
+      async deleteItemQualification(index) {
+        Swal.fire({
+          title: 'Are you sure you want to delete this item ?',
+          text: "You won't be able to revert this!",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes, delete it!',
+          allowOutsideClick: false,
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.confirmDeleteItemQualification(index);
+          }
+        });
+      },
+      confirmDeleteItemQualification(index) {
+        this.quaDetailData.splice(index, 1);
+        this.quaDetailData.forEach((item, i) => {
+          item.qualificationNo = i + 1;
+        });
       },
 
       async fetchDepartments() {
@@ -544,11 +790,19 @@
         try {
           const response = await apiService.getDescription();
           this.descRawData = response.data;
-          this.descPositionList = this.descRawData
-          .map(item => item.position_Name)
-          .filter((value, index, self) => self.indexOf(value) === index);
-          console.log(this.descRawData);
-          this.filterPositions();
+          // this.descPositionList = this.descRawData
+          // .map(item => item.position_Name)
+          // .filter((value, index, self) => self.indexOf(value) === index);
+          // this.filterPositions();
+        } catch (error) {
+          console.error(error);
+        }
+      },
+      async fetchDescriptionsDetail(headID) {
+        this.descDetailTable = true;
+        try {
+          const response = await apiService.getDescriptionDetail(headID);
+          this.descDetailData = response.data;
         } catch (error) {
           console.error(error);
         }
@@ -558,48 +812,89 @@
         try {
           const response = await apiService.getQualification();
           this.quaRawData = response.data;
-          this.quaPositionList = this.quaRawData
-          .map(item => item.position_Name)
-          .filter((value, index, self) => self.indexOf(value) === index);
-          this.filterQualifications();
+          // this.quaPositionList = this.quaRawData
+          // .map(item => item.position_Name)
+          // .filter((value, index, self) => self.indexOf(value) === index);
+          // this.filterQualifications();
+        } catch (error) {
+          console.error(error);
+        }
+      },
+      async fetchQualificationsDetail(headID) {
+        this.quaDetailTable = true;
+        try {
+          const response = await apiService.getQualificationDetail(headID);
+          this.quaDetailData = response.data;
         } catch (error) {
           console.error(error);
         }
       },
 
       validateDepartment() {
-        if (isEmpty(this.descEN) || isEmpty(this.descTH)) {
+        if (isEmpty(this.descEN) || isEmpty(this.descTH) || isEmpty(this.descStatus)) {
           this.snackbar = true;
-          this.snackbarMessage = 'Please fill in all fields.';
+          this.snackbarMessage = 'Please fill your information completely.';
         } else {
           this.addDep();
         }
       },
 
       validatePosition() {
-        if (isEmpty(this.posName) || this.depID == '') {
+        if (isEmpty(this.posName) || this.depID == '' || isEmpty(this.posStatus) || isEmpty(this.posPriority) || isEmpty(this.posJD) || isEmpty(this.posJQ)) {
           this.snackbar = true;
-          this.snackbarMessage = 'Please fill in all fields.';
+          this.snackbarMessage = 'Please fill your information completely.';
         } else {
           this.addPos();
         }
       },
 
-      validateDesc() {
-        if (isEmpty(this.jobDescEN) || isEmpty(this.jobDescTH) || this.posID == '') {
+      validateDescription() {
+        if (isEmpty(this.jobDescName) || this.depDescID == '' || isEmpty(this.descDetailData) ) {
           this.snackbar = true;
-          this.snackbarMessage = 'Please fill in all fields.';
+          this.snackbarMessage = 'Please fill your information completely.';
         } else {
           this.addDesc();
         }
       },
-
-      validateQua() {
-        if (isEmpty(this.quaEN) || isEmpty(this.quaTH) || this.posID == '') {
+      validateDescItemAdd() {
+        if (isEmpty(this.jobDescEN) && isEmpty(this.jobDescTH)) {
           this.snackbar = true;
-          this.snackbarMessage = 'Please fill in all fields.';
+          this.snackbarMessage = 'Please fill your information completely.';
+        } else {
+          this.addItemDescription();
+        }
+      },
+      validateDescItemEdit() {
+        if (isEmpty(this.jobDescEN) && isEmpty(this.jobDescTH)) {
+          this.snackbar = true;
+          this.snackbarMessage = 'Please fill in description.';
+        } else {
+          this.editItemDescription();
+        }
+      },
+
+      validateQualification() {
+        if (isEmpty(this.jobQuaName) || this.depQuaID == '' || isEmpty(this.quaDetailData) ) {
+          this.snackbar = true;
+          this.snackbarMessage = 'Please fill your information completely.';
         } else {
           this.addQua();
+        }
+      },
+      validateQuaItemAdd() {
+        if (isEmpty(this.jobQuaEN) && isEmpty(this.jobQuaTH)) {
+          this.snackbar = true;
+          this.snackbarMessage = 'Please fill in qualification.';
+        } else {
+          this.addItemQualification();
+        }
+      },
+      validateQuaItemEdit() {
+        if (isEmpty(this.jobQuaEN) && isEmpty(this.jobQuaTH)) {
+          this.snackbar = true;
+          this.snackbarMessage = 'Please fill in qualification.';
+        } else {
+          this.editItemQualification();
         }
       },
 
@@ -646,12 +941,18 @@
         const data = this.formtype2 == 'add'? {
         Position_Name: this.posName,
         DepartmentID: this.depID,
-        Status: this.posStatus
+        Status: this.posStatus,
+        Priority: this.posPriority,
+        DescriptionID: this.posJD,
+        QualificationID: this.posJQ
         } : {        
         PositionID: this.selectID2,
         Position_Name: this.posName,
         DepartmentID: this.depID,
-        Status: this.posStatus
+        Status: this.posStatus,
+        Priority: this.posPriority,
+        DescriptionID: this.posJD,
+        QualificationID: this.posJQ
         }
         console.log('Data', data);
         try {
@@ -682,19 +983,30 @@
       },
       
       async addDesc() {
-        const data = this.formtype3 == 'add'? {
-        DescriptionEN: this.jobDescEN,
-        DescriptionTH: this.jobDescTH,
-        PositionID: this.posID
-        } : {    
-        DescriptionID: this.selectID3,
-        DescriptionEN: this.jobDescEN,
-        DescriptionTH: this.jobDescTH,
-        PositionID: this.posID
-        }
+        Swal.fire({
+          title: this.formtype3 == 'add' ? 'Are you sure you want to add this item?' : 'Are you sure you want to update this item?',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes',
+          allowOutsideClick: false,
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.confirmAddDesc();
+          }
+        });
+      },
+      async confirmAddDesc() {
+        const data = {
+          descriptionID: this.selectID3,
+          jD_Name: this.jobDescName,
+          departmentID: this.depDescID,
+          detail: this.descDetailData
+        };
         console.log('Data', data);
         try {
-          const response = this.formtype3 === 'add' ? await apiService.postDescription(data) :  await apiService.updateDescription(data);
+          const response = await apiService.postDescription(data);
           console.log('Response:', response.data);
           this.showDescDialog = false;
           if(this.formtype3 == 'add'){
@@ -714,6 +1026,7 @@
               allowOutsideClick: false,
             });
           }
+          this.descDetailTable = false;
           this.fetchDescriptions();
         } catch (error) {
           console.error('Error:', error);
@@ -721,19 +1034,30 @@
       },
 
       async addQua() {
-        const data = this.formtype4 == 'add'? {
-        QualificationsEN: this.quaEN,
-        QualificationsTH: this.quaTH,
-        PositionID: this.posID
-        } : {    
-        PositionID: this.posID,
-        QualificationsID: this.selectID4,
-        QualificationsEN: this.quaEN,
-        QualificationsTH: this.quaTH
-        }
+        Swal.fire({
+          title: this.formtype4 == 'add' ? 'Are you sure you want to add this item?' : 'Are you sure you want to update this item?',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes',
+          allowOutsideClick: false,
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.confirmAddQua();
+          }
+        });
+      },
+      async confirmAddQua() {
+        const data = {
+          qualificationID: this.selectID4,
+          jQ_Name: this.jobQuaName,
+          departmentID: this.depQuaID,
+          detail: this.quaDetailData
+        };
         console.log('Data', data);
         try {
-          const response = this.formtype4 === 'add' ? await apiService.postQualification(data) :  await apiService.updateQualification(data);
+          const response = await apiService.postQualification(data);
           console.log('Response:', response.data);
           this.showQuaDialog = false;
           if(this.formtype4 == 'add'){
@@ -753,6 +1077,7 @@
               allowOutsideClick: false,
             });
           }
+          this.quaDetailTable = false;
           this.fetchQualifications();
         } catch (error) {
           console.error('Error:', error);
@@ -767,7 +1092,8 @@
           showCancelButton: true,
           confirmButtonColor: '#3085d6',
           cancelButtonColor: '#d33',
-          confirmButtonText: 'Yes, delete it!'
+          confirmButtonText: 'Yes, delete it!',
+          allowOutsideClick: false,
         }).then((result) => {
           if (result.isConfirmed) {
             this.confirmDeleteDepartment(departmentId);
@@ -812,7 +1138,8 @@
           showCancelButton: true,
           confirmButtonColor: '#3085d6',
           cancelButtonColor: '#d33',
-          confirmButtonText: 'Yes, delete it!'
+          confirmButtonText: 'Yes, delete it!',
+          allowOutsideClick: false,
         }).then((result) => {
           if (result.isConfirmed) {
             this.confirmDeletePosition(positionId);
@@ -857,6 +1184,7 @@
           confirmButtonColor: '#3085d6',
           cancelButtonColor: '#d33',
           confirmButtonText: 'Yes',
+          allowOutsideClick: false,
         }).then((result) => {
           if (result.isConfirmed) {
             this.confirmDeleteDesc(descriptionId);
@@ -881,7 +1209,7 @@
         }
       },
 
-      async deleteQua(qualifiactionId) {
+      async deleteQua(qualificationId) {
         Swal.fire({
           title: 'Are you sure you want to delete this item ?',
           text: "You won't be able to revert this!",
@@ -890,14 +1218,15 @@
           confirmButtonColor: '#3085d6',
           cancelButtonColor: '#d33',
           confirmButtonText: 'Yes',
+          allowOutsideClick: false,
         }).then((result) => {
           if (result.isConfirmed) {
-            this.confirmDeleteQua(qualifiactionId);
+            this.confirmDeleteQua(qualificationId);
           }
         });
       },
-      async confirmDeleteQua(qualifiactionId) {
-        const id = { QualificationsID : qualifiactionId};
+      async confirmDeleteQua(qualificationId) {
+        const id = { QualificationID : qualificationId};
         try {
           const response = await apiService.deleteQualification(id);
           console.log('Deleted successfully', response.data);
@@ -927,14 +1256,14 @@
 .filter-select {
   padding-right: 10px;
   padding-left: 10px;
-  border-right: 1.5px solid #abacad; /* Adjust the color and width as needed */
+  border-right: 1.5px solid #abacad;
   border-left: 1.5px solid #abacad;
 }
 
 .filter-select2 {
   padding-right: 10px;
   padding-left: 10px;
-  border-right: 1.5px solid #abacad; /* Adjust the color and width as needed */
+  border-right: 1.5px solid #abacad;
 }
 
 .section {
@@ -963,6 +1292,23 @@
   color: #1fac24;
 }
 .status-badge.inactive {
+  background-color: #fad3ce;
+  color: #f5372a;
+}
+
+.priority-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25em 0.5em;
+  border-radius: 20px;
+  font-weight: 500;
+  width: fit-content;
+}
+.priority-badge.normal {
+  background-color: #96d6f3;
+  color: #0f4ba7;
+}
+.priority-badge.urgent {
   background-color: #fad3ce;
   color: #f5372a;
 }

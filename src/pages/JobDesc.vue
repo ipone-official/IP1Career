@@ -1,58 +1,37 @@
 <template>
-    <!-- <div class="header">
-      <p class="font-head">{{ PositionName }}</p> -->
-        <!-- <select v-model="language"  class="form-select form-select-lg language-select" onchange="switchLanguage()">
-        <option value="en">English</option>
-        <option value="th">Thai</option>
-        </select> -->
-    <!-- </div> -->
-
-    <div class="container">
-
-      <div class="font-head">
-        {{ PositionName }}
-      </div>
-      
-      <div class="section" >
-        <v-btn color="yellow darken-2" @click="goForm()">สมัครงาน &rarr;</v-btn>
+  <!-- <div class="full-background"> -->
+    <div class="mybg">
+      <div class="head-section">
+        <v-layout class="firstline">
+          <div v-if="PositionPriority == 'URGENT'" class="urgent">ด่วน !</div>
+          <div class="position-font">{{ PositionName }}</div>
+        </v-layout>
+        <v-layout class="secondline">
+          <div class="depart-font">แผนก : {{ PositionDepart }}</div>
+        </v-layout>
       </div>
 
-      <div class="card">
-        <div class="card-header">
-          <div class="card-font-head">
-            <v-icon style="color: white;">mdi-file-document-outline</v-icon>
-            {{ descriptionTitle }}
-          </div>
-        </div>
-        <ul class="list-group list-group-flush">
-          <li class="desc-item list-group-item" v-for="resultDesc in selectDesc" :key="resultDesc.id">
-            <div style="padding-right: 7.5px;">&#10148;</div>
-            <div class="txt">{{ getJobDesc(resultDesc) }} </div>
-          </li>
-        </ul>
+      <div class="content-head">
+        {{ descriptionTitle }} :
+      </div>
+      <div class="content-item" v-for="desc in descResult">
+        <!-- <div style="padding-right: 7.5px;">&#9866;</div> -->
+        <div>- {{ desc.descriptionEN === "" ? desc.descriptionTH : desc.descriptionEN }}</div>
       </div>
 
-      <div class="card">
-        <div class="card-header">
-          <div class="card-font-head">
-            <v-icon style="color: white;">mdi-clipboard-check-outline</v-icon>
-            {{ qualificationTitle }}
-          </div>
-        </div>  
-        <ul class="list-group list-group-flush">
-          <li class="qua-item list-group-item" v-for="resultQua in selectQua" :key="resultQua.id">
-            <div style="padding-right: 7.5px;">&#10148;</div>
-            <div class="txt">{{ getJobQua(resultQua) }}</div>
-          </li>
-        </ul>
+      <div class="content-head">
+        {{ qualificationTitle }} :
+      </div>
+      <div class="content-item" v-for="qua in quaResult">
+        <!-- <div style="padding-right: 7.5px;">&#9866;</div> -->
+        <div>- {{ qua.qualificationEN === "" ? qua.qualificationTH : qua.qualificationEN }}</div>
       </div>
 
       <div class="section" >
-        <v-btn color="yellow darken-2" @click="goForm()">สมัครงาน &rarr;</v-btn>
+        <v-btn color="yellow darken-2" @click="goForm()">สมัครงาน &#10095;</v-btn>
       </div>
-
     </div>
-
+  <!-- </div> -->
 </template>
 
 <script>
@@ -119,6 +98,9 @@ import { mdiConsoleLine } from "@mdi/js";
       },
       btnformTitle() {
         return this.language === 'en' ? this.titles.btnform.en : this.titles.btnform.th;
+      },
+      description() {
+        return this.language === 'en' ? this.titles.btnform.en : this.titles.btnform.th;
       }
     },
   
@@ -131,174 +113,157 @@ import { mdiConsoleLine } from "@mdi/js";
       PositionDesc(){
         this.fetchDescription();
         this.fetchQualification();
-      // if (this.selectID.length == 0) {
-      //   console.log(this.rawData);
-      //   this.positions = this.rawData;
-        
-      // } else {
-      //   this.positions = this.rawData.filter((position) => 
-      //     this.selectID.includes(position.departmentID)
-      //   );
-      // }
       }
     },
 
     methods: {
+      // async fetchDescription() {
+      //   try {
+      //     const response = await apiService.getDescription();
+      //     this.descResult = response.data
+      //     this.selectDesc = this.descResult.filter(element => 
+      //       this.PositionDesc.includes(element.positionID)
+      //     );
+      //   } catch (error) {
+      //     console.error(error);
+      //   }
+      // },
       async fetchDescription() {
         try {
-          const response = await apiService.getDescription();
+          const response = await apiService.getSelectDescriptionDetail(this.PositionJD);
           this.descResult = response.data
-          this.selectDesc = this.descResult.filter(element => 
-            this.PositionDesc.includes(element.positionID)
-          );
         } catch (error) {
           console.error(error);
         }
       },
       async fetchQualification() {
         try {
-          const response = await apiService.getQualification();
+          const response = await apiService.getSelectQualificationDetail(this.PositionJQ);
           this.quaResult = response.data
-          this.selectQua = this.quaResult.filter(element => 
-            this.PositionDesc.includes(element.positionID)
-          );
         } catch (error) {
           console.error(error);
         }
       },
-      // goBack() {
-      // this.$router.push({ name: 'Career'});
-      // },
       goForm() {
       this.Applyform = true;
       this.Applydesc = false;
       },
-      switchLanguage() {
-      return this.language;
-      },
-      getJobDesc(resultDesc) {
-        return this.language === 'en' ? resultDesc.descriptionEN : resultDesc.descriptionTH;
-      },
-      getJobQua(resultQua) {
-        return this.language === 'en' ? resultQua.qualificationsEN : resultQua.qualificationsTH;
-      },
-
+      // getJobDesc(resultDesc) {
+      //   return this.language === 'en' ? resultDesc.descriptionEN : resultDesc.descriptionTH;
+      // },
+      // getJobQua(resultQua) {
+      //   return this.language === 'en' ? resultQua.qualificationsEN : resultQua.qualificationsTH;
+      // },
     }
   };
 </script>
   
 <style scoped>
-  .container{
-    max-width: 100%;
+  .full-background{
+    background: #f4f4f4 0%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }     
+  
+  .mybg{
     padding: 20px;
-    background: #ffffff 0%;
-    max-height: 750px;
-    min-height: 750px;
+    background: #007fc4 0%;
+    max-height: 725px;
+    min-height: 725px;
     overflow: auto;
     scrollbar-width: none;
+    margin: 25px 25px 0px 25px;
   }
 
-  .card {
-    border: 1px solid #e0e0e0;
-    border-radius: 6px;
-    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.1);
-    /* padding-top: 10px; */
-    /* padding-bottom: 20px; */
-    /* padding-left: 20px;
-    padding-right: 20px; */
-    margin: 25px 20px 25px 20px;
-  }
-
-  .card-header {
-    /* background: linear-gradient(to bottom, #007fc4 50%, #0977b3 50%); */
-    background-color: #007fc4;
-    color:white;
-    border-radius: 6px 6px 0px 0px !important;
-  }
-  
-  .results-section {
-    width: 100%;
-    padding: 20px;
-  }
-  
   .v-btn {
     border-radius: 4px;
     color: rgb(0, 0, 0);
   }
 
   .section {
-    padding: 0px 40px 0px 15px;
+    margin-top: 20px;
   }
 
-  .desc-item {
-    padding-top: 17.5px;
-    padding-bottom: 17.5px;
-    display: flex;
+  .head-section {
+    border-bottom: 1px solid rgb(255, 255, 255);
+    padding-bottom: 15px;
+    padding-top: 10px;
   }
 
-  .qua-item {
-    padding-top: 17.5px;
-    padding-bottom: 17.5px;
-    display: flex;
+  .firstline {
+    align-items: center;
+    justify-content: center;
   }
-  
-  .font-head {
-    font-size: 1.75em;
-    padding-top: 30px;
-    padding-bottom: 10px;
+
+  .urgent {
+    background-color: red;
+    margin-right: 20px;
+    padding: 3px 6px 3px 6px;
+    color: white;
+    font-size: 1em;
+    font-weight: 300;
+    white-space: nowrap;
+  }
+
+  .position-font {
+    font-size: 1.6em;
     font-weight: bold;
-    color: #1b489b;
-    text-align: center;
+    color: white;
   }
 
-  .txt {
-    font-size: 16px;
+  .secondline {
+    align-items: center;
+    justify-content: center;
   }
 
-  .card-font-head {
-    font-size: 1.2em; 
-    font-weight: bold; 
-    padding: 2.5px 20px 2.5px 0px;
+  .depart-font {
+    font-size: 1.3em;
+    color: white;
   }
 
-  li:nth-child(even) {
-    background-color: #e9e7e7;
+  .content-item {
+    padding-top: 15px;
+    padding-bottom: 15px;
+    display: flex;
+    color: white;
+    font-size: 1.15em;
+  }
+
+  .content-head {
+    font-size: 1.3em;
+    padding-top: 30px;
+    color: white;
+    font-weight: bold;
+  }
+  @media (max-width: 1400px) {
+    /* .font-head {
+      font-size: 1.5em;
+    } */
+    .content-item {
+      font-size: 1.05em;
+    }
+    .content-head {
+      font-size: 1.3em;
+    }
   }
 
   @media (max-width: 1400px) {
     .font-head {
       font-size: 1.5em;
     }
-    .txt {
-      font-size: 14px;
-    }
-    .card-font-head {
-      font-size: 1.1em; 
-    }
   }
 
-  .theme--light.v-table thead th {
-    background-image: -webkit-gradient(
-      linear,
-      right top,
-      left top,
-      from(rgba(51, 148, 225, 0.18)),
-      to(transparent)
-    );
-    background-image: linear-gradient(270deg, rgba(51, 148, 225, 0.18), transparent);
-    background-color: #a7b0b9 !important;
-    font-size: 15px !important;
-    color: #ffffff !important;
-    /* background-color: #222d32;
-      background-color: #007fc4;
-      background-color: #000000;
-      background-color: #ffffff; */
+  @media (max-width: 650px) {
+    .position-font {
+      font-size: 1.5em;
+    }
+    .depart-font {
+      font-size: 1.2em;
+      color: white;
+    }
+    .urgent {
+      font-size: 0.9em;
+    }
   }
-  
-  .theme--light.v-datatable thead th.column.sortable.active,
-  .theme--light.v-datatable thead th.column.sortable.active .v-icon,
-  .theme--light.v-datatable thead th.column.sortable:hover {
-    color: #ffffff !important;
-  }
-
 </style>

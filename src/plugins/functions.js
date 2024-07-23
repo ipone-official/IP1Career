@@ -194,4 +194,8 @@ export default {
       short: mShort,
     };
   },
+
+  yyyymmddConvertDDMMYYYY(val){
+    return  `${val.substring(6,8)}/${val.substring(4,6)}/${val.substring(0,4)}`;
+  },
 };

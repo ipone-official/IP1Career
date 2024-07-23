@@ -11,7 +11,7 @@
     
                         <v-card-text>
     
-                            <div class="text-xs-center">Please wait . . .
+                            <div class="text-xs-center">กรุณารอสักครู่ . . .
     
                             </div>
     

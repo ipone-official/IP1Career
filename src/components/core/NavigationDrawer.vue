@@ -51,12 +51,18 @@
         </v-list-tile-action>
         <v-list-tile-title :class="[{'active': selectedIndex === 3}, 'item-title' ]" >{{ $t('Candidate') }}</v-list-tile-title>
       </v-list-tile>
-      <v-list-tile @click="changeRoute('NewEmpForm', 4)" style="margin-left: 1rem">
+      <v-list-tile @click="changeRoute('UserManual', 4)" style="margin-left: 1rem">
+        <v-list-tile-action>
+          <v-icon >mdi-book-open-variant</v-icon>
+        </v-list-tile-action>
+        <v-list-tile-title :class="[{'active': selectedIndex === 4}, 'item-title' ]" >{{ $t('User Manual') }}</v-list-tile-title>
+      </v-list-tile>
+      <!-- <v-list-tile @click="changeRoute('NewEmpForm', 4)" style="margin-left: 1rem">
         <v-list-tile-action>
           <v-icon >mdi-billboard</v-icon>
         </v-list-tile-action>
         <v-list-tile-title :class="[{'active': selectedIndex === 4}, 'item-title' ]" >{{ $t('NewEmpForm') }}</v-list-tile-title>
-      </v-list-tile>
+      </v-list-tile> -->
     </v-list>
   </v-navigation-drawer>
 </template>

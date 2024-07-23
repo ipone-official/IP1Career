@@ -2,7 +2,7 @@
   <v-card>
     <v-card-title>
     <span style="font-weight: bold; font-size: 17px;">
-      รายชื่อผู้สมัคร
+      Applicant List
     </span>
       <v-spacer></v-spacer>
       <p style="border-left: 1.5px solid #abacad"></p>
@@ -26,6 +26,7 @@
       :headers="headers"
       :search="searchApp"
       :items="applicants"
+      :rows-per-page-items="rowPerPageItems"
       >
         <template v-slot:items="props">
           <tr>
@@ -33,14 +34,21 @@
             <td class="text-left">{{ props.item.title }}</td>
             <td class="text-left">{{ props.item.first_Name }}</td>
             <td class="text-left">{{ props.item.last_Name }}</td>
+            <td class="text-left">{{ props.item.title_EN }}</td>
+            <td class="text-left">{{ props.item.first_Name_EN }}</td>
+            <td class="text-left">{{ props.item.last_Name_EN }}</td>
             <td class="text-left">{{ props.item.email }}</td>
             <td class="text-left">{{ props.item.phone }}</td>
             <td class="text-left"><v-icon @click="openResume(props.item.resume)">mdi-file-document-outline</v-icon></td>
             <td class="text-left">{{ props.item.social }}</td>
             <td class="text-left">{{ props.item.position_Name }}</td>
-            <td class="text-left">{{ props.item.create_Date }}</td>
+            <td class="text-left">{{ functions.yyyymmddConvertDDMMYYYY(props.item.dateFormat) }} {{ props.item.timeFormat }}</td>
             <!-- <td class="text-left">{{ props.item.consent_Version }}</td> -->
-            <td class="text-left">{{ props.item.status }}</td>
+            <td class="text-left">
+              <div :class="['status-badge', props.item.status.toLowerCase()]">
+                {{ props.item.status }}
+              </div>
+            </td>
             <td class="text-left">
               <v-icon v-if="props.item.status !== 'REJECT' && props.item.status !== 'APPROVE'" color="green lighten-1" @click="editApplicant('APPROVE', props.item.applicantID)">mdi-checkbox-marked</v-icon>
               <v-icon v-if="props.item.status !== 'REJECT' && props.item.status !== 'APPROVE'" color="red" @click="editApplicant('REJECT', props.item.applicantID)">mdi-close-box</v-icon>
@@ -61,6 +69,7 @@ import Loading from "../components/core/Loading";
 import { sync } from "vuex-pathify";
 import apiService from '@/services/apiService';
 import Swal from "sweetalert2";
+import functions from "../plugins/functions";
 
 export default {
   components: {
@@ -71,15 +80,18 @@ export default {
     return {
       headers: [
         { text: 'ID', value: 'applicantID' },
-        { text: 'Title', value: 'title' },
-        { text: 'First Name', value: 'first_Name' },
-        { text: 'Last Name', value: 'last_Name' },
+        { text: 'Prefix TH', value: 'title' },
+        { text: 'First Name TH', value: 'first_Name' },
+        { text: 'Last Name TH', value: 'last_Name' },
+        { text: 'Prefix EN', value: 'title_EN' },
+        { text: 'First Name EN', value: 'first_Name_EN' },
+        { text: 'Last Name EN', value: 'last_Name_EN' },
         { text: 'Email', value: 'email' },
         { text: 'Phone', value: 'phone' },
         { text: 'Resume', value: 'resume' },
-        { text: 'ช่องทางการรับข่าวสาร', value: 'social' },
+        { text: 'News Channels', value: 'social' },
         { text: 'Position Name', value: 'position_Name' },
-        { text: 'วันที่สมัคร', value: 'create_Date' },
+        { text: 'Register Date', value: 'dateFormat' },
         // { text: 'Consent Version', value: 'consent_Version' },
         { text: 'Status', value: 'status' },
         { text: 'Action'}
@@ -92,11 +104,19 @@ export default {
       positionList: [],
       searchApp: '',
       loadingDialog: false,
+      functions,
     };
   },
 
   computed: {
     ...sync("*"),
+    rowPerPageItems() {
+      return [
+        { text: "10", value: 10 },
+        { text: "30", value: 30 },
+        { text: "ALL", value: this.applicants ? this.applicants.length : 0 },
+      ];
+    },
   },
 
   watch: {
@@ -142,10 +162,17 @@ export default {
         const response = await apiService.getApplicant();
         this.appRawData = response.data;
 
+        for (let i = 0; i < this.appRawData.length; i++) {
+          const v = this.appRawData[i].create_Date.split(" ")
+          const v2 = v[0].split("/")
+          this.appRawData[i].dateFormat = `${v2[2]}${v2[1]}${v2[0]}`
+          this.appRawData[i].timeFormat = v[1]
+        }
+
         this.statusList = this.appRawData
           .map(item => item.status)
           .filter((value, index, self) => self.indexOf(value) === index);
-        this.filterStatus = 'All Status'
+        this.filterStatus = 'REGISTERED'
 
         this.positionList = this.appRawData
           .map(item => item.position_Name)
@@ -226,6 +253,12 @@ export default {
 </script>
 
 <style scoped>
+.filter-search {
+  padding-right: 10px;
+  padding-left: 10px;
+  border-left: 1.5px solid #abacad;
+}
+
 .filter-select {
   padding-right: 10px;
   padding-left: 10px;
@@ -237,6 +270,49 @@ export default {
   padding-left: 10px;
   border-right: 1.5px solid #abacad; /* Adjust the color and width as needed */
   border-left: 1.5px solid #abacad; /* Adjust the color and width as needed */
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25em 0.5em;
+  border-radius: 20px;
+  font-weight: 500;
+  width: fit-content;
+}
+.status-badge.approve {
+  background-color: #d1f5d1;
+  color: #1fac24;
+}
+.status-badge.reject {
+  background-color: #fad3ce;
+  color: #f5372a;
+}
+.status-badge.registered {
+  background-color: #d8d8d8;
+  color: #888686;
+}
+
+@media (max-width: 965px) {
+  .filter-select {
+    border-right: 1.5px solid #abacad;
+  }
+}
+
+@media (max-width: 695px) {
+  .filter-select2 {
+    border-left: 0px solid #abacad;
+  }
+  .filter-search {
+    border-right: 1.5px solid #abacad;
+  }
+}
+
+@media (max-width: 575px) {
+  .filter-select2 {
+    border-left: 1.5px solid #abacad;
+  }
+
 }
 
 .theme--light.v-table thead th {

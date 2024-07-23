@@ -11,6 +11,7 @@ import DisplayPage from '../pages/DisplayPage.vue';
 import Applicant from '../pages/Applicant.vue';
 import Candidate from '../pages/Candidate.vue';
 import NewEmpForm from '../pages/NewEmpForm.vue';
+import UserManual from '../pages/UserManual.vue';
 
 Vue.use(Router);
 
@@ -105,6 +106,16 @@ export default new Router({
         breadcrumb: [
           { name: 'NewEmpForm' }
         ]
+      }
+    },
+    {
+      path: '/UserManual',
+      name: 'UserManual',
+      component: UserManual,
+      meta: {
+        // breadcrumb: [
+        //   { name: 'UserManual' }
+        // ]
       }
     },
     {

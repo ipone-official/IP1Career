@@ -7,57 +7,76 @@
 
       <v-form ref="form" v-model="valid">
         <v-layout class="custom-size" aligh-center wrap>
-          <v-flex sm2 md2 lg2 xl2 style="padding-top: 10px;">
+          <v-flex sm2 md2 lg2 xl2 class="space-label">
             <v-icon>mdi-briefcase-account</v-icon>
             <span style="padding-left: 0.2em; font-size: 14px;">ตำแหน่ง</span>
           </v-flex>
 
           <v-flex md6 lg6 xl6>
-            <v-text-field type="text" v-model="PositionName" disabled single-line solo label="ตำแหน่ง" class="dis" background-color="#CFE7FB"></v-text-field>
+            <v-text-field type="text" v-model="PositionName" readonly single-line solo background-color="#BADDFA"></v-text-field>
           </v-flex>
         </v-layout>
         
 
         <v-layout class="custom-size">
-          <v-flex xs12 sm2 md2 lg2 xl2 style="padding-top: 5px;">
+          <v-flex xs12 sm2 md2 lg2 xl2 class="space-label">
             <v-icon>mdi-account</v-icon>
             <span style="padding-left: 0.2em; font-size: 14px;">ชื่อ</span>
           </v-flex>
 
           <v-flex xs12 sm2 md3 lg2 xl2 class="custom-text-field1">
-            <v-select v-model="title" :items="vse" single-line solo placeholder="คำนำหน้า" background-color="#CFE7FB" class="custom-text-field" ></v-select>
+            <v-select v-model="title" :items="vse" single-line solo label="คำนำหน้า" @change="updateTitleEN" background-color="#BADDFA" class="custom-text-field" ></v-select>
           </v-flex>
 
           <v-flex xs12 sm4 md4 lg4 xl4 >
-            <v-text-field v-model="firstname" maxlength="40" @keydown.native="keyFilter($event, 'Th')" single-line solo  placeholder="ชื่อ (ไทย)" background-color="#CFE7FB" class="custom-text-field"></v-text-field>
+            <v-text-field v-model="firstname" maxlength="40" @keydown.native="keyFilter($event, 'Th')" single-line solo label="ชื่อ (ไทย)" background-color="#BADDFA" class="custom-text-field" light></v-text-field>
           </v-flex>
 
           <v-flex xs12 sm4 md4 lg4 xl4 class="custom-text-field2">
-                <v-text-field v-model="lastname" maxlength="40" @keydown.native="keyFilter($event, 'Th')" single-line solo placeholder="นามสกุล (ไทย)" background-color="#CFE7FB" class="custom-text-field"></v-text-field>
+                <v-text-field v-model="lastname" maxlength="40" @keydown.native="keyFilter($event, 'Th')" single-line solo label="นามสกุล (ไทย)" background-color="#BADDFA" class="custom-text-field"></v-text-field>
+          </v-flex>
+        </v-layout>
+
+        <v-layout class="custom-size">
+          <v-flex xs12 sm2 md2 lg2 xl2 class="space-label">
+            <!-- <v-icon>mdi-account</v-icon>
+            <span style="padding-left: 0.2em; font-size: 14px;">ชื่อ</span> -->
+          </v-flex>
+
+          <v-flex xs12 sm2 md3 lg2 xl2 class="custom-text-field1">
+            <v-select v-model="titleEN" :items="vse3" single-line solo label="Prefix" readonly background-color="#BADDFA" class="custom-text-field" ></v-select>
+          </v-flex>
+
+          <v-flex xs12 sm4 md4 lg4 xl4 >
+            <v-text-field v-model="firstnameEN" maxlength="40" @keydown.native="keyFilter($event, 'En')" single-line solo label="First Name" background-color="#BADDFA" class="custom-text-field" light></v-text-field>
+          </v-flex>
+
+          <v-flex xs12 sm4 md4 lg4 xl4 class="custom-text-field2">
+                <v-text-field v-model="lastnameEN" maxlength="40" @keydown.native="keyFilter($event, 'En')" single-line solo label="Last Name" background-color="#BADDFA" class="custom-text-field"></v-text-field>
           </v-flex>
         </v-layout>
       
         <v-layout class="custom-size">
-          <v-flex xs12 sm2 md2 lg2 xl2 style="padding-top: 5px;">
+          <v-flex xs12 sm2 md2 lg2 xl2 class="space-label">
             <v-icon>mdi-email</v-icon>
             <span style="padding-left: 0.2em;  font-size: 14px;">อีเมล</span>
           </v-flex>
           <v-flex sm6 md6 lg6 xl6 >
             <div class="form-group">
-              <v-text-field v-model="email" type="email" @keydown.native="keyFilterEmail($event, 'emailV')" single-line placeholder="อีเมล" solo background-color="#CFE7FB" class="custom-text-field" ></v-text-field>
+              <v-text-field v-model="email" type="email" @keydown.native="keyFilterEmail($event, 'emailV')" single-line label="อีเมล" solo background-color="#BADDFA" class="custom-text-field" ></v-text-field>
             </div>  
           </v-flex>
         </v-layout>
 
         <v-layout class="custom-size" wrap>
-          <v-flex xs12 sm2 md2 lg2 xl2 style="padding-top: 5px;">
+          <v-flex xs12 sm2 md2 lg2 xl2 class="space-label">
             <v-icon>mdi-phone</v-icon>
             <span style="padding-left: 0.2em;  font-size: 14px;">โทรศัพท์</span>
           </v-flex>
           <v-flex sm6 md6 lg6 xl6 >
                 <div class="form-group">
-                  <v-text-field v-model="phone"  type="text" maxlength="10" @keydown.native="keyFilter($event, 'number')" single-line solo placeholder="หมายเลขที่สามารถติดต่อได้" 
-                  background-color="#CFE7FB" 
+                  <v-text-field v-model="phone"  type="text" maxlength="10" @keydown.native="keyFilter($event, 'number')" single-line solo label="หมายเลขที่สามารถติดต่อได้" 
+                  background-color="#BADDFA" 
                   class="custom-text-field" 
                   >
                   </v-text-field>
@@ -67,12 +86,12 @@
 
           
         <v-layout class="custom-size">
-          <v-flex xs12 sm2 md2 lg2 xl2 style="padding-top: 5px;">
+          <v-flex xs12 sm2 md2 lg2 xl2 class="space-label">
             <v-icon medium style="align-items: flex-start;">mdi-file-document-outline</v-icon>
             <span for="resume" style="padding-left: 0.2em;  font-size: 14px;">เรซูเม่</span>
           </v-flex>
           <v-flex xs12 sm6 md6 lg6 xl6 >
-            <v-text-field v-model="fileName" ref="resume" @change="validateFile" disabled single-line solo background-color="#CFE7FB" class="custom-text-field dis" ></v-text-field>
+            <v-text-field v-model="fileName" ref="resume" @change="validateFile" readonly single-line solo background-color="#BADDFA" class="custom-text-field dis" ></v-text-field>
           </v-flex>
           <v-flex class="custom-file-res">
             <input type="file" id="resume" ref="resume" @change="validateFile" accept=".pdf, .png, .jpg, .jpeg">
@@ -82,13 +101,13 @@
 
       
         <v-layout class="custom-size" wrap>
-          <v-flex xs12 sm2 md2 lg2 xl2 style="padding-top: 5px;">
+          <v-flex xs12 sm2 md2 lg2 xl2 class="space-label">
             <v-icon>mdi-bullhorn</v-icon>
             <span style="padding-left: 0.2em;  font-size: 14px;">คุณได้รับข่าวสารการสมัครจากช่องทางไหน ?</span>
           </v-flex>
           <v-flex >
             <div class="form-group">
-              <v-select v-model="social" :items="vse2" single-line solo background-color="#CFE7FB" class="custom-text-field" ></v-select>
+              <v-select v-model="social" :items="vse2" single-line solo background-color="#BADDFA" class="custom-text-field" ></v-select>
             </div>
           </v-flex>
         </v-layout>
@@ -124,12 +143,12 @@
           </v-checkbox>
         </div>
 
-        <v-dialog v-model="dialog" width="50%" persistent>
+        <v-dialog v-model="dialog" width="80%" persistent>
           <v-card>
             <v-card-title style="font-weight: bold; align-items: center;">
-              <v-icon>mdi-text-box</v-icon>&nbsp; &nbsp; {{ myJson.title }}
+              <v-icon>mdi-text-box</v-icon>&nbsp; {{ myJson.title }}
             </v-card-title>
-            <v-card-text>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; {{ myJson.name2 }}</v-card-text>
+            <v-card-text>&nbsp; &nbsp; &nbsp; &nbsp;{{ myJson.name2 }}</v-card-text>
             <v-card-text>{{ myJson.name3 }}</v-card-text>
             <v-card-text style="font-weight: bold;">{{ myJson.name4 }}</v-card-text>
             <v-card-actions>
@@ -139,10 +158,10 @@
           </v-card>
         </v-dialog>
 
-        <v-dialog v-model="dialog2" width="50%" persistent>
+        <v-dialog v-model="dialog2" width="80%" persistent>
           <v-card>
             <v-card-title style="font-weight: bold; align-items: center;">
-              <v-icon>mdi-text-box</v-icon>&nbsp; &nbsp; {{ myJson2.poTitle }}
+              <v-icon>mdi-text-box</v-icon>&nbsp; {{ myJson2.poTitle }}
             </v-card-title>
             <v-card-text style="font-weight: bold;">{{ myJson2.headTerm1 }}</v-card-text>
             <v-card-text>{{ myJson2.term1 }}</v-card-text>
@@ -230,6 +249,9 @@
         title: '',
         firstname: '',
         lastname: '',
+        titleEN: '',
+        firstnameEN: '',
+        lastnameEN: '',
         phone: '',
         email: '',
         resume: '',
@@ -242,9 +264,11 @@
         submitClicked: false,
         vse: ['นาย', 'นาง', 'นางสาว'],
         vse2: ['Facebook', 'Instagram', 'Tiktok', 'Jobsdb', 'JobThai', 'อื่นๆ'],
+        vse3: ['Mr.', 'Mrs.', 'Miss'],
         fileName: '',
         fileType: '',
         loadingDialog: false,
+        pageLangauge: 'th'
       };
     },
 
@@ -260,6 +284,18 @@
     },
 
     methods: {
+      updateTitleEN(){
+        if(this.title == 'นาย'){
+          this.titleEN = 'Mr.'
+        }
+        if(this.title == 'นางสาว'){
+          this.titleEN = 'Miss'
+        }
+        if(this.title == 'นาง'){
+          this.titleEN = 'Mrs.'
+        }
+      },
+
       chDialog(){
         if(this.checkboxA == true){
           this.dialog = true;
@@ -282,6 +318,16 @@
         }
         else if (this.lastname.length < 1) {
           this.remind = 'กรุณากรอกนามสกุล';
+          this.snackbar = true;
+          return
+        }
+        else if (this.firstnameEN.length < 1) {
+          this.remind = 'กรุณากรอกชื่อภาษาอังกฤษ';
+          this.snackbar = true;
+          return
+        }
+        else if (this.lastnameEN.length < 1) {
+          this.remind = 'กรุณากรอกนามสกุลภาษาอังกฤษ';
           this.snackbar = true;
           return
         }
@@ -374,6 +420,9 @@
         formData.append('First_Name', this.firstname);
         formData.append('Last_Name', this.lastname);
         formData.append('Title', this.title);
+        formData.append('First_Name_EN', this.firstnameEN);
+        formData.append('Last_Name_EN', this.lastnameEN);
+        formData.append('Title_EN', this.titleEN);
         formData.append('Email', this.email);
         formData.append('Phone', this.phone);
         formData.append('Resume', this.resume);
@@ -383,8 +432,6 @@
         formData.append('Status', fStatus);
         formData.append('Consent_Version', version);
 
-        console.log('resume', this.resume);
-        console.log('Data', formData);
         this.loadingDialog = true; // แสดง Loader
         try {
           const response = await apiService.postApplicant(formData);
@@ -420,6 +467,9 @@
         this.title = ""
         this.firstname = ""
         this.lastname = ""
+        this.titleEN = ""
+        this.firstnameEN = ""
+        this.lastnameEN = ""
         this.email = ""
         this.phone = ""
         this.$refs.resume.value = "";
@@ -454,8 +504,8 @@
 
 .container {
   max-width: 100%;
-  padding: 60px 60px 20px 60px;
-  background: #ffffff;
+  padding: 30px 25px 20px 25px;
+  background: #f4f4f4;
   max-height: 750px;
   min-height: 750px;
   overflow: auto;
@@ -510,16 +560,10 @@ input[type="file"] {
   width: 100%;
 }
 
-.dis{ /* ตัวหนังสือในช่อง position */
-  font-size: 16px; 
-  font-weight: bold;
-  color: black;
-}
-
 .font-head{
   font-size: 1.75em;
   font-weight: bold;
-  padding-bottom: 25px;
+  padding-bottom: 30px;
   text-align: center;
   color: rgb(0, 0, 0);
 }
@@ -543,6 +587,11 @@ input[type="file"] {
 .v-card__text{
   padding: 10px 16px 10px 16px !important;
 }
+
+.space-label{
+  padding-top: 5px;
+}
+
 @media (max-width: 599px) {
   .custom-size {
     display: block;
@@ -556,6 +605,10 @@ input[type="file"] {
   .custom-file-res{
     padding-left: 0px;
     padding-bottom: 20px;
+  }
+  .space-label{
+    padding-top: 0px;
+    padding-bottom: 10px;
   }
 }
 

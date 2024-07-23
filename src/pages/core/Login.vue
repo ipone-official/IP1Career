@@ -39,7 +39,7 @@
                 <v-spacer></v-spacer>
             </v-layout>
             <v-container fluid grid-list-xl>
-                <v-layout row wrap style="backgroup: red;">
+                <v-layout row wrap style="background: red;">
                     <v-flex d-flex lg3 sm6 xs12>
                         <widget icon="domain" title="Office" :supTitle="$t('65 Ramkhamhang Sapansung Bangkok 10240')" color="#2196F3" />
                     </v-flex>
@@ -98,7 +98,7 @@ export default {
     methods: {
         login() {
             const vm = this;
- return vm.$router.push({ name: 'Reports' });
+            return vm.$router.push({ name: 'ManageData' });
             if (!vm.userName || !vm.password) {
 
                 vm.result = "Username and Password can't be null.";

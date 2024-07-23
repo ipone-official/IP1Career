@@ -1,49 +1,31 @@
 <template>
-  <div>
+  <div class="container">
 
-    <div class="container">
-
-      <div class="job-listings-container">
-        <div class="filter-section">
-            <div class="card-header">
-              <div class="card-font-head">
-                <v-icon color="white" >mdi-tune</v-icon>
-                {{ departmentTitle }}
-              </div>
-            </div>
-            <ul class="list-group">
-              <li class="filter-item list-group-item" v-for="department in departments" :key="department.departmentID" >
-                <label class="department-label">
-                <input type="checkbox" :value="department.departmentID" v-model="selectID" style="transform: scale(1.3);">
-                  {{ getDepartmentDesc(department) }}
-                </label>
-              </li>
-            </ul>
-        </div>
-
-        <div class="results-section">
-          <div class="card-header">
-            <div class="card-font-head">
-              <v-icon color="white">mdi-account</v-icon>
-              {{ vacanciesTitle }}
-            </div>
+    <div class="job-listings-container">
+      <!-- <div class="filter-section">
+          <div class="filter-item list-group-item" v-for="department in departments" :key="department.departmentID" >
+            <label class="department-label">
+            <input type="checkbox" :value="department.departmentID" v-model="selectID" style="transform: scale(1.3);">
+              {{ department.department_DescTH }}
+            </label>
           </div>
-          <!-- <table class="table">
-            <tbody>
-              <tr v-for="(position, index) in filterPosition" :key="position.positionID" @click="goToJobDesc(position.positionID, position.position_Name)">
-                <td class="job-item">{{ position.position_Name }}<span>&#10140;</span></td>
-              </tr>
-            </tbody>
-          </table> -->
+      </div> -->
 
-          <div v-for="(position, index) in filterPosition" :key="position.positionID" @click="goToJobDesc(position.positionID, position.position_Name)">
-            <div class="newjob-item">{{ position.position_Name }}<span>&#10140;</span></div>
+      <div class="results-section">
+        <div class="newjob-item" v-for="(position, index) in seachDepartment" :key="position.positionID" 
+        @click="goToJobDesc(position.positionID, position.position_Name, position.department_DescTH, position.priority, position.descriptionID, position.qualificationID)">
+          <div class="job-details">
+            <div class="first-section">
+              <div v-if="position.priority == 'URGENT'" class="urgent">ด่วน !</div>
+              <div class="job-firstline">{{ position.position_Name }}</div>
+            </div>
+            <div class="job-secondline">{{ position.department_DescTH }}</div>
           </div>
+          <span class="arrow-icon">&#10095;</span>
         </div>
       </div>
-      
     </div>
-
+      
   </div>
 </template>
 
@@ -66,29 +48,20 @@ export default {
       departments: [],
       filterPosition: [],
       positions: [],
-      selectID: [],
       rawData: [],
       depRawData: [],
-      titles: {
-        department: {
-          en: 'Department',
-          th: 'แผนก'
-        },
-        vacancies: {
-          en: 'Job Vacancies',
-          th: 'ตำแหน่งงานที่รับสมัคร'
-        }
-      }
     };
   },
 
   computed: {
     ...sync("*"),
-    departmentTitle() {
-      return this.language === 'en' ? this.titles.department.en : this.titles.department.th;
-    },
-    vacanciesTitle() {
-      return this.language === 'en' ? this.titles.vacancies.en : this.titles.vacancies.th;
+    seachDepartment() {
+      if (!this.searchVal) {
+        return this.filterPosition;
+      }
+      return this.filterPosition.filter(department => 
+        department.position_Name.toLowerCase().includes(this.searchVal.toLowerCase())
+      );
     }
   },
 
@@ -115,7 +88,9 @@ export default {
       try {
         const response = await apiService.getDepartment();
         this.depRawData = response.data;
-        this.departments = this.depRawData.filter(department => department.status === 'ACTIVE');
+        this.departments = this.depRawData
+                            .filter(department => department.status === 'ACTIVE');
+        
       } catch (error) {
         console.error(error);
       }
@@ -124,21 +99,29 @@ export default {
       try {
         const response = await apiService.getPosition();
         this.rawData = response.data;
-        this.positions = this.rawData.filter(position => position.status === 'ACTIVE');
+
+        const priorityOrder = {
+          'URGENT': 1,
+          'NORMAL': 2
+        };
+        this.positions = this.rawData.filter(position => position.status === 'ACTIVE')
+                                      .sort((a, b) => { return priorityOrder[a.priority] - priorityOrder[b.priority]});
+        
         this.filterPosition = this.positions;
       } catch (error) {
         console.error(error);
       }
     },
-    goToJobDesc(id, name) {
-      console.log("id", id)
+    goToJobDesc(id, name, dep, pri, jd, jq) {
       this.PositionDesc = [id]
       this.PositionName = name
+      this.PositionDepart = dep
+      this.PositionPriority = pri
+      this.PositionJD = jd
+      this.PositionJQ = jq
       this.Applydesc = true
       this.Apply100w = false
       this.Applyform = false
-      console.log("PositionDesc", this.PositionDesc)
-      console.log("PositionName", this.PositionName)
       // this.$router.push({ name: 'JobDesc'});  
     },
     switchLanguage() {
@@ -155,13 +138,13 @@ export default {
 
 .container{
   max-width: 100%;
-  padding: 20px;
-  /* box-shadow: 7px 8px 20px -4px rgba(0, 0, 0, 0.1); */
-  background: #ffffff 0%;
+  padding: 5px 0px 0px 0px;
+  background: #f4f4f4;
   overflow: scroll;
   scrollbar-width: none;
-  max-height: 750px;
-  min-height: 750px;
+  max-height: 725px;
+  min-height: 725px;
+  margin-top: 20px;
 }
 
 .department-label input[type="checkbox"] {
@@ -169,7 +152,6 @@ export default {
 }
 
 .department-label {
-  /* padding: 10px 0px 10px 5px; */
   color: rgb(0, 0, 0);
   font-size: 0.9em;
 }
@@ -177,153 +159,97 @@ export default {
 .job-listings-container {
   display: flex;
   justify-content: space-between;
-  /* background: white;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  border-radius: 10px;
-  max-height: 750px;
-  min-height: 750px; */
-}
-
-.filter-section {
-  width: 40%;
-  padding: 20px;
-  border-right: 1px solid #ddd;
 }
 
 .results-section {
-  width: 60%;
-  padding: 20px;
+  width: 100%;
+  padding: 0px 0px 10px 0px;
 }
 
 .newjob-item {
-  border-radius: 5px;
   cursor: pointer;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  font-size: 1.12em;
-  font-weight: 400;
+  justify-content: space-between;
   background-color: #fff;
-  border: 1.75px solid #ddd;
+  /* border: 2px solid #d4d4d4; */
+  border: 1px solid #000000;
   padding: 17.5px 20px 17.5px 15px;
-  margin-top: 20px;
+  margin-bottom: 20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .newjob-item:hover {
-  background-image: linear-gradient(to right, rgba(51, 148, 225, .18), transparent); 
+  /* background-image: linear-gradient(to right, rgba(51, 148, 225, .18), transparent);  */
+  background: #e0f2ff;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   transform: translateY(-2px);
 }
 
-/* .list-group {
-  border-radius: 5px;
-  background-color: #fff;
+.job-details {
+  display: flex;
+  flex-direction: column;
 }
 
-.filter-item {
-  padding: 15px 10px 15px 12.5px;
-  border-bottom: 2px solid #eee;
+.job-firstline {
+  justify-content: space-between; 
+  display: flex;
+  font-size: 1.3em;
 }
 
-.filter-item:last-child {
-  border-bottom: none;
-} */
- 
-.filter-item {
-  background-color: #fff;
-  border: 1.75px solid #dddddd !important;
-  border-radius: 5px;
-  padding: 15px;
+.job-secondline {
   font-size: 1em;
-  margin-top: 20px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: box-shadow 0.3s ease, transform 0.3s ease;
+  color: #aaaaaa;
 }
 
-.filter-item:hover {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  transform: translateY(-2px);
+.urgent {
+  background-color: red;
+  margin-right: 10px;
+  padding: 3px 6px 3px 6px;
+  color: white;
+  font-weight: 300;
+  white-space: nowrap;
 }
 
-.card-header {
-  padding: 10px 20px 10px 10px;
-  /* background: linear-gradient(to bottom, #007fc4 50%, #0977b3 50%); */
-  background-color: #007fc4;
-  color:white;
-  border-radius: 4px !important;
-  box-shadow: 0 2px 4px rgb(168, 166, 166); /* ใช้ rgb สำหรับเงา */
+.arrow-icon {
+  flex-shrink: 0;
+  font-size: 27.5px;
+  font-weight: bold;
+  margin-left: 10px;
 }
 
-.card-font-head {
-  font-size: 1.2em; 
-  font-weight: bold; 
-  /* padding: 5px 20px 5px 0px; */
+.first-section {
+  display: flex;
+  align-items: center;
+  padding-bottom: 5px;
 }
 
-li:nth-child(even) {
-  background-color: #e9e7e7;
-  }
-
-.theme--light.v-table thead th {
-  background-image: -webkit-gradient(
-    linear,
-    right top,
-    left top,
-    from(rgba(51, 148, 225, 0.18)),
-    to(transparent)
-  );
-  background-image: linear-gradient(270deg, rgba(51, 148, 225, 0.18), transparent);
-  background-color: #a7b0b9 !important;
-  font-size: 15px !important;
-  color: #ffffff !important;
-  /* background-color: #222d32;
-    background-color: #007fc4;
-    background-color: #000000;
-    background-color: #ffffff; */
-}
-
-.theme--light.v-datatable thead th.column.sortable.active,
-.theme--light.v-datatable thead th.column.sortable.active .v-icon,
-.theme--light.v-datatable thead th.column.sortable:hover {
-  color: #ffffff !important;
-}
-
-@media (max-width: 1100px) {
-  .job-listings-container {
-    display: block;
-    justify-content: space-between;
-  }
-
-  .filter-section {
-    width: 100%;
-    padding: 20px;
-    border-bottom: 1px solid #ddd;
-    border-right: none;
-  }
-
+/* @media (max-width: 960px) {
   .results-section {
     width: 100%;
-    padding: 20px;
+    padding: 10px 60px 0px 0px;
   }
-}
+} */
 
 @media (max-width: 1400px) {
   .txt {
     font-size: 15px;
   }
-  .job-item {
-    font-size: 1.05em;
-  }
-  .newjob-item {
-    font-size: 1.05em;
+  .job-firstline {
+    font-size: 1.25em;
   }
   .filter-item {
-    font-size: 0.95em;
+    font-size: em;
   }
   .card-font-head {
     font-size: 1.1em;
+  }
+}
+
+@media (max-width: 650px) {
+  .job-firstline {
+    font-size: 1.2em;
   }
 }
 </style>
