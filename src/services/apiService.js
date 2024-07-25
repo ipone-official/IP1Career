@@ -19,17 +19,11 @@ export default {
   getDescription() {
     return apiClient.get('/Description');
   },
-  getDescriptionDetail(data) {
-    return apiClient.get(`/DescriptionDetail/${data}`);
-  },
   getSelectDescriptionDetail(data) {
     return apiClient.get(`/SelectDescriptionDetail/${data}`);
   },
   getQualification() {
     return apiClient.get('/Qualification');
-  },
-  getQualificationDetail(data) {
-    return apiClient.get(`/QualificationDetail/${data}`);
   },
   getSelectQualificationDetail(data) {
     return apiClient.get(`/SelectQualificationDetail/${data}`);

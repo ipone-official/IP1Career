@@ -25,7 +25,7 @@
           </v-flex>
 
           <v-flex xs12 sm2 md3 lg2 xl2 class="custom-text-field1">
-            <v-select v-model="title" :items="vse" single-line solo label="คำนำหน้า" @change="updateTitleEN" background-color="#BADDFA" class="custom-text-field" ></v-select>
+            <v-autocomplete v-model="title" :items="vse" single-line solo label="คำนำหน้า" @change="updateTitleEN" background-color="#BADDFA" class="custom-text-field" ></v-autocomplete>
           </v-flex>
 
           <v-flex xs12 sm4 md4 lg4 xl4 >
@@ -44,7 +44,7 @@
           </v-flex>
 
           <v-flex xs12 sm2 md3 lg2 xl2 class="custom-text-field1">
-            <v-select v-model="titleEN" :items="vse3" single-line solo label="Prefix" readonly background-color="#BADDFA" class="custom-text-field" ></v-select>
+            <v-autocomplete v-model="titleEN" :items="vse3" single-line solo label="Prefix" readonly background-color="#BADDFA" class="custom-text-field" ></v-autocomplete>
           </v-flex>
 
           <v-flex xs12 sm4 md4 lg4 xl4 >
@@ -52,7 +52,7 @@
           </v-flex>
 
           <v-flex xs12 sm4 md4 lg4 xl4 class="custom-text-field2">
-                <v-text-field v-model="lastnameEN" maxlength="40" @keydown.native="keyFilter($event, 'En')" single-line solo label="Last Name" background-color="#BADDFA" class="custom-text-field"></v-text-field>
+            <v-text-field v-model="lastnameEN" maxlength="40" @keydown.native="keyFilter($event, 'En')" single-line solo label="Last Name" background-color="#BADDFA" class="custom-text-field"></v-text-field>
           </v-flex>
         </v-layout>
       
@@ -148,9 +148,9 @@
             <v-card-title style="font-weight: bold; align-items: center;">
               <v-icon>mdi-text-box</v-icon>&nbsp; {{ objective.title }}
             </v-card-title>
-            <v-card-text>&nbsp; &nbsp; &nbsp; &nbsp;{{ objective.name2 }}</v-card-text>
-            <v-card-text>{{ objective.name3 }}</v-card-text>
-            <v-card-text style="font-weight: bold;">{{ objective.name4 }}</v-card-text>
+            <v-card-text>&nbsp; &nbsp; &nbsp; &nbsp;{{ objective.item1 }}</v-card-text>
+            <v-card-text>{{ objective.item2 }}</v-card-text>
+            <v-card-text style="font-weight: bold;">{{ objective.item3 }}</v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn color="primary" @click="dialog = false" >ตกลง</v-btn>
@@ -163,30 +163,18 @@
             <v-card-title style="font-weight: bold; align-items: center;">
               <v-icon>mdi-text-box</v-icon>&nbsp; {{ policy.title }}
             </v-card-title>
-            <v-card-text style="font-weight: bold;">{{ policy.headTerm1 }}</v-card-text>
-            <v-card-text>{{ policy.term1 }}</v-card-text>
-            <v-card-text style="font-weight: bold;">{{ policy.headTerm2 }}</v-card-text>
-            <v-card-text>{{ policy.term2 }}</v-card-text>
-            <v-card-text>
-              <ul>
-                <li>{{ policy.subTerm21 }}</li>
-                <li>{{ policy.subTerm22 }}</li>
-                <li>{{ policy.subTerm23 }}</li>
+            <v-card-text v-for="(section, key) in policy.details" :key="key">
+              <div style="font-weight: bold; padding-bottom: 10px;">{{ section.head }}</div>
+              <div>{{ section.content }}</div>
+              <ul v-if="section.subterms">
+                <li v-for="subterm in section.subterms" :key="subterm">{{ subterm }}</li>
               </ul>
             </v-card-text>
-            <v-card-text style="font-weight: bold;">{{ policy.headTerm3 }}</v-card-text>
-            <v-card-text>{{ policy.term3 }}</v-card-text>
-            <v-card-text style="font-weight: bold;">{{ policy.headTerm4 }}</v-card-text>
-            <v-card-text>{{ policy.term4 }}</v-card-text>
-            <v-card-text style="font-weight: bold;">{{ policy.headTerm5 }}</v-card-text>
-            <v-card-text>{{ policy.term5 }}</v-card-text>
-            <v-card-text style="font-weight: bold;">{{ policy.headTerm6 }}</v-card-text>
-            <v-card-text>{{ policy.term6 }}</v-card-text>
-            <v-card-text>{{ policy.footer }}</v-card-text>
-            <v-card-text v-html="policy.contact"></v-card-text>
+            <v-card-text>{{ policy.footer.note }}</v-card-text>
+            <v-card-text v-html="policy.footer.contact"></v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="primary" @click="dialog2 = false" >ตกลง</v-btn>
+              <v-btn color="primary" @click="dialog2 = false">ตกลง</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -257,13 +245,13 @@
         social: 'Facebook',
         consent: '',
         objective: objectiveJson,
-        policy: policyJson,
+        policy: policyJson.data,
         remind: '',
         valid: true,
         submitClicked: false,
-        vse: ['นาย', 'นาง', 'นางสาว'],
+        vse: ['นาย', 'นาง', 'นางสาว', 'ว่าที่ร้อยตรี'],
         vse2: ['Facebook', 'Instagram', 'Tiktok', 'Jobsdb', 'JobThai', 'อื่นๆ'],
-        vse3: ['Mr.', 'Mrs.', 'Miss'],
+        vse3: ['Mr.', 'Mrs.', 'Miss', 'Acting Sub Lt.'],
         fileName: '',
         fileType: '',
         loadingDialog: false,
@@ -292,6 +280,9 @@
         }
         if(this.title == 'นาง'){
           this.titleEN = 'Mrs.'
+        }
+        if(this.title == 'ว่าที่ร้อยตรี'){
+          this.titleEN = 'Acting Sub Lt.'
         }
       },
 

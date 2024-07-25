@@ -71,8 +71,8 @@
               </div>
             </td>
             <td class="text-left">
-              <v-icon color="yellow darken-2" @click="showDepAdd('edit', props)">mdi-pencil</v-icon>
-              <v-icon color="red" @click="deleteDep(props.item.departmentID)">mdi-delete</v-icon>
+              <v-icon class="custom-icon" size="18" color="white" @click="showDepAdd('edit', props)">mdi-pencil</v-icon>
+              <v-icon class="custom-icon-delete" size="18" color="white" @click="deleteDep(props.item.departmentID)">mdi-delete</v-icon>
             </td>
           </tr>
         </template>
@@ -82,8 +82,11 @@
     <!-- Form Add Position -->
     <v-dialog v-model="showPosDialog" persistent width="50%">
       <v-card style="padding-bottom: 10px;">
-        <v-card-title style="font-weight: bold;">
-          <v-icon left>home</v-icon>{{ formtype2 === 'add' ? 'Add New Position' : 'Update Position' }}
+        <v-card-title style="font-weight: bold; display: flex; align-items: center; justify-content: space-between;">
+          <v-flex style="display: flex; align-items: center; font-weight: bold;">
+            <v-icon left>home</v-icon>{{ formtype2 === 'add' ? 'Add New Position' : 'Update Position' }}
+          </v-flex>
+          <v-icon size="30" color="red" style="display: flex; justify-content: flex-end;" @click="showPosDialog = false">mdi-close-box</v-icon>
         </v-card-title>
         <v-form ref="form" style="padding: 10px 20px 10px 20px;">
           <label class="custom-label">Position Name</label>
@@ -162,8 +165,8 @@
               </div>
             </td>
             <td>
-              <v-icon color="yellow darken-2" @click="setPositionModel('edit', props)">mdi-pencil</v-icon>
-              <v-icon color="red" @click="deletePos(props.item.positionID)">mdi-delete</v-icon>
+              <v-icon class="custom-icon" size="18" color="white" @click="setPositionModel('edit', props)">mdi-pencil</v-icon>
+              <v-icon class="custom-icon-delete" size="18" color="white" @click="deletePos(props.item.positionID)">mdi-delete</v-icon>
             </td>
           </tr>
         </template>
@@ -202,8 +205,8 @@
             <td class="text-left">{{ props.item.jD_Name }}</td>
             <td class="text-left">{{ props.item.department_DescEN }}</td>
             <td class="text-left">
-            <v-icon color="yellow darken-2" @click="fetchDescriptionsDetail(props.item.descriptionID), setDescModel('edit', props)">mdi-pencil</v-icon>
-            <v-icon color="red" @click="deleteDesc(props.item.descriptionID)">mdi-delete</v-icon>
+            <v-icon class="custom-icon" size="18" color="white" @click="fetchDescriptionsDetail(props.item.descriptionID), setDescModel('edit', props)">mdi-pencil</v-icon>
+            <v-icon class="custom-icon-delete" size="18" color="white" @click="deleteDesc(props.item.descriptionID)">mdi-delete</v-icon>
             </td>
           </tr>
         </template>
@@ -211,15 +214,15 @@
     </v-card>
     <!-- New Description -->
     <v-dialog v-model="descDetailTable" persistent width="75%">
-      <v-card style="padding: 15px;">
-        <v-card-tile style="display: flex; align-items: center; justify-content: space-between; padding: 0px 0px 15px 15px;">
+      <v-card style="padding-bottom: 10px;">
+        <v-card-title style="display: flex; align-items: center; justify-content: space-between; padding: 16px">
           <v-flex style="display: flex; align-items: center; font-weight: bold;">
             <v-icon style="padding-right: 10px;">home</v-icon>{{ formtype3 === 'add' ? 'Add New Description' : 'Update Description' }}
           </v-flex>
           <v-icon size="30" color="red" @click="descDetailTable = false">mdi-close-box</v-icon>
-        </v-card-tile>
+        </v-card-title>
 
-        <v-form ref="form" style="padding: 10px 10px 10px 10px;">
+        <v-form ref="form" style="padding: 10px 20px 10px 20px;">
           <v-layout>
             <v-flex style="padding-right: 10px;">
               <label class="custom-label">JD Name</label>
@@ -256,8 +259,8 @@
               <td class="text-left">{{ props.item.descriptionEN }}</td>
               <td class="text-left">{{ props.item.descriptionTH }}</td>
               <td class="text-left">
-              <v-icon color="yellow darken-2" @click="setItemDescModel(props)">mdi-pencil</v-icon>
-              <v-icon color="red" @click="deleteItemDescription(props.index)">mdi-delete</v-icon>
+              <v-icon class="custom-icon" size="18" color="white" @click="setItemDescModel(props)">mdi-pencil</v-icon>
+              <v-icon class="custom-icon-delete" size="18" color="white" @click="deleteItemDescription(props.index)">mdi-delete</v-icon>
               </td>
             </tr>
           </template>
@@ -302,8 +305,8 @@
             <td class="text-left">{{ props.item.jQ_Name }}</td>
             <td class="text-left">{{ props.item.department_DescEN }}</td>
             <td class="text-left">
-            <v-icon color="yellow darken-2" @click="fetchQualificationsDetail(props.item.qualificationID), setQuaModel('edit', props)">mdi-pencil</v-icon>
-            <v-icon color="red" @click="deleteQua(props.item.qualificationID)">mdi-delete</v-icon>
+            <v-icon class="custom-icon" size="18" color="white" @click="fetchQualificationsDetail(props.item.qualificationID), setQuaModel('edit', props)">mdi-pencil</v-icon>
+            <v-icon class="custom-icon-delete" size="18" color="white" @click="deleteQua(props.item.qualificationID)">mdi-delete</v-icon>
             </td>
           </tr>
         </template>
@@ -311,13 +314,13 @@
     </v-card>
     <!-- New Qualification -->
     <v-dialog v-model="quaDetailTable" persistent width="75%">
-      <v-card style="padding: 15px;">
-        <v-card-tile style="display: flex; align-items: center; justify-content: space-between; padding: 0px 0px 15px 15px;">
+      <v-card style="padding-bottom: 10px;">
+        <v-card-title style="display: flex; align-items: center; justify-content: space-between; padding: 16px">
           <v-flex style="display: flex; align-items: center; font-weight: bold;">
             <v-icon style="padding-right: 10px;">home</v-icon>{{ formtype4 === 'add' ? 'Add New Qualification' : 'Update Qualification' }}
           </v-flex>
           <v-icon size="30" color="red" @click="quaDetailTable = false">mdi-close-box</v-icon>
-        </v-card-tile>
+        </v-card-title>
 
         <v-form ref="form" style="padding: 10px 20px 10px 20px;">
           <v-layout>
@@ -356,8 +359,8 @@
               <td class="text-left">{{ props.item.qualificationEN }}</td>
               <td class="text-left">{{ props.item.qualificationTH }}</td>
               <td class="text-left">
-              <v-icon color="yellow darken-2" @click="setItemQuaModel(props)">mdi-pencil</v-icon>
-              <v-icon color="red" @click="deleteItemQualification(index)">mdi-delete</v-icon>
+              <v-icon class="custom-icon" size="18" color="white" @click="setItemQuaModel(props)">mdi-pencil</v-icon>
+              <v-icon class="custom-icon-delete" size="18" color="white" @click="deleteItemQualification(index)">mdi-delete</v-icon>
               </td>
             </tr>
           </template>
@@ -664,23 +667,23 @@
         this.jobDescTH = "";
         this.descItemButton = 'new';
       },
-      // async deleteItemDescription(index) {
-      //   Swal.fire({
-      //     title: 'Are you sure you want to delete this item ?',
-      //     text: "You won't be able to revert this!",
-      //     icon: 'warning',
-      //     showCancelButton: true,
-      //     confirmButtonColor: '#3085d6',
-      //     cancelButtonColor: '#d33',
-      //     confirmButtonText: 'Yes, delete it!',
-      //     allowOutsideClick: false,
-      //   }).then((result) => {
-      //     if (result.isConfirmed) {
-      //       this.confirmDeleteItemDescription(index);
-      //     }
-      //   });
-      // },
-      deleteItemDescription(index) {
+      async deleteItemDescription(index) {
+        Swal.fire({
+          title: 'Are you sure you want to delete this item ?',
+          text: "You won't be able to revert this!",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes, delete it!',
+          allowOutsideClick: false,
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.confirmDeleteItemDescription(index);
+          }
+        });
+      },
+      confirmDeleteItemDescription(index) {
         this.descDetailData.splice(index, 1);
         this.descDetailData.forEach((item, i) => {
           item.descriptionNo = i + 1;
@@ -801,7 +804,7 @@
       async fetchDescriptionsDetail(headID) {
         this.descDetailTable = true;
         try {
-          const response = await apiService.getDescriptionDetail(headID);
+          const response = await apiService.getSelectDescriptionDetail(headID);
           this.descDetailData = response.data;
         } catch (error) {
           console.error(error);
@@ -823,7 +826,7 @@
       async fetchQualificationsDetail(headID) {
         this.quaDetailTable = true;
         try {
-          const response = await apiService.getQualificationDetail(headID);
+          const response = await apiService.getSelectQualificationDetail(headID);
           this.quaDetailData = response.data;
         } catch (error) {
           console.error(error);
@@ -1311,5 +1314,25 @@
 .priority-badge.urgent {
   background-color: #fad3ce;
   color: #f5372a;
+}
+
+.custom-icon {
+  background-color: #FBC02D;
+  border-radius: 50%;
+  padding: 8px;
+  margin: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.custom-icon-delete {
+  background-color: #EF5350;
+  border-radius: 50%;
+  padding: 8px;
+  margin: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 </style>
