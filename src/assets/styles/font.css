@@ -1,11 +1,10 @@
-/* @font-face {
-  font-family: "SukhumvitSet";
-  src: url("../fonts/SukhumvitSet-Light.ttf") format("truetype");
-} */
+@font-face {
+  font-family: "Prompt";
+  src: url("../fonts/Prompt-Light.ttf") format("truetype");
+}
 
 * {
   font-family: "Prompt", sans-serif;
-  font-weight: 400;
 }
 
 .font-title {

@@ -16,14 +16,8 @@ export default {
   getPosition() {
     return apiClient.get('/Position');
   },
-  getDescription() {
-    return apiClient.get('/Description');
-  },
   getSelectDescriptionDetail(data) {
     return apiClient.get(`/SelectDescriptionDetail/${data}`);
-  },
-  getQualification() {
-    return apiClient.get('/Qualification');
   },
   getSelectQualificationDetail(data) {
     return apiClient.get(`/SelectQualificationDetail/${data}`);

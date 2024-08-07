@@ -7,7 +7,7 @@
             <v-card class="flex" flat tile :color="$root.themeColorFooter">
                 <v-card-actions></v-card-actions>
             </v-card>
-            <v-layout row wrap style="padding: 2rem">
+            <v-layout style="padding: 2rem">
                 <v-spacer></v-spacer>
                 <v-flex d-flex lg3 sm12 xs12>
                     <v-card class="elevation-1 pa-3" :color="$root.themeColor">
@@ -39,7 +39,7 @@
                 <v-spacer></v-spacer>
             </v-layout>
             <v-container fluid grid-list-xl>
-                <v-layout row wrap style="background: red;">
+                <v-layout row wrap>
                     <v-flex d-flex lg3 sm6 xs12>
                         <widget icon="domain" title="Office" :supTitle="$t('65 Ramkhamhang Sapansung Bangkok 10240')" color="#2196F3" />
                     </v-flex>
