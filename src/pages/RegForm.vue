@@ -621,7 +621,6 @@ export default {
     },
 
     goBack() {
-      // this.$router.push({ name: 'Career'});
       this.Applyform = false;
       this.Applydesc = true;
     },
@@ -675,15 +674,14 @@ input[type="file"] {
 }
 
 .custom-file-upload {
-  border-radius: 4px; /* ขอบโค้ง */
-  border: none; /* ลบเส้นขอบ */
+  border-radius: 4px;
+  border: none;
   white-space: nowrap;
   padding: 7.5px 20px 0px 20px;
-  /* margin-left: 10px; */
   cursor: pointer;
-  background-color: #1976d2; /* สีฟ้าของ Vuetify */
-  color: white; /* ข้อความสีขาว */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* เพิ่มเงาเบาๆ */
+  background-color: #1976d2;
+  color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   height: 40px;
 }
 

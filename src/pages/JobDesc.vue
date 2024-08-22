@@ -1,5 +1,4 @@
 <template>
-  <!-- <div class="full-background"> -->
     <div class="mybg">
       <div class="head-section">
         <v-layout class="firstline">
@@ -15,7 +14,6 @@
         {{ descriptionTitle }} :
       </div>
       <div class="content-item" v-for="desc in descResult">
-        <!-- <div style="padding-right: 7.5px;">&#9866;</div> -->
         <div>- {{ desc.descriptionEN === "" ? desc.descriptionTH : desc.descriptionEN }}</div>
       </div>
 
@@ -23,7 +21,6 @@
         {{ qualificationTitle }} :
       </div>
       <div class="content-item" v-for="qua in quaResult">
-        <!-- <div style="padding-right: 7.5px;">&#9866;</div> -->
         <div>- {{ qua.qualificationEN === "" ? qua.qualificationTH : qua.qualificationEN }}</div>
       </div>
 
@@ -31,7 +28,6 @@
         <v-btn color="yellow darken-2" @click="goForm()">สมัครงาน &#10095;</v-btn>
       </div>
     </div>
-  <!-- </div> -->
 </template>
 
 <script>
@@ -43,9 +39,6 @@ import Loading from "../components/core/Loading";
 import { sync } from "vuex-pathify";
 import apiService from '@/services/apiService';
 import { watch } from "vue";
-import { forEach } from "lodash";
-import { result } from "lodash";
-import { mdiConsoleLine } from "@mdi/js";
   
   export default {
     components: {
@@ -77,10 +70,6 @@ import { mdiConsoleLine } from "@mdi/js";
             en: 'Apply',
             th: 'สมัครงาน'
           },
-          // btnback: {
-          //   en: 'Go Back',
-          //   th: 'กลับหน้าแรก'
-          // },
         }
       };
     },
@@ -117,17 +106,6 @@ import { mdiConsoleLine } from "@mdi/js";
     },
 
     methods: {
-      // async fetchDescription() {
-      //   try {
-      //     const response = await apiService.getDescription();
-      //     this.descResult = response.data
-      //     this.selectDesc = this.descResult.filter(element => 
-      //       this.PositionDesc.includes(element.positionID)
-      //     );
-      //   } catch (error) {
-      //     console.error(error);
-      //   }
-      // },
       async fetchDescription() {
         try {
           const response = await apiService.getSelectDescriptionDetail(this.PositionJD);
@@ -148,12 +126,6 @@ import { mdiConsoleLine } from "@mdi/js";
       this.Applyform = true;
       this.Applydesc = false;
       },
-      // getJobDesc(resultDesc) {
-      //   return this.language === 'en' ? resultDesc.descriptionEN : resultDesc.descriptionTH;
-      // },
-      // getJobQua(resultQua) {
-      //   return this.language === 'en' ? resultQua.qualificationsEN : resultQua.qualificationsTH;
-      // },
     }
   };
 </script>
