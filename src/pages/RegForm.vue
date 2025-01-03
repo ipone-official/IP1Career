@@ -1,77 +1,46 @@
 <template>
   <div class="container">
     <div class="font-head">
-      <v-icon style="font-size: 32.5px">mdi-text-box</v-icon>
+      <v-icon style="font-size: 32.5px; margin-right: 10px;">mdi-text-box</v-icon>
       ใบสมัครงาน
     </div>
 
     <v-form ref="form" v-model="valid">
       <v-layout class="custom-size" wrap>
-        <v-flex sm2 md2 lg2 xl2 class="space-label">
+        <v-flex sm2 md2 lg2 xl2 class="d-flex align-center justify-center">
+        <div class="space-label">
           <v-icon>mdi-briefcase-account</v-icon>
           <span style="padding-left: 0.2em; font-size: 14px">ตำแหน่ง</span>
+        </div>
         </v-flex>
 
         <v-flex sm6 md6 lg6 xl6>
-          <v-text-field
-            type="text"
-            v-model="PositionName"
-            readonly
-            single-line
-            solo
-            hide-details
-            background-color="#BADDFA"
-          ></v-text-field>
+          <v-text-field type="text" v-model="PositionName" readonly single-line solo hide-details
+            background-color="#BADDFA"></v-text-field>
         </v-flex>
       </v-layout>
 
       <v-layout class="custom-size" style="margin-top: 1rem">
-        <v-flex xs12 sm2 md2 lg2 xl2 class="space-label">
+        <v-flex xs12 sm2 md2 lg2 xl2 class="d-flex align-center justify-center">
+        <div class="space-label">
           <v-icon>mdi-account</v-icon>
           <span style="padding-left: 0.2em; font-size: 14px">ชื่อ</span>
+        </div>
         </v-flex>
 
         <v-flex xs12 sm2 md3 lg2 xl2 class="custom-text-field1">
-          <v-autocomplete
-            v-model="title"
-            :items="vse"
-            single-line
-            solo
-            hide-details
-            label="คำนำหน้า"
-            @change="updateTitleEN"
-            background-color="#BADDFA"
-            class="custom-text-field"
-          ></v-autocomplete>
+          <v-autocomplete v-model="title" :items="vse" single-line solo hide-details label="คำนำหน้า"
+            @change="updateTitleEN" background-color="#BADDFA" class="custom-text-field"></v-autocomplete>
         </v-flex>
 
         <v-flex xs12 sm4 md3 lg4 xl4>
-          <v-text-field
-            v-model="firstname"
-            maxlength="40"
-            @keydown.native="keyFilter($event, 'Th')"
-            single-line
-            solo
-            hide-details
-            label="ชื่อ (ไทย)"
-            background-color="#BADDFA"
-            class="custom-text-field"
-            light
-          ></v-text-field>
+          <v-text-field v-model="firstname" maxlength="40" @keydown.native="keyFilter($event, 'Th')" single-line solo
+            hide-details label="ชื่อ (ไทย)" background-color="#BADDFA" class="custom-text-field" light></v-text-field>
         </v-flex>
 
         <v-flex xs12 sm4 md4 lg4 xl4 class="custom-text-field2">
-          <v-text-field
-            v-model="lastname"
-            maxlength="40"
-            @keydown.native="keyFilter($event, 'Th')"
-            single-line
-            solo
-            hide-details
-            label="นามสกุล (ไทย)"
-            background-color="#BADDFA"
-            class="custom-text-field"
-          ></v-text-field>
+          <v-text-field v-model="lastname" maxlength="40" @keydown.native="keyFilter($event, 'Th')" single-line solo
+            hide-details label="นามสกุล (ไทย)" background-color="#BADDFA" class="custom-text-field"></v-text-field>
         </v-flex>
       </v-layout>
 
@@ -82,123 +51,66 @@
         </v-flex>
 
         <v-flex xs12 sm2 md3 lg2 xl2 class="custom-text-field1">
-          <v-autocomplete
-            v-model="titleEN"
-            :items="vse3"
-            single-line
-            solo
-            hide-details
-            label="Prefix"
-            readonly
-            background-color="#BADDFA"
-            class="custom-text-field"
-          ></v-autocomplete>
+          <v-autocomplete v-model="titleEN" :items="vse3" single-line solo hide-details label="Prefix" readonly
+            background-color="#BADDFA" class="custom-text-field"></v-autocomplete>
         </v-flex>
 
         <v-flex xs12 sm4 md3 lg4 xl4>
-          <v-text-field
-            v-model="firstnameEN"
-            maxlength="40"
-            @keydown.native="keyFilter($event, 'En')"
-            single-line
-            solo
-            hide-details
-            label="First Name"
-            background-color="#BADDFA"
-            class="custom-text-field"
-            light
-          ></v-text-field>
+          <v-text-field v-model="firstnameEN" maxlength="40" @keydown.native="keyFilter($event, 'En')" single-line solo
+            hide-details label="First Name" background-color="#BADDFA" class="custom-text-field" light></v-text-field>
         </v-flex>
 
         <v-flex xs12 sm4 md4 lg4 xl4 class="custom-text-field2">
-          <v-text-field
-            v-model="lastnameEN"
-            maxlength="40"
-            @keydown.native="keyFilter($event, 'En')"
-            single-line
-            solo
-            hide-details
-            label="Last Name"
-            background-color="#BADDFA"
-            class="custom-text-field"
-          ></v-text-field>
+          <v-text-field v-model="lastnameEN" maxlength="40" @keydown.native="keyFilter($event, 'En')" single-line solo
+            hide-details label="Last Name" background-color="#BADDFA" class="custom-text-field"></v-text-field>
         </v-flex>
       </v-layout>
 
       <v-layout class="custom-size" style="margin-top: 0.5rem">
-        <v-flex xs12 sm2 md2 lg2 xl2 class="space-label">
+        <v-flex xs12 sm2 md2 lg2 xl2 class="d-flex align-center justify-center">
+        <div class="space-label">
           <v-icon>mdi-email</v-icon>
           <span style="padding-left: 0.2em; font-size: 14px">อีเมล</span>
+        </div>
         </v-flex>
         <v-flex sm6 md6 lg6 xl6>
           <div class="form-group">
-            <v-text-field
-              v-model="email"
-              type="email"
-              @keydown.native="keyFilterEmail($event, 'emailV')"
-              single-line
-              hide-details
-              label="อีเมล"
-              solo
-              background-color="#BADDFA"
-              class="custom-text-field"
-            ></v-text-field>
+            <v-text-field v-model="email" type="email" @keydown.native="keyFilterEmail($event, 'emailV')" single-line
+              hide-details label="อีเมล" solo background-color="#BADDFA" class="custom-text-field"></v-text-field>
           </div>
         </v-flex>
       </v-layout>
 
       <v-layout class="custom-size" wrap style="margin-top: 0.5rem">
-        <v-flex xs12 sm2 md2 lg2 xl2 class="space-label">
+        <v-flex xs12 sm2 md2 lg2 xl2 class="d-flex align-center justify-center">
+        <div class="space-label">
           <v-icon>mdi-phone</v-icon>
           <span style="padding-left: 0.2em; font-size: 14px">โทรศัพท์</span>
+        </div>
         </v-flex>
         <v-flex sm6 md6 lg6 xl6>
           <div class="form-group">
-            <v-text-field
-              v-model="phone"
-              type="text"
-              maxlength="10"
-              @keydown.native="keyFilter($event, 'number')"
-              single-line
-              solo
-              hide-details
-              label="หมายเลขที่สามารถติดต่อได้"
-              background-color="#BADDFA"
-              class="custom-text-field"
-            >
+            <v-text-field v-model="phone" type="text" maxlength="10" @keydown.native="keyFilter($event, 'number')"
+              single-line solo hide-details label="หมายเลขที่สามารถติดต่อได้" background-color="#BADDFA"
+              class="custom-text-field">
             </v-text-field>
           </div>
         </v-flex>
       </v-layout>
 
       <v-layout class="custom-size" style="margin-top: 0.5rem">
-        <v-flex xs12 sm2 md2 lg2 xl2 class="space-label">
-          <v-icon medium style="align-items: flex-start"
-            >mdi-file-document-outline</v-icon
-          >
+        <v-flex xs12 sm2 md2 lg2 xl2 class="d-flex align-center justify-center">
+        <div class="space-label">
+          <v-icon medium style="align-items: flex-start">mdi-file-document-outline</v-icon>
           <span for="resume" style="padding-left: 0.2em; font-size: 14px">เรซูเม่</span>
+        </div>
         </v-flex>
         <v-flex xs12 sm6 md6 lg6 xl6>
-          <v-text-field
-            v-model="fileName"
-            ref="resume"
-            @change="validateFile"
-            readonly
-            single-line
-            solo
-            hide-details
-            background-color="#BADDFA"
-            class="custom-text-field dis"
-          ></v-text-field>
+          <v-text-field v-model="fileName" ref="resume" @change="validateFile" readonly single-line solo hide-details
+            background-color="#BADDFA" class="custom-text-field dis"></v-text-field>
         </v-flex>
         <v-flex class="custom-file-res">
-          <input
-            type="file"
-            id="resume"
-            ref="resume"
-            @change="validateFile"
-            accept=".pdf, .png, .jpg, .jpeg"
-          />
+          <input type="file" id="resume" ref="resume" @change="validateFile" accept=".pdf, .png, .jpg, .jpeg" />
           <label for="resume" class="custom-file-upload">
             <v-icon color="white">mdi-file-document</v-icon> เลือกไฟล์
           </label>
@@ -208,30 +120,18 @@
       <v-layout class="custom-size" wrap style="margin-top: 0.5rem">
         <v-flex xs12 sm2 md2 lg2 xl2 class="space-label">
           <v-icon>mdi-bullhorn</v-icon>
-          <span style="padding-left: 0.2em; font-size: 14px"
-            >คุณได้รับข่าวสารการสมัครจากช่องทางไหน ?</span
-          >
+          <span style="padding-left: 0.2em; font-size: 14px">คุณได้รับข่าวสารการสมัครจากช่องทางไหน ?</span>
         </v-flex>
         <v-flex>
           <div class="form-group">
-            <v-select
-              v-model="social"
-              :items="vse2"
-              single-line
-              solo
-              background-color="#BADDFA"
-              class="custom-text-field"
-            ></v-select>
+            <v-select v-model="social" :items="vse2" single-line solo background-color="#BADDFA"
+              class="custom-text-field"></v-select>
           </div>
         </v-flex>
       </v-layout>
 
       <div style="padding-top: 10px">
-        <v-checkbox
-          v-model="checkboxA"
-          :error="submitClicked"
-          @change="handleRadioChange"
-        >
+        <v-checkbox v-model="checkboxA" :error="submitClicked" @change="handleRadioChange">
           <template v-slot:label>
             <div style="font-size: 15px">
               ท่านได้อ่านวัตถุประสงค์การใช้ข้อมูลส่วนบุคคลเพื่อการสมัครงานของบริษัท ฯ
@@ -239,11 +139,7 @@
             </div>
           </template>
         </v-checkbox>
-        <v-checkbox
-          v-model="checkboxF"
-          :error="submitClicked"
-          @change="handleRadioChange2"
-        >
+        <v-checkbox v-model="checkboxF" :error="submitClicked" @change="handleRadioChange2">
           <template v-slot:label>
             <div style="font-size: 15px">
               ท่านได้อ่านคำประกาศการใช้ข้อมูลส่วนบุคคลของบริษัท ฯ
@@ -256,8 +152,8 @@
 
       <v-dialog v-model="dialog" width="80%" persistent>
         <v-card>
-          <v-card-title style="font-weight: bold">
-            <v-icon>mdi-text-box</v-icon>&nbsp; {{ objective.title }}
+          <v-card-title style="font-weight: bold" class="primary white--text">
+            <v-icon color="white">mdi-text-box</v-icon>&nbsp; {{ objective.title }}
           </v-card-title>
           <v-card-text>&nbsp; &nbsp; &nbsp; &nbsp;{{ objective.item1 }}</v-card-text>
           <v-card-text>{{ objective.item2 }}</v-card-text>
@@ -276,26 +172,19 @@
             ประกาศความเป็นส่วนตัวของผู้สมัครงาน
           </v-card-title>
           <v-card-text v-if="dialog2">
-          <v-layout style="padding-bottom: 15px;">
-          <v-flex d-flex align-end>
-            {{ currentPage }} / {{ pageCount }}
-          </v-flex>
-            <v-spacer></v-spacer>
-            <v-btn @click="prevPage" class="page-count" small color="#ffc10a" :disabled="currentPage === 1"
-              >ก่อนหน้า</v-btn
-            >
-            <v-btn @click="nextPage" class="page-count" small color="#0580c6" :disabled="currentPage === pageCount"
-              >ถัดไป</v-btn
-            >
-          </v-layout>
+            <v-layout style="padding-bottom: 15px;">
+              <v-flex d-flex align-end>
+                {{ currentPage }} / {{ pageCount }}
+              </v-flex>
+              <v-spacer></v-spacer>
+              <v-btn @click="prevPage" class="page-count" small color="#ffc10a"
+                :disabled="currentPage === 1">ก่อนหน้า</v-btn>
+              <v-btn @click="nextPage" class="page-count" small color="#0580c6"
+                :disabled="currentPage === pageCount">ถัดไป</v-btn>
+            </v-layout>
 
-            <pdf
-              :src="pdfUrl"
-              :page="currentPage"
-              @num-pages="pageCount = $event"
-              @page-loaded="currentPage = $event"
-              class="pdf-container"
-            ></pdf>
+            <pdf :src="pdfUrl" :page="currentPage" @num-pages="pageCount = $event" @page-loaded="currentPage = $event"
+              class="pdf-container"></pdf>
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
@@ -698,8 +587,10 @@ input[type="file"] {
   font-size: 1.75em;
   font-weight: bold;
   padding-bottom: 30px;
-  text-align: center;
   color: rgb(0, 0, 0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .custom-text-field1 {
@@ -723,7 +614,7 @@ input[type="file"] {
 }
 
 .space-label {
-  padding-top: 5px;
+  padding-top: 0px;
 }
 
 .custom-layout {
@@ -733,9 +624,10 @@ input[type="file"] {
 
 .pdf-container {
   height: 725px;
-  overflow-y: auto;
   width: 90%;
   margin: 0 auto;
+  overflow: auto;
+  scrollbar-width: none;
 }
 
 .font-page-count {
@@ -751,16 +643,20 @@ input[type="file"] {
   .custom-size {
     display: block;
   }
+
   .custom-text-field1 {
     padding-right: 0px;
   }
+
   .custom-text-field2 {
     padding-left: 0px;
   }
+
   .custom-file-res {
     padding-left: 0px;
     padding-bottom: 20px;
   }
+
   .space-label {
     padding-top: 0px;
     padding-bottom: 10px;
@@ -771,6 +667,7 @@ input[type="file"] {
   .row {
     flex-direction: column;
   }
+
   .policy-link {
     font-size: 15px;
   }
@@ -782,9 +679,11 @@ input[type="file"] {
     overflow-y: auto;
     width: 100%;
   }
+
   .font-page-count {
     font-size: 12px;
   }
+
   .page-count {
     font-size: 10px;
     height: 20px;

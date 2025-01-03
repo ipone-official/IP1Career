@@ -4,64 +4,23 @@
     app
     :color="$root.themeColor">
     <v-toolbar-title>
-      <v-toolbar-side-icon @click="toggleNavigationBar"></v-toolbar-side-icon>
+      <v-toolbar-side-icon @click="toggleNavigationBar" v-if="!this.notGetADs"></v-toolbar-side-icon>
     </v-toolbar-title>
-    <!-- <v-spacer></v-spacer> -->
+    <v-spacer></v-spacer>
 
-
-     
-
-
-
-    <!-- <v-menu  class="toolbar-menu-item" offset-y origin="center center" :nudge-bottom="10" transition="scale-transition" content-class="language-menu">
-      <v-btn icon large flat slot="activator" :ripple="false" >
-        <img :src="selectedLanguageFlag" class="selected-language-flag" />
-      </v-btn>
-      <v-list class="languages-list">
-        <v-list-tile
-          v-for="(language,index) in languages"
-          @click="selectLanguage(language.languageCode)"
-          :key="index"
-          class="languages-list-item">
-            <v-list-tile-action v-if="language.path">
-              <img :src="language.path" class="language-flag" />
-            </v-list-tile-action>
-            <v-list-tile-content class="languages-list-item-title">
-              <v-list-tile-title >{{ language.name }}</v-list-tile-title>
-            </v-list-tile-content>
-        </v-list-tile>
-      </v-list>
-    </v-menu>
-
-
-    <div>
-      <h3>DHL</h3>
-    </div> -->
-    <!-- <v-menu class="toolbar-menu-item" offset-y origin="center center" :nudge-bottom="10" transition="scale-transition">
+    <div v-if="!this.notGetADs">
+      <p class="ma-auto">{{ infoLogin.ADname }}</p>
+    </div>
+    <div v-if="this.notGetADs">
+      <p class="ma-auto">{{ this.empIDPeoplePlus }} - {{ this.firstnameADs }} {{ this.surnameADs }}</p>
+    </div>
+    <v-menu class="toolbar-menu-item" offset-y origin="center center" :nudge-bottom="10" transition="scale-transition">
       <v-btn icon large flat slot="activator" :ripple="false">
         <v-avatar size="42px">
           <img src="https://avataaars.io/?avatarStyle=Circle&topType=ShortHairShortFlat&accessoriesType=Sunglasses&hairColor=Black&facialHairType=Blank&clotheType=CollarSweater&clotheColor=Black&eyeType=Default&eyebrowType=Default&mouthType=Smile&skinColor=Light"/>
         </v-avatar>
       </v-btn>
-      <v-list>
-        <v-list-tile
-          v-for="(item,index) in items"
-          :key="index"
-          :to="!item.href ? { name: item.name } : null"
-          :href="item.href"
-          ripple="ripple"
-          :disabled="item.disabled"
-          :target="item.target"
-          @click="item.click">
-          <v-list-tile-action v-if="item.icon">
-            <v-icon>{{ item.icon }}</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title>{{ item.title }}</v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
-      </v-list>
-    </v-menu> -->
+    </v-menu>
   </v-toolbar>
 </template>
 <script>

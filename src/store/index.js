@@ -6,10 +6,6 @@ import { make } from "vuex-pathify";
 pathify.options.mapping = "simple";
 
 const getDefaultState = () => ({
-  userMember: [],
-  disabledFormReport: false,
-  subHeaders: [],
-  disabledAddPhone: false,
   PositionDesc : [0],
   PositionName : "",
   PositionDepart : "",
@@ -21,7 +17,21 @@ const getDefaultState = () => ({
   Apply100w : true,
   language: 'th',
   selectID: [],
-  searchVal: ""
+  searchVal: "",
+  firstnameADs: '',
+  surnameADs: '',
+  mobileADs: '',
+  groupPeoplePlus: {},
+  educationalName: '',
+  academyName: '',
+  myAssetID: [],
+  notGetADs: false,
+  empIDPeoplePlus: '',
+  consentStatus: '',
+  policyDialog: false,
+  usernameForUpdate: '',
+  passwordForUpdate: '',
+  tokenForUpdate: ''
 });
 const loginInfo = () => ({
   drawer: false,
@@ -31,9 +41,20 @@ const loginInfo = () => ({
   infoLogin: {
     isLogin: false,
     authentication: false,
-    username: 'DHL',
+    ADname: '',
+    ADfirstName: '',
+    ADlastName: '',
+    ADemail: '',
+    ADempId: '',
+    ADgroup:[],
+    ADsamAccount: '',
+    ADmobile: '',
+    ADtelephone: ''
   },
+  selectAssetID: '',
+  selectEmploymentID: '',
 })
+
 const state = Object.assign(getDefaultState(), loginInfo());
 
 const mutations = make.mutations(state);

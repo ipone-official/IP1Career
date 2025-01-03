@@ -88,9 +88,7 @@ export default {
       try {
         const response = await apiService.getDepartment();
         this.depRawData = response.data;
-        this.departments = this.depRawData
-                            .filter(department => department.status === 'ACTIVE');
-        
+        this.departments = this.depRawData.filter(department => department.status === 'ACTIVE');
       } catch (error) {
         console.error(error);
       }
@@ -106,7 +104,7 @@ export default {
         };
         this.positions = this.rawData.filter(position => position.status === 'ACTIVE')
                                       .sort((a, b) => { return priorityOrder[a.priority] - priorityOrder[b.priority]});
-        
+                                      
         this.filterPosition = this.positions;
       } catch (error) {
         console.error(error);

@@ -1,5 +1,5 @@
 <template>
-  <v-card>
+  <v-card class="pa-3 ma-2">
     <v-card-title>
     <span style="font-weight: bold; font-size: 17px;">
       Applicant List
@@ -49,7 +49,7 @@
                 {{ props.item.status }}
               </div>
             </td>
-            <td class="text-left">
+            <td class="text-left" v-if="userRole != 'CANT'">
               <v-icon v-if="props.item.status !== 'REJECT' && props.item.status !== 'APPROVE'" color="green lighten-1" @click="editApplicant('APPROVE', props.item.applicantID)">mdi-checkbox-marked</v-icon>
               <v-icon v-if="props.item.status !== 'REJECT' && props.item.status !== 'APPROVE'" color="red" @click="editApplicant('REJECT', props.item.applicantID)">mdi-close-box</v-icon>
             </td>
@@ -80,12 +80,12 @@ export default {
     return {
       headers: [
         { text: 'ID', value: 'applicantID' },
-        { text: 'Prefix TH', value: 'title' },
-        { text: 'First Name TH', value: 'first_Name' },
-        { text: 'Last Name TH', value: 'last_Name' },
-        { text: 'Prefix EN', value: 'title_EN' },
-        { text: 'First Name EN', value: 'first_Name_EN' },
-        { text: 'Last Name EN', value: 'last_Name_EN' },
+        { text: 'Prefix(TH)', value: 'title' },
+        { text: 'First Name(TH)', value: 'first_Name' },
+        { text: 'Last Name(TH)', value: 'last_Name' },
+        { text: 'Prefix(EN)', value: 'title_EN' },
+        { text: 'First Name(EN)', value: 'first_Name_EN' },
+        { text: 'Last Name(EN)', value: 'last_Name_EN' },
         { text: 'Email', value: 'email' },
         { text: 'Phone', value: 'phone' },
         { text: 'Resume', value: 'resume' },
@@ -105,6 +105,7 @@ export default {
       searchApp: '',
       loadingDialog: false,
       functions,
+      userRole: '',
     };
   },
 
@@ -132,9 +133,20 @@ export default {
 
   created() {
     this.fetchApplicants();
+
+    setTimeout(() => {
+      this.checkRoleHeader();
+    }, 500);
   },
   
   methods: {
+    checkRoleHeader() {
+      if (this.infoLogin.ADgroup.includes("User_Career")) {
+        this.headers.pop();
+        this.userRole = 'CANT';
+      }
+    },
+
     filterStatus1() { 
       console.log(this.filterPosition, this.filterStatus)
       if (this.filterStatus === 'All Status' && this.filterPosition === 'All Position') {
@@ -172,7 +184,12 @@ export default {
         this.statusList = this.appRawData
           .map(item => item.status)
           .filter((value, index, self) => self.indexOf(value) === index);
-        this.filterStatus = 'REGISTERED'
+
+          if(this.statusList.includes('REGISTERED')){
+            this.filterStatus = "REGISTERED";
+          } else {
+            this.filterStatus = "All Status";
+          }
 
         this.positionList = this.appRawData
           .map(item => item.position_Name)
@@ -222,6 +239,7 @@ export default {
       var dataApp = {
         ApplicantID: data,
         Status: type,
+        AcceptBy: this.infoLogin.ADempId ? this.infoLogin.ADempId : localStorage.getItem('currentEmpID')
       }
       console.log('EN', dataApp);
       this.loadingDialog = true; // แสดง Loader
@@ -230,7 +248,7 @@ export default {
         this.loadingDialog = false;
         console.log('Response:', response.data);
         Swal.fire({
-              title: 'สำเร็จ!',
+              title: 'Success!',
               text: 'Update data succes',
               icon: 'success',
               confirmButtonText: 'ตกลง',

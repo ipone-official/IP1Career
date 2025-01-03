@@ -38,6 +38,10 @@ setupComponents(Vue);
 
 Vue.use(Vuetify);
 
+import moment from 'moment';
+
+Vue.prototype.$moment = moment;
+
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */

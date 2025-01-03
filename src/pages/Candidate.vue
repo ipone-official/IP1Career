@@ -1,11 +1,11 @@
 <template>
-  <v-card>
+  <v-card class="pa-3 ma-2">
     <v-card-title>
       <span style="font-weight: bold; font-size: 17px;">
         Candidate List
       </span>
       <v-spacer></v-spacer>
-      <v-flex lg3 class="filter-search">
+      <v-flex lg3 class="filter-select">
           <v-text-field
             v-model="searchCan"
             append-icon="search"
@@ -50,9 +50,12 @@
                 {{ props.item.status }}
               </div>
             </td>
-            <td class="text-left">
-              <v-icon v-if="props.item.status !== 'REJECT' && props.item.status !== 'APPROVE'" color="green lighten-1">mdi-checkbox-marked</v-icon>
-              <v-icon v-if="props.item.status !== 'REJECT' && props.item.status !== 'APPROVE'" color="red" @click="editCandidate('REJECT', props.item.candidateID)">mdi-close-box</v-icon>
+            <td class="text-left" v-if="userRole != 'CANT'">
+              <v-layout>
+
+                <v-icon v-if="props.item.status !== 'REJECT' && props.item.status !== 'APPROVE'" color="green lighten-1" @click="editCandidate('APPROVE', props.item.candidateID)">mdi-checkbox-marked</v-icon>
+                <v-icon v-if="props.item.status !== 'REJECT' && props.item.status !== 'APPROVE'" color="red" @click="editCandidate('REJECT', props.item.candidateID)">mdi-close-box</v-icon>
+              </v-layout>
             </td>
           </tr>
         </template>
@@ -81,12 +84,12 @@ export default {
     return {
       headers: [
         { text: 'ID', value: 'candidateID' },
-        { text: 'Title', value: 'title' },
-        { text: 'First Name', value: 'first_Name' },
-        { text: 'Last Name', value: 'last_Name' },
-        { text: 'Title EN', value: 'title_EN' },
-        { text: 'First Name EN', value: 'first_Name_EN' },
-        { text: 'Last Name EN', value: 'last_Name_EN' },
+        { text: 'Prefix(TH)', value: 'title' },
+        { text: 'First Name(TH)', value: 'first_Name' },
+        { text: 'Last Name(TH)', value: 'last_Name' },
+        { text: 'Prefix(EN)', value: 'title_EN' },
+        { text: 'First Name(EN)', value: 'first_Name_EN' },
+        { text: 'Last Name(EN)', value: 'last_Name_EN' },
         { text: 'Email', value: 'email' },
         { text: 'Phone', value: 'phone' },
         { text: 'Resume', value: 'resume', sortable: false, },
@@ -105,6 +108,7 @@ export default {
       searchCan: '',
       loadingDialog: false,
       functions,
+      userRole: '',
     };
   },
 
@@ -132,9 +136,20 @@ export default {
 
   created() {
     this.fetchCandidates();
+
+    setTimeout(() => {
+      this.checkRoleHeader();
+    }, 500);
   },
   
   methods: {
+    checkRoleHeader() {
+      if (this.infoLogin.ADgroup.includes("User_Career")) {
+        this.headers.pop();
+        this.userRole = 'CANT';
+      }
+    },
+
     filterStatus1() { 
       console.log(this.filterPosition, this.filterStatus)
       if (this.filterStatus === 'All Status' && this.filterPosition === 'All Position') {
@@ -159,7 +174,10 @@ export default {
 
     async fetchCandidates() {
       try {
-        const response = await apiService.getCandidate();
+        const data = {
+          CurrentEmpID : this.infoLogin.ADempId ? this.infoLogin.ADempId : localStorage.getItem('currentEmpID')
+        }
+        const response = await apiService.getCandidate(data);
         this.candidateRawData = response.data;
 
         for (let i = 0; i < this.candidateRawData.length; i++) {
@@ -172,7 +190,12 @@ export default {
         this.statusList = this.candidateRawData
           .map(item => item.status)
           .filter((value, index, self) => self.indexOf(value) === index);
-        this.filterStatus = 'QUALIFIER'
+
+          if(this.statusList.includes('QUALIFIER')){
+            this.filterStatus = "QUALIFIER";
+          } else {
+            this.filterStatus = "All Status";
+          }
 
         this.positionList = this.candidateRawData
           .map(item => item.position_Name)
@@ -186,7 +209,6 @@ export default {
     },
 
     sortBy(column) {
-    // หากต้องการเรียงจากน้อยไปหามาก
     this.candidates.sort((a, b) => a[column] - b[column]);
     },
 
@@ -207,7 +229,7 @@ export default {
           allowOutsideClick: false,
         }).then((result) => {
           if (result.isConfirmed) {
-            this.confirmEditApplicant(type, data);
+            this.confirmEditCandidate(type, data);
           }
         });
       } else {
@@ -231,6 +253,7 @@ export default {
       var dataApp = {
         CandidateID: data,
         Status: type,
+        ApproveBy: this.infoLogin.ADempId ? this.infoLogin.ADempId : localStorage.getItem('currentEmpID')
       }
       console.log('EN', dataApp);
       this.loadingDialog = true; // แสดง Loader
@@ -239,7 +262,7 @@ export default {
         this.loadingDialog = false; // แสดง Loader
         console.log('Response:', response.data);
         Swal.fire({
-              title: 'สำเร็จ!',
+              title: 'Success!',
               text: 'Update data succes',
               icon: 'success',
               confirmButtonText: 'ตกลง',

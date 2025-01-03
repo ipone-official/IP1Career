@@ -11,7 +11,16 @@ const keyFilter = (event, type, lang) => {
     const regexThEn = () => {
       if (['All'].includes(type)) return /[0-9ก-์A-z/, -]/
       if (['En'].includes(type)) return /[A-z .]/
-      if (['Th'].includes(type)) return /[ก-์ ]/
+      if (['Th'].includes(type)) {
+        return (e) => {
+          // ตรวจสอบว่าเป็น Tab Key หรือไม่
+          if (e.key === "Tab") return true; // อนุญาตให้ Tab ทำงานปกติ
+          // ใช้ RegEx สำหรับอักขระไทยและช่องว่าง
+          if (!/[ก-์ ]/.test(e.key)) {
+            e.preventDefault(); // บล็อกอักขระที่ไม่ผ่าน RegEx
+          }
+        };
+      }      
       if (['Group'].includes(type)) return  /[0-9A-z '/.-]/
       if (['GroupTh'].includes(type)) return  /[0-9ก-์ /.-]/
       if (type === 'number') return /[0-9]/

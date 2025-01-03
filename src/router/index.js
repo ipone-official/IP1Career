@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 
-import Reports from '../pages/Reports.vue';
 import Login from '../pages/core/Login.vue';
 import Career from '../pages/Career.vue';
 import JobDesc from '../pages/JobDesc.vue';
@@ -10,23 +9,17 @@ import ManageData from '../pages/ManageData.vue';
 import DisplayPage from '../pages/DisplayPage.vue';
 import Applicant from '../pages/Applicant.vue';
 import Candidate from '../pages/Candidate.vue';
+import Employment from '../pages/Employment.vue';
 import NewEmpForm from '../pages/NewEmpForm.vue';
+import EmploymentAsset from '../pages/EmploymentAsset.vue';
+import EmployeeInfo from '../pages/PeoplePlus/EmployeeInfo.vue';
 import UserManual from '../pages/UserManual.vue';
+import EmploymentForm from '../pages/PeoplePlus/EmploymentForm.vue';
 
 Vue.use(Router);
 
 export default new Router({
   routes: [
-    {
-      path: '/Reports',
-      name: 'Reports',
-      component: Reports,
-      meta: {
-        breadcrumb: [
-          { name: 'Reports' }
-        ]
-      }
-    },
     {
       path: '/Career',
       name: 'Career',
@@ -68,7 +61,7 @@ export default new Router({
       }
     },
     {
-      path: '/DisplayPage',
+      path: '/',
       name: 'DisplayPage',
       component: DisplayPage,
       meta: {
@@ -99,6 +92,26 @@ export default new Router({
       }
     },
     {
+      path: '/Employment',
+      name: 'Employment',
+      component: Employment,
+      meta: {
+        breadcrumb: [
+          { name: 'Employment' }
+        ]
+      }
+    },
+    {
+      path: '/EmploymentAsset',
+      name: 'EmploymentAsset',
+      component: EmploymentAsset,
+      meta: {
+        breadcrumb: [
+          { name: 'EmploymentAsset' }
+        ]
+      }
+    },
+    {
       path: '/NewEmpForm',
       name: 'NewEmpForm',
       component: NewEmpForm,
@@ -109,17 +122,29 @@ export default new Router({
       }
     },
     {
+      path: '/EmployeeInfo',
+      name: 'EmployeeInfo',
+      component: EmployeeInfo,
+      meta: {
+        allowAnonymous: true,
+      }
+    },
+    {
       path: '/UserManual',
       name: 'UserManual',
       component: UserManual,
       meta: {
-        // breadcrumb: [
-        //   { name: 'UserManual' }
-        // ]
       }
     },
     {
-      path: '/',
+      path: '/EmploymentForm',
+      name: 'EmploymentForm',
+      component: EmploymentForm,
+      meta: {
+      }
+    },
+    {
+      path: '/Login',
       name: 'Login',
       component: Login,
       meta: {

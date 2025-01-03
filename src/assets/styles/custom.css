@@ -3,7 +3,7 @@
     box-shadow: none !important;
     min-height: 40px !important;
     font-size: 15px !important;
-    white-space: nowrap !important; 
+    white-space: nowrap !important;
   }
 
   .custom-text-field-search.v-text-field.v-text-field--solo .v-input__control .v-input__slot {
