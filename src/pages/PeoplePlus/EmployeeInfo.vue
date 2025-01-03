@@ -915,7 +915,15 @@ export default {
                 return;
             } else if (this.personalFormEducational == '') {
                 this.snackbar = true;
+                this.alertMessage = "กรุณาเลือกระดับการศึกษา";
+                return;
+            } else if (this.mEducational == '') {
+                this.snackbar = true;
                 this.alertMessage = "กรุณาเลือกวุฒิการศึกษา";
+                return;
+            } else if (this.mFaculty == '') {
+                this.snackbar = true;
+                this.alertMessage = "กรุณาเลือกคณะ/สาขาวิชา";
                 return;
             } else if (this.fileUserImageInServer == '' && this.fileNameUserImg == undefined) {
                 this.snackbar = true;

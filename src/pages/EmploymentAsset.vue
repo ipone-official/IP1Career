@@ -14,9 +14,20 @@
           hide-details></v-text-field>
       </v-flex>
     </v-card-title>
-    <v-data-table :headers="headers" :search="searchEmpAsset" :items="employeeAssetLists"
+    <v-data-table :headers="headers" :search="searchEmpAsset" :items="sortedItems"
       :rows-per-page-items="rowPerPageItems">
-      <!-- Customize items -->
+      <template v-slot:headers="props">
+    <tr>
+      <th v-for="header in props.headers" :key="header.text">
+        <span @click="sortBy(header.value)" style="cursor: pointer;">
+          {{ header.text }}
+          <span v-if="sortKey === header.value">
+            {{ sortDesc ? '▼' : '▲' }}
+          </span>
+        </span>
+      </th>
+    </tr>
+  </template>
       <template v-slot:items="props">
         <tr>
           <td class="text-left">{{ props.item.employment_ID }}</td>
@@ -271,21 +282,23 @@ export default {
   data() {
     return {
       headers: [
-        { text: "ID", value: "employment_ID" },
-        { text: "First Name", value: "employee_Name" },
-        { text: "Last Name", value: "employee_Surname" },
-        { text: "Status", value: "formStatus" },
-        { text: "Create Date", value: "createDate" },
-        { text: "Create By", value: "createByFullName" },
-        { text: "Update Date", value: "updateDate" },
-        { text: "Update By", value: "updateByFullName" },
-        { text: "Approve Date", value: "approveDate" },
-        { text: "Approve By", value: "approveByFullName" },
-        { text: "Receive Date", value: "receiveDate" },
-        { text: "Receive By", value: "receiveBy" },
-        { text: "Efective Date", value: "effectiveDate" },
-        { text: "Action", sortable: false },
-      ],
+      { text: "ID", value: "employment_ID", sortable: false },
+      { text: "First Name", value: "employee_Name", sortable: false },
+      { text: "Last Name", value: "employee_Surname", sortable: false },
+      { text: "Status", value: "formStatus", sortable: false },
+      { text: "Create Date", value: "createDate", sortable: false },
+      { text: "Create By", value: "createByFullName", sortable: false },
+      { text: "Update Date", value: "updateDate", sortable: false },
+      { text: "Update By", value: "updateByFullName", sortable: false },
+      { text: "Approve Date", value: "approveDate", sortable: false },
+      { text: "Approve By", value: "approveByFullName", sortable: false },
+      { text: "Receive Date", value: "receiveDate", sortable: false },
+      { text: "Receive By", value: "receiveBy", sortable: false },
+      { text: "Efective Date", value: "effectiveDate", sortable: false },
+      { text: "Action", sortable: false },
+    ],
+    sortKey: '', // เก็บคอลัมน์ที่ใช้เรียง
+    sortDesc: false, // เก็บลำดับการเรียง (asc/desc)
       rawEmployeeAssetLists: [],
       employeeAssetLists: [],
       searchEmpAsset: "",
@@ -333,6 +346,23 @@ export default {
         },
       ];
     },
+    sortedItems() {
+  if (!this.sortKey) return this.employeeAssetLists;
+
+  return [...this.employeeAssetLists].sort((a, b) => {
+    let result = 0;
+
+    // ตรวจสอบว่าฟิลด์ที่เรียงเป็น ID (หรือฟิลด์ที่มีค่าเป็นตัวเลข)
+    const aValue = this.sortKey === 'employment_ID' ? Number(a[this.sortKey]) : a[this.sortKey];
+    const bValue = this.sortKey === 'employment_ID' ? Number(b[this.sortKey]) : b[this.sortKey];
+
+    if (aValue > bValue) result = 1;
+    if (aValue < bValue) result = -1;
+
+    return this.sortDesc ? -result : result;
+  });
+}
+
   },
 
   watch: {
@@ -349,6 +379,16 @@ export default {
   },
 
   methods: {
+    sortBy(key) {
+    if (this.sortKey === key) {
+      // หากกดคอลัมน์เดิม สลับลำดับการเรียง (asc/desc)
+      this.sortDesc = !this.sortDesc;
+    } else {
+      // กำหนดคอลัมน์ใหม่ และเริ่มต้นเป็น ascending
+      this.sortKey = key;
+      this.sortDesc = false;
+    }
+  },
     setProp(data) {
       this.retireMenu = true;
       this.currentAssetID = data.item.employeeAsset_ID;
@@ -504,6 +544,7 @@ export default {
         }
         const response = await apiService.getEmploymentAssetList(data);
         this.rawEmployeeAssetLists = response.data;
+        this.rawEmployeeAssetLists.sort((a, b) => b.employment_ID - a.employment_ID);
 
         this.statusList = this.rawEmployeeAssetLists
           .map(item => item.formStatus)

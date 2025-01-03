@@ -904,6 +904,7 @@
             </v-flex>
 
             <v-flex xs12 lg3 xl3 class="custom-space">
+            <!-- {{ assetFormPosition }} -->
               <div>ตำแหน่ง</div>
               <v-autocomplete
                 label="ตำแหน่ง"
@@ -921,6 +922,7 @@
                   !this.infoLogin.ADgroup.includes('Admin_Career')
                 "
                 v-model="assetFormPosition"
+                return-object
               ></v-autocomplete>
             </v-flex>
             <v-flex xs12 lg6 xl5 class="custom-space">
@@ -1155,6 +1157,7 @@
             <v-flex lg4 xl4 class="custom-space">
               <div style="padding-left: 32px">ลักษณะงาน</div>
               <v-layout>
+              <!-- {{ assetJobType }} -->
                 <v-icon>mdi-clipboard-account</v-icon>
                 <v-autocomplete
                   prefix="*"
@@ -1171,6 +1174,7 @@
                   :items="JobTypeList"
                   item-text="jobType_TH"
                   item-value="jobType_Code"
+                  return-object
                 ></v-autocomplete>
               </v-layout>
             </v-flex>
@@ -1779,6 +1783,7 @@ export default {
       assetDepreciation: "",
       requireEmail: "N",
       checkADsUser: "",
+      noReplaceJobtype: false
     };
   },
 
@@ -1889,6 +1894,17 @@ export default {
     assetSalary: {
       handler: "formatSalary",
     },
+    assetFormPosition(val){
+      if(val.length == 0 || this.noReplaceJobtype) return this.noReplaceJobtype = false
+      const mItemJobtype = this.JobTypeList.filter(
+        (type) => type.jobType_Code == val.department_Desc
+      );
+      if(mItemJobtype.length == 1){
+        this.assetJobType = mItemJobtype[0]
+      } else {
+        this.assetJobType = ""
+      }
+    }
   },
 
   methods: {
@@ -2473,7 +2489,19 @@ export default {
         this.selectDepartment = response.data.department_Desc;
         this.replacePosition = response.data.replaceStatus;
         this.replaceEmployee = response.data.replaceEmployeeID;
-        this.assetFormPosition = response.data.position_Desc;
+
+        const mItemPosition = this.AllPosition.filter(
+        (type) => type.position_Code == response.data.position_Desc
+      );
+        this.noReplaceJobtype = true
+        this.assetFormPosition = mItemPosition[0]
+
+       const mItemJobtype = this.JobTypeList.filter(
+        (type) => type.jobType_Code == response.data.jobType
+      );
+      this.assetJobType = mItemJobtype[0]
+
+
         if (response.data.employeeStatus != "") {
           this.assetEmployeeStatus = response.data.employeeStatus;
         } else {
@@ -2484,7 +2512,7 @@ export default {
         this.assetGroupEmployee = response.data.groupEmployee;
         this.assetPayrollType = response.data.payrollType;
         this.assetRecordTime = response.data.recordTime;
-        this.assetJobType = response.data.jobType;
+        
         this.assetJobGrade = response.data.jobGrade;
         this.assetJobLevel = response.data.jobLevel;
         this.assetEmploymentType = response.data.employmentType;
@@ -2561,7 +2589,7 @@ export default {
         Department_Desc: this.selectDepartment,
         WorkUnit_Desc: this.workUnit,
         SubTeam_Desc: this.subTeam,
-        Position_Desc: this.assetFormPosition,
+        Position_Desc: this.assetFormPosition.position_Code,
         ReplaceStatus: this.replacePosition,
         ReplaceEmployeeID: this.replaceEmployee,
         OnboardDate: this.customOnboardDate,
@@ -2574,7 +2602,7 @@ export default {
         GroupEmployee: this.assetGroupEmployee,
         GroupWork: this.assetGroupWork,
         RecordTime: this.assetRecordTime,
-        JobType: this.assetJobType,
+        JobType: this.assetJobType.jobType_Code,
         JobGrade: this.assetJobGrade,
         JobLevel: this.assetJobLevel,
         EmploymentType: this.assetEmploymentType,
@@ -2877,7 +2905,7 @@ export default {
       if (this.validateForm(this.groupPeoplePlus)) return; // เพิ่มวันที่ 21.11.2024
 
       const job = this.AllPosition.filter(
-        (type) => type.position_Code == this.assetFormPosition
+        (type) => type.position_Code == this.assetFormPosition.position_Code
       );
       if (job.length > 0) {
         this.jobName = job[0].position_TH;  // เพิ่มวันที่ 02.01.2025
@@ -3066,7 +3094,7 @@ export default {
                 dteeffex: "",
                 codcomp: this.companyCode,
                 desc_codcomp: "",
-                codpos: this.assetFormPosition,
+                codpos: this.assetFormPosition.position_Code,
                 namabb: "",
                 dteefpos: this.customOnboardDate,
                 numlvl: this.assetJobLevel,
@@ -3077,7 +3105,7 @@ export default {
                 typemp: this.assetGroupEmployee,
                 codcalen: this.assetGroupWork,
                 flgatten: "Y",
-                codjob: this.assetJobType,
+                codjob: this.assetJobType.jobType_Code,
                 jobgrade: this.assetJobGrade,
                 dteefstep: this.customOnboardDate,
                 codgrpgl: this.assetGLAccount,
@@ -3427,7 +3455,7 @@ export default {
       }
 
       const job = this.AllPosition.filter(
-        (type) => type.position_Code == this.assetFormPosition
+        (type) => type.position_Code == this.assetFormPosition.position_Code
       );
       if (job.length > 0) {
         this.jobName = job[0].position_TH;  
