@@ -875,7 +875,7 @@
                     min-width="290px"
                   >
                     <template v-slot:activator="{ on }">
-                      <div>วันที่เริ่มงาน </div>
+                      <div>วันที่เริ่มงาน</div>
                       <v-text-field
                         v-model="customOnboardDate"
                         readonly
@@ -904,7 +904,7 @@
             </v-flex>
 
             <v-flex xs12 lg3 xl3 class="custom-space">
-            <!-- {{ assetFormPosition }} -->
+              <!-- {{ assetFormPosition }} -->
               <div>ตำแหน่ง</div>
               <v-autocomplete
                 label="ตำแหน่ง"
@@ -914,7 +914,7 @@
                 solo
                 background-color="#f5fafd"
                 flat
-                item-text="position_TH"  
+                item-text="position_TH"
                 item-value="position_Code"
                 hide-details
                 :disabled="
@@ -1157,7 +1157,7 @@
             <v-flex lg4 xl4 class="custom-space">
               <div style="padding-left: 32px">ลักษณะงาน</div>
               <v-layout>
-              <!-- {{ assetJobType }} -->
+                <!-- {{ assetJobType }} -->
                 <v-icon>mdi-clipboard-account</v-icon>
                 <v-autocomplete
                   prefix="*"
@@ -1783,7 +1783,7 @@ export default {
       assetDepreciation: "",
       requireEmail: "N",
       checkADsUser: "",
-      noReplaceJobtype: false
+      noReplaceJobtype: false,
     };
   },
 
@@ -1847,7 +1847,6 @@ export default {
     this.fetchRequireItemList();
     this.fetchPayslip();
 
-
     setTimeout(() => {
       if (this.showAdd == "") {
         this.checkRoleHeader();
@@ -1894,17 +1893,18 @@ export default {
     assetSalary: {
       handler: "formatSalary",
     },
-    assetFormPosition(val){
-      if(val.length == 0 || this.noReplaceJobtype) return this.noReplaceJobtype = false
+    assetFormPosition(val) {
+      if (val.length == 0 || this.noReplaceJobtype)
+        return (this.noReplaceJobtype = false);
       const mItemJobtype = this.JobTypeList.filter(
         (type) => type.jobType_Code == val.department_Desc
       );
-      if(mItemJobtype.length == 1){
-        this.assetJobType = mItemJobtype[0]
+      if (mItemJobtype.length == 1) {
+        this.assetJobType = mItemJobtype[0];
       } else {
-        this.assetJobType = ""
+        this.assetJobType = "";
       }
-    }
+    },
   },
 
   methods: {
@@ -2491,16 +2491,15 @@ export default {
         this.replaceEmployee = response.data.replaceEmployeeID;
 
         const mItemPosition = this.AllPosition.filter(
-        (type) => type.position_Code == response.data.position_Desc
-      );
-        this.noReplaceJobtype = true
-        this.assetFormPosition = mItemPosition[0]
+          (type) => type.position_Code == response.data.position_Desc
+        );
+        this.noReplaceJobtype = true;
+        this.assetFormPosition = mItemPosition[0];
 
-       const mItemJobtype = this.JobTypeList.filter(
-        (type) => type.jobType_Code == response.data.jobType
-      );
-      this.assetJobType = mItemJobtype[0]
-
+        const mItemJobtype = this.JobTypeList.filter(
+          (type) => type.jobType_Code == response.data.jobType
+        );
+        this.assetJobType = mItemJobtype[0];
 
         if (response.data.employeeStatus != "") {
           this.assetEmployeeStatus = response.data.employeeStatus;
@@ -2512,7 +2511,7 @@ export default {
         this.assetGroupEmployee = response.data.groupEmployee;
         this.assetPayrollType = response.data.payrollType;
         this.assetRecordTime = response.data.recordTime;
-        
+
         this.assetJobGrade = response.data.jobGrade;
         this.assetJobLevel = response.data.jobLevel;
         this.assetEmploymentType = response.data.employmentType;
@@ -2908,7 +2907,7 @@ export default {
         (type) => type.position_Code == this.assetFormPosition.position_Code
       );
       if (job.length > 0) {
-        this.jobName = job[0].position_TH;  // เพิ่มวันที่ 02.01.2025
+        this.jobName = job[0].position_TH; // เพิ่มวันที่ 02.01.2025
       } else {
         this.assetDetailSnackbar = true;
         this.snackbarMessage = "ยังไม่ได้เลือกตำแหน่งงาน";
@@ -2923,6 +2922,16 @@ export default {
       } else {
         this.assetDetailSnackbar = true;
         this.snackbarMessage = "ยังไม่ได้เลือกสถานที่ทำงาน";
+        return;
+      }
+      if (this.assetDepreciation == "") {
+        this.assetDetailSnackbar = true;
+        this.snackbarMessage = "กรุณาระบุค่าสึกหรอ";
+        return;
+      }
+      if (this.assetPayslip == "") {
+        this.assetDetailSnackbar = true;
+        this.snackbarMessage = "กรุณาระบุ payslip";
         return;
       }
 
@@ -2953,7 +2962,6 @@ export default {
             },
           }
         );
-        console.log(responseCheckIdNumber, "responseCheckIdNumber");
         if (responseCheckIdNumber.data.errorno != "") {
           this.loadingDialog = false;
           return Swal.fire({
@@ -2979,7 +2987,6 @@ export default {
             },
           }
         );
-        console.log(responseCheckBank, "responseCheckBank");
         if (responseCheckBank.data.errorno != "") {
           this.loadingDialog = false;
           return Swal.fire({
@@ -2995,6 +3002,23 @@ export default {
         }
 
         if (this.empIDPeoplePlus == "") {
+          let emailPeople = "";
+          const office365Email = this.systemAssetDetail.filter(
+            (chk) => chk.list_Description == "Office365 (Email)"
+          );
+          if (office365Email.length > 0) {
+            emailPeople = office365Email[0].item_Detail1;
+          }
+          // แปลงวันที่จาก String เป็น Date object
+          const [day, month, year] = this.customOnboardDate.split("/").map(Number);
+          const date = new Date(year, month - 1, day);
+
+          // เพิ่มวันที่ 118 วัน
+          date.setDate(date.getDate() + 118);
+
+          // แปลงวันที่กลับไปเป็นรูปแบบ String
+          const dateDteduepr = date.toLocaleDateString("en-GB");
+
           const dataNewEmp = {
             p_codempid_query: "",
             flgwarning: "S",
@@ -3121,13 +3145,13 @@ export default {
                 typdisp: "",
                 desdisp: "",
                 qtyduepr: "119",
-                dteduepr: "18/08/2024",
+                dteduepr: dateDteduepr,
                 yredatrq: "",
                 mthdatrq: "",
                 dteoccup: "",
                 numtelof: "",
                 email:
-                  this.requireEmail == "Y" ? this.emailADs : this.groupPeoplePlus.email,
+                  this.requireEmail == "Y" ? emailPeople : this.groupPeoplePlus.email,
                 numreqst: "",
                 param_numreqst: "",
                 param_codpos: "",
@@ -3191,7 +3215,7 @@ export default {
                       rowID: 2,
                       flgEdit: false,
                       amtincomOld: this.assetDepreciation,
-                    },   
+                    },
                     {
                       codincom: "05",
                       desincom: "ค่าตำแหน่ง",
@@ -3201,7 +3225,7 @@ export default {
                       rowID: 3,
                       flgEdit: false,
                       amtincomOld: "",
-                    }/*,
+                    } /*,
                     {
                       codincom: "93",
                       desincom: "รายได้ประจำอื่นๆ",
@@ -3211,7 +3235,7 @@ export default {
                       rowID: 4,
                       flgEdit: false,
                       amtincomOld: "",
-                    },*/
+                    },*/,
                   ],
                 },
               },
@@ -3303,8 +3327,19 @@ export default {
               },
             }
           );
-          this.empIDPeoplePlus = response.data.codempid;
+
           console.log("API Response:", response.data);
+          if (response.data.codempid == "") {
+            this.loadingDialog = false;
+            return Swal.fire({
+              title: "ไม่สำเร็จ!",
+              html: "ไม่สามารถส่งข้อมูลได้เนื่องจาก : " + response.data.response, // แสดงข้อความจาก response
+              icon: "error",
+              confirmButtonText: "ตกลง",
+              allowOutsideClick: false,
+            });
+          }
+          this.empIDPeoplePlus = response.data.codempid;
         }
 
         const updateNewEmp = {
@@ -3458,7 +3493,7 @@ export default {
         (type) => type.position_Code == this.assetFormPosition.position_Code
       );
       if (job.length > 0) {
-        this.jobName = job[0].position_TH;  
+        this.jobName = job[0].position_TH;
       } else {
         this.assetDetailSnackbar = true;
         this.snackbarMessage = "ยังไม่ได้เลือกตำแหน่งงาน";
