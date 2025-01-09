@@ -18,6 +18,7 @@ const apiClientAds = axios.create({
   }
 });
 
+
 export default {
   getAdsUser(data) {
     return apiClientAds.post('/ADsGetUser', data);

@@ -214,7 +214,7 @@ export default {
     async fetchEmployments() {
       try {
         const data = {
-          CurrentEmpID : this.infoLogin.ADempId ? this.infoLogin.ADempId : localStorage.getItem('currentEmpID')
+          CurrentEmpID : this.infoLogin.ADempId
         }
         const response = await apiService.getEmployment(data);
         this.employmentRawData = response.data;
@@ -288,7 +288,7 @@ export default {
       var dataApp = {
         EmploymentID: data,
         Status: type,
-        CreateBy: this.infoLogin.ADempId ? this.infoLogin.ADempId : localStorage.getItem('currentEmpID'),
+        CreateBy: this.infoLogin.ADempId,
         NameHR: this.infoLogin.ADname,
         EmailHR: this.infoLogin.ADemail,
         MobileHR: this.infoLogin.ADmobile,

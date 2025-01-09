@@ -2594,9 +2594,7 @@ export default {
         ReplaceStatus: this.replacePosition,
         ReplaceEmployeeID: this.replaceEmployee,
         OnboardDate: this.customOnboardDate,
-        UpdateBy: this.infoLogin.ADempId
-          ? this.infoLogin.ADempId
-          : localStorage.getItem("currentEmpID"),
+        UpdateBy: this.infoLogin.ADempId,
         EmployeeStatus: this.assetEmployeeStatus,
         Location: this.assetLocation,
         GL_Account: this.assetGLAccount,
@@ -2658,9 +2656,7 @@ export default {
           this.selectAssetID !== ""
             ? this.selectAssetID
             : localStorage.getItem("selectAsset"),
-        approveBy: this.infoLogin.ADempId
-          ? this.infoLogin.ADempId
-          : localStorage.getItem("currentEmpID"),
+        approveBy: this.infoLogin.ADempId,
       };
       try {
         const response = await apiService.updateReturnDate(data);
@@ -3415,9 +3411,7 @@ export default {
             this.selectAssetID !== ""
               ? this.selectAssetID
               : localStorage.getItem("selectAsset"),
-          approveBy: this.infoLogin.ADempId
-            ? this.infoLogin.ADempId
-            : localStorage.getItem("currentEmpID"),
+          approveBy: this.infoLogin.ADempId,
           Status: sta,
         };
         const responseUpdate = await apiService.updateAssetFormStatus(data);

@@ -285,7 +285,7 @@ export default {
                 Consent: consent,
                 Status: formStatus,
                 Consent_Version: version,
-                ApproveBy: this.infoLogin.ADempId ? this.infoLogin.ADempId : localStorage.getItem('currentEmpID')
+                ApproveBy: this.infoLogin.ADempId
             };
 
             this.loadingDialog = true; // แสดง Loader

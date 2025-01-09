@@ -239,7 +239,7 @@ export default {
       var dataApp = {
         ApplicantID: data,
         Status: type,
-        AcceptBy: this.infoLogin.ADempId ? this.infoLogin.ADempId : localStorage.getItem('currentEmpID')
+        AcceptBy: this.infoLogin.ADempId
       }
       console.log('EN', dataApp);
       this.loadingDialog = true; // แสดง Loader

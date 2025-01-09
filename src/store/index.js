@@ -49,7 +49,8 @@ const loginInfo = () => ({
     ADgroup:[],
     ADsamAccount: '',
     ADmobile: '',
-    ADtelephone: ''
+    ADtelephone: '',
+    pathUrl: ''
   },
   selectAssetID: '',
   selectEmploymentID: '',

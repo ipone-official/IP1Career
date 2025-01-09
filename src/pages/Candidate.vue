@@ -173,9 +173,10 @@ export default {
     },
 
     async fetchCandidates() {
+
       try {
         const data = {
-          CurrentEmpID : this.infoLogin.ADempId ? this.infoLogin.ADempId : localStorage.getItem('currentEmpID')
+          CurrentEmpID : this.infoLogin.ADempId
         }
         const response = await apiService.getCandidate(data);
         this.candidateRawData = response.data;
@@ -253,7 +254,7 @@ export default {
       var dataApp = {
         CandidateID: data,
         Status: type,
-        ApproveBy: this.infoLogin.ADempId ? this.infoLogin.ADempId : localStorage.getItem('currentEmpID')
+        ApproveBy: this.infoLogin.ADempId
       }
       console.log('EN', dataApp);
       this.loadingDialog = true; // แสดง Loader

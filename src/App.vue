@@ -1,108 +1,156 @@
 <template>
-    <div>
-        <template v-if="!$route.meta.allowAnonymous">
-            <v-app id="inspire">
-                    <toolbar @toggleNavigationBar="drawer = !drawer" />
-                    <navigation :toggle="drawer" v-if="!this.notGetADs"/>
-                    <v-content>
-                        <breadcrumbs />
-                        <router-view />
-                    </v-content>
-                    <page-footer />
-            </v-app>
-        </template>
-
+  <div>
+    <template v-if="!$route.meta.allowAnonymous">
+      <v-app id="inspire">
+        <NewLoading v-if="!infoLogin.isLogin" :isLoading="isLoading" />
         <template v-else>
-
-            <!-- <transition>
-                  <keep-alive>
-                      <router-view></router-view>
-                  </keep-alive>
-              </transition> -->
-            <v-app id="inspire">
-                <div class="app-container">
-                    <!-- <toolbar @toggleNavigationBar="drawer = !drawer"/>
-                  <navigation :toggle="drawer"/> -->
-                    <v-content>
-                        <breadcrumbs />
-                        <router-view />
-                        <!-- <page-footer /> -->
-                    </v-content>
-                </div>
-            </v-app>
+          <toolbar @toggleNavigationBar="drawer = !drawer" />
+          <navigation :toggle="drawer" v-if="!this.notGetADs" />
+          <v-content>
+            <breadcrumbs />
+            <router-view />
+          </v-content>
+          <page-footer />
         </template>
-    </div>
+      </v-app>
+    </template>
+
+    <template v-else>
+      <v-app id="inspire">
+        <template >
+          <div class="app-container">
+            <v-content>
+              <breadcrumbs />
+              <router-view />
+            </v-content>
+          </div>
+        </template>
+      </v-app>
+    </template>
+  </div>
 </template>
 
 <script>
 import { sync } from "vuex-pathify";
-import apiService from '@/services/apiService';
+import {
+  getUser,
+  isTokenNearExpiration,
+  RenewToken,
+  ValidateJwtToken,
+} from "@/services/apiServicePortaol";
 import Swal from "sweetalert2";
+import NewLoading from "@/components/NewLoading.vue";
 
 export default {
-    name: 'App',
-    data() {
-        return {
-            getUserFromStorage: '',
-            getEmpID: '',
-        }
+  name: "App",
+  components: {
+    NewLoading,
+  },
+  data() {
+    return {
+      getUserFromStorage: "",
+      getEmpID: "",
+      isLoading: false,
+    };
+  },
+  computed: {
+    ...sync("*"),
+  },
+  watch: {
+    drawer(val) {
+      this.toggle = val;
     },
-    computed: {
-        ...sync("*"),
-    },
-    watch: {
-        drawer(val) {
-            this.toggle = val
-        }
-    },
-    created() {
-        if(!this.$route.query.EmployeeID && this.$route.path !== '/' && !this.$route.query.EmployementID){
-            this.getUserFromStorage = this.$route.query.Employee != undefined ? this.$route.query.Employee : localStorage.getItem('currentUser')
-            this.getUser();
-        } else {
-            this.notGetADs = true;
-        }
-    },
-    methods: {
-        async getUser() {
-            try {
-                const getUserAd = {
-                    username: this.getUserFromStorage
-                }
-                const response = await apiService.getAdsUser(getUserAd);
-                console.log(response, 'getUser')
-                if (!response.data.locked) {
-                    this.infoLogin.ADname = response.data.name
-                    this.infoLogin.ADfirstName = response.data.firstName
-                    this.infoLogin.ADlastName = response.data.lastName
-                    this.infoLogin.ADemail = response.data.email
-                    this.infoLogin.ADempId = response.data.empId
-                    this.infoLogin.ADgroup = response.data.group
-                    this.infoLogin.ADsamAccount = response.data.samAccount
-                    this.infoLogin.ADmobile = response.data.mobilePhone
-                    this.infoLogin.ADtelephone = response.data.telephoneNumber
-                    localStorage.setItem('currentUser', response.data.samAccount)
-                    localStorage.setItem('fullNameUser', response.data.name)
-                    localStorage.setItem('currentEmpID', response.data.empId)
-                }
-            } catch (error) {
-                // Swal.fire({
-                //     title: 'เกิดข้อผิดพลาด!',
-                //     text: 'ไม่พบข้อมูลผู้ใช้ กรุณาเข้าสู่ระบบผ่านเว็บ Portal',
-                //     icon: 'error',
-                //     confirmButtonText: 'ตกลง',
-                //     allowOutsideClick: false
-                // }).then((result) => {
-                //     if (result.isConfirmed) {
-                //         // เมื่อกดตกลงแล้ว redirect ไปยัง URL ที่กำหนด
-                //         window.location.href = 'https://portal.ip-one.com/#/Systems'; // เปลี่ยน URL ตามต้องการ
-                //     }
-                // });
-                console.log(error);
-            }
-        }
+  },
+  created() {
+    if (
+      !this.$route.query.EmployeeID &&
+      this.$route.path !== "/" &&
+      !this.$route.query.EmployementID
+    ) {
+      // console.log(this.$route.query.accessTokenCareer, "this.$route.query.accessTokenCareer")
+      // console.log(this.$route.query.refreshTokenCareer, "this.$route.query.refreshTokenCareer")
+
+      // this.getUserFromStorage =
+      this.$route.query.accessTokenCareer != undefined
+        ? localStorage.setItem("accessTokenCareer", this.$route.query.accessTokenCareer)
+        : localStorage.getItem("accessTokenCareer");
+      this.$route.query.refreshTokenCareer != undefined
+        ? localStorage.setItem("refreshTokenCareer", this.$route.query.refreshTokenCareer)
+        : "";
+      this.ValidateJwtToken();
+    } else {
+      this.notGetADs = true;
+      this.infoLogin.isLogin = true;
     }
-}
+  },
+  methods: {
+    async ValidateJwtToken() {
+      this.isLoading = true;
+      try {
+        const response = await ValidateJwtToken();
+        const nameClaim = response.claims.find((claim) => claim.type === "name");
+
+        if (nameClaim) {
+          if (isTokenNearExpiration()) {
+            // หาก Token ใกล้หมดอายุ ให้ Renew Token
+            await RenewToken(localStorage.getItem("refreshTokenCareer"));
+          }
+          await this.getUser(nameClaim.value);
+        } else {
+          Swal.fire({
+            html: `Name claim not found`,
+            icon: "warning",
+            showCancelButton: false,
+            allowOutsideClick: false,
+            confirmButtonText: "OK",
+          }).then(async (result) => {
+            if (result.isConfirmed) {
+              localStorage.removeItem("accessTokenCareer");
+            }
+          });
+        }
+      } catch (error) {
+        // หากเกิดข้อผิดพลาด ให้แสดงผลข้อความ
+        Swal.fire({
+          html: `Token is invalid or expired.`,
+          icon: "warning",
+          showCancelButton: false,
+          allowOutsideClick: false,
+          confirmButtonText: "OK",
+        }).then(async (result) => {
+          if (result.isConfirmed) {
+            localStorage.removeItem("accessTokenCareer");
+          }
+        });
+      } finally {
+        // ปิดการแสดงผล Loading ในทุกกรณี
+        this.isLoading = false;
+      }
+    },
+    async getUser(username) {
+      this.isLoading = true;
+      try {
+        const response = await getUser(username);
+        this.infoLogin.isLogin = true;
+        this.infoLogin.ADname = response.name;
+        this.infoLogin.ADfirstName = response.firstName;
+        this.infoLogin.ADlastName = response.lastName;
+        this.infoLogin.ADemail = response.email;
+        this.infoLogin.ADempId = response.empId;
+        this.infoLogin.ADgroup = response.group;
+        this.infoLogin.ADsamAccount = response.samAccount;
+        this.infoLogin.ADmobile = response.mobile;
+        this.infoLogin.ADtelephone = response.telephone;
+        this.infoLogin.pathUrl = response.pathUrl;
+      } catch (error) {
+        // หากเกิดข้อผิดพลาด ให้แสดงผลข้อความ
+      } finally {
+        // ปิดการแสดงผล Loading ในทุกกรณี
+        this.isLoading = false;
+      }
+    },
+  },
+};
 </script>
 
 <style>

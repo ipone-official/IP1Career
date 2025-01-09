@@ -508,7 +508,7 @@ export default {
           ReasonResign: this.selectReasonResign,
           ReasonInsured: this.selectReasonInsured,
           Remark: this.Remark,
-          RecordBy: this.infoLogin.ADempId ? this.infoLogin.ADempId : localStorage.getItem('currentEmpID')
+          RecordBy: this.infoLogin.ADempId
         }
         const updateResponse = await apiService.updateEffectiveDate(data);
         console.log(updateResponse.data);
@@ -540,7 +540,7 @@ export default {
     async fetchEmployeeAssetList() {
       try {
         const data = {
-          CurrentEmpID: this.infoLogin.ADempId ? this.infoLogin.ADempId : localStorage.getItem('currentEmpID')
+          CurrentEmpID: this.infoLogin.ADempId
         }
         const response = await apiService.getEmploymentAssetList(data);
         this.rawEmployeeAssetLists = response.data;
@@ -1068,10 +1068,10 @@ export default {
     async confirmUpdateStatusEmployee(sta, id) {
       const data = {
         EmployeeAsset_ID: id,
-        approveBy:
-          this.infoLogin.ADsamAccount !== ""
-            ? this.infoLogin.ADsamAccount
-            : localStorage.getItem("currentUser"),
+        approveBy: this.infoLogin.ADsamAccount,
+          // this.infoLogin.ADsamAccount !== ""
+          //   ? this.infoLogin.ADsamAccount
+          //   : localStorage.getItem("currentUser"),
         Status: sta,
       };
       try {
