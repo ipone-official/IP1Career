@@ -106,6 +106,7 @@ export default {
           }).then(async (result) => {
             if (result.isConfirmed) {
               localStorage.removeItem("accessTokenCareer");
+              window.location.replace("https://portal.ip-one.com/#/");
             }
           });
         }
@@ -120,6 +121,8 @@ export default {
         }).then(async (result) => {
           if (result.isConfirmed) {
             localStorage.removeItem("accessTokenCareer");
+            window.location.replace("https://portal.ip-one.com/#/");
+
           }
         });
       } finally {
