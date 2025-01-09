@@ -1310,8 +1310,9 @@
                 :type="showSalary ? 'text' : 'password'"
                 @click:append="showSalary = !showSalary"
                 :disabled="
-                  !this.infoLogin.ADgroup.includes('HR_Career') &&
-                  !this.infoLogin.ADgroup.includes('Admin_Career')
+                  (!this.infoLogin.ADgroup.includes('HR_Career') &&
+                    !this.infoLogin.ADgroup.includes('Admin_Career')) ||
+                  empIDPeoplePlus != ''
                 "
                 v-model="assetSalary"
               ></v-text-field>
@@ -1517,6 +1518,7 @@
             @click:append="showPassword = !showPassword"
             prepend-inner-icon="mdi-lock"
             v-model="peoplePlusPassword"
+            @keyup.enter="confirmApproveAssetForm('ONBOARDING')"
           ></v-text-field>
         </v-card-text>
         <v-card-actions>
@@ -1894,7 +1896,7 @@ export default {
       handler: "formatSalary",
     },
     assetFormPosition(val) {
-      if (val.length == 0 || this.noReplaceJobtype)
+      if (val.length == 0 || (this.noReplaceJobtype && this.assetJobType != undefined))
         return (this.noReplaceJobtype = false);
       const mItemJobtype = this.JobTypeList.filter(
         (type) => type.jobType_Code == val.department_Desc
@@ -2572,11 +2574,11 @@ export default {
         allowOutsideClick: false,
       }).then((result) => {
         if (result.isConfirmed) {
-          this.confirmAddAssetEmployee();
+          this.confirmAddAssetEmployee(false);
         }
       });
     },
-    async confirmAddAssetEmployee() {
+    async confirmAddAssetEmployee(flagShow) {
       const data = {
         EmployeeAsset_ID:
           this.selectAssetID !== ""
@@ -2608,7 +2610,7 @@ export default {
         PayrollType: this.assetPayrollType,
         BankAccount: this.assetBankAccount,
         AccountNumber: this.assetAccountNumber.replace(/-/g, ""),
-        Salary: this.assetSalary,
+        Salary: flagShow ? '0' : this.assetSalary,
         Depreciation: this.assetDepreciation,
         Payslip: this.assetPayslip,
         EffectiveDate: this.customEffectiveDate,
@@ -2619,15 +2621,16 @@ export default {
       };
 
       try {
-        const response = await apiService.postEmployeeAsset(data);
-        console.log("Response:", response.data);
-        Swal.fire({
-          title: "สำเร็จ!",
-          text: "บันทึกข้อมูลสำเร็จ",
-          icon: "success",
-          confirmButtonText: "ตกลง",
-          allowOutsideClick: false,
-        });
+        await apiService.postEmployeeAsset(data);
+        if (!flagShow) {
+          Swal.fire({
+            title: "สำเร็จ!",
+            text: "บันทึกข้อมูลสำเร็จ",
+            icon: "success",
+            confirmButtonText: "ตกลง",
+            allowOutsideClick: false,
+          });
+        }
       } catch (error) {
         console.error("Error:", error);
       }
@@ -3405,9 +3408,7 @@ export default {
           EmployeeID: this.empIDPeoplePlus,
         };
         const responseUpdateID = await apiService.updateEmployeeID(dataID);
-        console.log("Update EmpID Response:", responseUpdateID.data);
-
-        this.confirmAddAssetEmployee();
+        await this.confirmAddAssetEmployee(true);
 
         const data = {
           EmployeeAsset_ID:
@@ -3431,6 +3432,12 @@ export default {
           icon: "success",
           confirmButtonText: "ตกลง",
           allowOutsideClick: false,
+        }).then((result) => {
+          if (result.isConfirmed) {
+            this.getAssetID();
+            this.getAssetForm();
+            this.getAssetFormDetail();
+          }
         });
       } catch (error) {
         console.error("Error:", error);
