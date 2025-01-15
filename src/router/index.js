@@ -105,15 +105,15 @@ router.beforeEach(async (to, from, next) => {
   try {
     if (!to.meta.allowAnonymous) {
       if (isTokenNearExpiration()) {
-        await RenewToken(localStorage.getItem('refreshToken'));
+        await RenewToken(localStorage.getItem('refreshTokenCareer'));
       }
     }
     next();
   } catch (error) {
     console.error('Error during token renewal:', error);
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
-    next({ name: 'Login' });
+    localStorage.removeItem('accessTokenCareer');
+    localStorage.removeItem('refreshTokenCareer');
+    window.location.replace("https://portal.ip-one.com/#/");
   }
 });
 
