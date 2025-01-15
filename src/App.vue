@@ -37,7 +37,7 @@ import {
   isTokenNearExpiration,
   RenewToken,
   ValidateJwtToken,
-} from "@/services/apiServicePortaol";
+} from "@/services/apiServicePortal";
 import Swal from "sweetalert2";
 import NewLoading from "@/components/NewLoading.vue";
 
@@ -67,8 +67,6 @@ export default {
       this.$route.path !== "/" &&
       !this.$route.query.EmployementID
     ) {
-      // console.log(this.$route.query.accessTokenCareer, "this.$route.query.accessTokenCareer")
-      // console.log(this.$route.query.refreshTokenCareer, "this.$route.query.refreshTokenCareer")
 
       // this.getUserFromStorage =
       this.$route.query.accessTokenCareer != undefined
@@ -106,6 +104,7 @@ export default {
           }).then(async (result) => {
             if (result.isConfirmed) {
               localStorage.removeItem("accessTokenCareer");
+              localStorage.removeItem("refreshTokenCareer");
               window.location.replace("https://portal.ip-one.com/#/");
             }
           });
@@ -121,6 +120,7 @@ export default {
         }).then(async (result) => {
           if (result.isConfirmed) {
             localStorage.removeItem("accessTokenCareer");
+            localStorage.removeItem("refreshTokenCareer");
             window.location.replace("https://portal.ip-one.com/#/");
 
           }

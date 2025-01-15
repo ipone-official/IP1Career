@@ -635,7 +635,7 @@ export default {
         const loginResponse = await axios.post('https://api.ipo.peopleplushcm.com/v1/oauth/token', peoplePlusLogin);
         this.tokenForUpdate = loginResponse.data.access_token;
 
-
+/*
         const responseCheckIdNumber = await axios.get(`https://api.ipo.peopleplushcm.com/api/hrpmc2e/msgWarning?numoffid=${ this.groupPeoplePlus.employee_IDNumber }&codnatnl=&dteempdb=&numbank=&numbank2=&codempid=`, {
           headers: {
             'Authorization': `Bearer ${this.tokenForUpdate}`,
@@ -671,7 +671,7 @@ export default {
             allowOutsideClick: false,
           });
         }
-
+*/
         const dataNewEmp = {
           p_codempid_query: this.tempData.tempEmployeeID,
           flgwarning: "S",
