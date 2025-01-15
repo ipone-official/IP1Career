@@ -672,6 +672,16 @@ export default {
           });
         }
 */
+      // แปลงวันที่จาก String เป็น Date object
+      const [day, month, year] = this.tempData.tempOnboardDate.split("/").map(Number);
+          const date = new Date(year, month - 1, day);
+
+          // เพิ่มวันที่ 118 วัน
+          date.setDate(date.getDate() + 118);
+
+          // แปลงวันที่กลับไปเป็นรูปแบบ String
+          const dateDteduepr = date.toLocaleDateString("en-GB");
+
         const dataNewEmp = {
           p_codempid_query: this.tempData.tempEmployeeID,
           flgwarning: "S",
@@ -720,8 +730,8 @@ export default {
               age_year: "",
               age_month: "",
               codsex: this.groupPeoplePlus.employee_Sex,
-              weight: "",
-              high: "",
+              weight: this.groupPeoplePlus.employee_Weight,
+              high: this.groupPeoplePlus.employee_High,
               codblood: this.groupPeoplePlus.employee_BloodGroup,
               codorgin: this.groupPeoplePlus.employee_Ethnicity,
               codnatnl: this.groupPeoplePlus.employee_Nationality,
@@ -740,7 +750,7 @@ export default {
             address: {
               codempid: "",
               adrreg: this.groupPeoplePlus.employee_Address,
-              adrrege: "",
+              adrrege: this.groupPeoplePlus.employee_Address,
               adrregt: this.groupPeoplePlus.employee_Address,
               adrreg3: "",
               adrreg4: "",
@@ -751,7 +761,7 @@ export default {
               codcntyr: this.groupPeoplePlus.employee_Country,
               codpostr: this.groupPeoplePlus.employee_ZipCode,
               adrcont: this.groupPeoplePlus.employee_Address,
-              adrconte: "",
+              adrconte: this.groupPeoplePlus.employee_Address,
               adrcontt: this.groupPeoplePlus.employee_Address,
               adrcont3: "",
               adrcont4: "",
@@ -798,12 +808,12 @@ export default {
               typdisp: "",
               desdisp: "",
               qtyduepr: "119",
-              dteduepr: "18/08/2024",
+              dteduepr: dateDteduepr,
               yredatrq: "",
               mthdatrq: "",
               dteoccup: "",
               numtelof: "",
-              email: "",
+              email: this.groupPeoplePlus.email,
               numreqst: "",
               param_numreqst: "",
               param_codpos: "",
@@ -839,7 +849,7 @@ export default {
                 afpro: "",
                 amtothr: "",
                 amtday: "",
-                sumincom: "",
+                // sumincom: "",
                 lock_edit: "N",
                 dteupd: "",
                 coduser: "",
