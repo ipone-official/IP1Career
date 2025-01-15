@@ -62,25 +62,23 @@ export default {
     },
   },
   created() {
-    if (
-      !this.$route.query.EmployeeID &&
-      this.$route.path !== "/" &&
-      !this.$route.query.EmployementID
-    ) {
-
-      // this.getUserFromStorage =
-      this.$route.query.accessTokenCareer != undefined
-        ? localStorage.setItem("accessTokenCareer", this.$route.query.accessTokenCareer)
-        : localStorage.getItem("accessTokenCareer");
-      this.$route.query.refreshTokenCareer != undefined
-        ? localStorage.setItem("refreshTokenCareer", this.$route.query.refreshTokenCareer)
-        : "";
-      this.ValidateJwtToken();
-    } else {
-      this.notGetADs = true;
-      this.infoLogin.isLogin = true;
+  const query = this.$route.query;
+  if (!query.EmployeeID && this.$route.path !== '/' && !query.EmployementID) {
+    if (query.accessTokenCareer) {
+      localStorage.setItem('accessTokenCareer', query.accessTokenCareer);
     }
-  },
+    if (query.refreshTokenCareer) {
+      localStorage.setItem('refreshTokenCareer', query.refreshTokenCareer);
+    }
+
+    if (query.accessTokenCareer || query.refreshTokenCareer) {
+      this.ValidateJwtToken();
+    }
+  } else {
+    this.notGetADs = true;
+    this.infoLogin.isLogin = true;
+  }
+},
   methods: {
     async ValidateJwtToken() {
       this.isLoading = true;
